@@ -15,7 +15,10 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', rescue(async (req, res) => {
   const file = await fs.readFile(fileName);
-  res.send(file.toString('utf-8'));
+  if (!file) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(JSON.parse(file));
 }));
 
 app.listen(3000, () => console.log('listening on port 3000'));
