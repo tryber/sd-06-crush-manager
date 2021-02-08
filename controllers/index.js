@@ -15,7 +15,7 @@ const getSpecificCrush = async (req, res) => {
     if (err) throw new Error('oijaojd');
     const crush = JSON.parse(data).filter((crushObj) => crushObj.id === parseInt(id, 10));
     const response = crush.length > 0 ? crush : { message: 'Crush não encontrado' };
-    res.send(response);
+    res.send(...response);
   });
 };
 
