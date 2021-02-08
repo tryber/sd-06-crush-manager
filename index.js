@@ -22,7 +22,7 @@ app.get('/crush/:id', (req, res) => {
 });
 
 app.get('/crush', (req, res) => {
-  if (crush) return res.status(200).send([]);
+  if (!crush) return res.status(200).send([]);
 
   res.status(SUCCESS).send(crush);
 });
