@@ -15,8 +15,23 @@ const createToken = () => {
   return token;
 };
 
+const validateLogin = (email, password) => {
+  if (!email || email === '') {
+    return 'O campo "email" é obrigatório';
+  }
+  if (!checkEmail(email)) {
+    return 'O "email" deve ter o formato "email@email.com"';
+  }
+  if (!password || password.toString() === '') {
+    return 'O campo "password" é obrigatório';
+  }
+  if (!checkPassword(password)) {
+    return 'A "senha" deve ter pelo menos 6 caracteres';
+  }
+  return 'OK';
+};
+
 module.exports = {
-  checkEmail,
-  checkPassword,
   createToken,
+  validateLogin,
 };

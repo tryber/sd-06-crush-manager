@@ -3,7 +3,7 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { checkEmail, checkPassword, createToken } = require('./functions');
+const { createToken, validateLogin } = require('./functions');
 
 const app = express();
 const SUCCESS = 200;
@@ -45,21 +45,20 @@ app.get('/crush/:id', async (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || email === '') {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  const validationLogin = validateLogin(email, password);
+  if (validationLogin !== 'OK') {
+    return res.status(400).json({ message: validationLogin });
   }
-  if (!checkEmail(email)) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-  if (!password || password.toString() === '') {
-    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  }
-  if (!checkPassword(password)) {
-    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-  }
-
   const token = createToken();
   res.status(200).json({ token });
+});
+
+// endpoint POST /crush - Requirement 04
+app.post('/crush', (req, res) => {
+  const { name, age, date } = req.body;
+
+  const { token } = req.headers;
+  res.status(201).json({ token, name, age, date });
 });
 
 app.listen(3000);
