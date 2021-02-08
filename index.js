@@ -81,14 +81,14 @@ app.post('/crush', validateToken, async (req, res) => {
   res.status(201).send(newCrush);
 });
 
-// app.delete('/crush:id', validateToken, async (req, res) => {
-//   const id = Number(req.params.id);
-//   console.log(id);
-//   const data = await getCrush();
-//   const treatedData = JSON.parse(data);
-//   const result = treatedData.filter((crush) => crush.id !== id);
-//   await writeFile('./crush.json', JSON.stringify(result));
-//   res.status(200).send({ message: 'Crush deletado com sucesso' });
-// });
+app.delete('/crush/:id', validateToken, async (req, res) => {
+  const id = Number(req.params.id);
+  console.log(id);
+  const data = await getCrush();
+  const treatedData = JSON.parse(data);
+  const result = treatedData.filter((crush) => crush.id !== id);
+  await writeFile('./crush.json', JSON.stringify(result));
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
+});
 
 app.listen(3000, () => console.log('servidor online porta 3000'));
