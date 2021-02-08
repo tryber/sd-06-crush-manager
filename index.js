@@ -22,11 +22,9 @@ app.get('/crush/:id', (req, res) => {
 });
 
 app.get('/crush', (req, res) => {
-  if (crush.length > 0) {
-    return res.status(SUCCESS).send(crush);
-  }
-  const array = [];
-  res.status(200).send(array);
+  if (crush) return res.status(200).send([]);
+
+  res.status(SUCCESS).send(crush);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
