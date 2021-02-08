@@ -3,7 +3,13 @@ const express = require('express');
 const crypto = require('crypto');
 const fs = require('fs');
 const util = require('util');
-const { checkEmail, checkPassword } = require('./login');
+const { checkEmail,
+  checkPassword,
+  checkToken,
+  checkName,
+  checkAge,
+  checkDate,
+} = require('./verify');
 
 const app = express();
 const SUCCESS = 200;
@@ -16,6 +22,7 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
 
 function getCrush() {
   return readFile('./crush.json', 'utf-8');
@@ -36,7 +43,7 @@ app.get('/crush/:id', async (req, res) => {
   res.status(200).send(user);
 });
 
-app.use((req, res) => {
+app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email) return res.status(400).send({ message: 'O campo "email" é obrigatório' });
   if (!checkEmail(email)) return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
@@ -46,6 +53,44 @@ app.use((req, res) => {
   res.status(200).send({ token });
 });
 
-app.post('/login');
+app.use((req, res, next) => {
+  const { token } = req.headers;
+  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
+  if (!checkToken(token)) return res.status(401).send({ message: 'Token inválido' });
+  return next();
+});
+
+app.post('/crush', async (req, res) => {
+  const { name, age, date } = req.body;
+
+  if (!name === '') return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!checkName(name)) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!age || age === '') return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (!checkAge(age)) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+  if (!date || !date.datedAt || !date.rate) {
+    return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
+  if (!checkDate(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (!Number.isInteger(Number(date.rate)) || Number(date.rate) < 1 || (Number(date.rate) > 5)) {
+    return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  const data = await getCrush();
+  const treatedData = JSON.parse(data);
+  const newCrush = { id: treatedData.length + 1, ...req.body };
+  treatedData.push(newCrush);
+  await writeFile('./crush.json', JSON.stringify(treatedData));
+  res.status(201).send(newCrush);
+});
+
+// app.delete('/crush:id', async (req, res) => {
+//   const id = Number(req.params.id);
+//   console.log(id);
+//   const data = await getCrush();
+//   const treatedData = JSON.parse(data);
+//   const result = treatedData.filter((crush) => crush.id !== id);
+//   await writeFile('./crush.json', JSON.stringify(result));
+//   res.status(200).send({ message: 'Crush deletado com sucesso' });
+// });
 
 app.listen(3000, () => console.log('servidor online porta 3000'));
