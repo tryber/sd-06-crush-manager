@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { logger, error, getCrushs, getCrushById } = require('./middlewares');
+const { logger, error, getCrushs, getCrushById, postLogin } = require('./middlewares');
 
 const app = express();
 const SUCCESS = 200;
@@ -14,6 +14,8 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', getCrushs);
 app.get('/crush/:id', getCrushById);
+
+app.post('/login', postLogin);
 
 app.use(error);
 const PORT = 3000;

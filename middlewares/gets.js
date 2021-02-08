@@ -9,18 +9,14 @@ module.exports = {
     } else {
       res.status(200).json([]);
     }
-    return next();
   },
 
   async getCrushById(req, res, next) {
     const file = await read();
     if (!file) return next({ message: 'Não foi possível ler o arquivo!', statusCode: 500 });
-    await file.find((crush) => {
-      const crushId = +req.params.id;
-      if (crush.id === crushId) {
-        res.status(200).json(crush);
-      }
-      return next({ message: 'Crush não encontrado', statusCode: 404 });
-    });
+    const crushId = +req.params.id;
+    const newFile = file.find((crush) => crush.id === crushId);
+    if (newFile) return res.status(200).json(newFile);
+    next({ message: 'Crush não encontrado', statusCode: 404 });
   },
 };

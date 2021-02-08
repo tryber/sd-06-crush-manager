@@ -2,6 +2,7 @@ const auth = require('./auth');
 const error = require('./error');
 const logger = require('./logger');
 const { getCrushs, getCrushById } = require('./gets');
+const { postLogin } = require('./posts');
 
 module.exports = {
   auth,
@@ -9,4 +10,5 @@ module.exports = {
   logger,
   getCrushs,
   getCrushById,
+  postLogin,
 };
