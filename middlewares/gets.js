@@ -1,4 +1,3 @@
-const crushs = require('../crush.json');
 const read = require('../services/reader');
 
 module.exports = {
@@ -14,10 +13,11 @@ module.exports = {
   },
 
   async getCrushById(req, res, next) {
+    const file = await read();
     const crushId = +req.params.id;
-    if (!crushId) return next({ message: 'Crush não encontrado', statusCode: 500 });
-    const result = crushs.find((crush) => crush.id === crushId);
+    if (!file && !crushId) return next({ message: 'Crush não encontrado', statusCode: 404 });
     if (crushId) {
+      const result = await file.find((crush) => crush.id === crushId);
       res.status(200).send(result);
     }
     return next();
