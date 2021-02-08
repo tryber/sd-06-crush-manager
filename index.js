@@ -1,5 +1,6 @@
 const express = require('express');
 const readFile = require('./util/readFile');
+const tokenGenerator = require('./util/tokenGenerator');
 
 const app = express();
 const SUCCESS = 200;
@@ -32,6 +33,31 @@ app.get('/crush/:id', (request, response) => {
   }
 
   response.status(200).send(chosenCrush);
+});
+
+// challenge 3
+app.get('/login', (request, response) => {
+  const { email, password } = request.headers;
+  const token = tokenGenerator();
+  const emailValidator = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  if (!email || email.length === 0) {
+    return response.status(400).send({ message: 'O campo "email" é obrigatório' });
+  }
+
+  if (!emailValidator.test(String(email).toLowerCase())) {
+    return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+
+  if (!password || password.length === 0) {
+    return response.status(400).send({ message: 'O campo "password" é obrigatório' });
+  }
+
+  if (password && password.length < 6) {
+    return response.status(400).send({ message: 'O "password" ter pelo menos 6 caracteres' });
+  }
+
+  response.status(200).send({ token });
 });
 
 app.listen(port, () => console.log('Example app listening on port 3000!'));
