@@ -11,9 +11,9 @@ router.route('/')
 
       if (crushData && Array.isArray(crushData) && crushData.length === 0) return res.json([]);
 
-      return res.status(200).json(crushData);
+      return res.json(crushData);
     } catch (error) {
-      req.statusCode = 500;
+      res.statusCode = 500;
       next(error);
     }
   });
@@ -27,12 +27,12 @@ router.route('/:id')
       const foundCrush = crushData.find((crush) => crush.id === Number(id));
 
       if (!foundCrush) {
-        req.statusCode = 404;
+        res.statusCode = 404;
         return next('Crush não encontrado');
       }
-      return res.status(200).json(foundCrush);
+      return res.json(foundCrush);
     } catch (error) {
-      req.statusCode = 500;
+      res.statusCode = 500;
       next(error);
     }
   });
