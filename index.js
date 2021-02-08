@@ -1,5 +1,5 @@
 const express = require('express');
-const { readFile, writeFile } = require('./useful/readAndWriteFiles');
+const { readFile } = require('./useful/readAndWriteFiles');
 
 const app = express();
 const SUCCESS = 200;
