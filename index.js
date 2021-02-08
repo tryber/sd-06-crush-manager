@@ -8,8 +8,9 @@ app.use(bodyParser.json());
 
 const CrashAll = require('./src/controllers/CrashAll');
 const CrashById = require('./src/controllers/CrashById');
+const CrashToken = require('./src/controllers/CrashToken');
 
-app.use('/crush', CrashAll, CrashById);
+app.use('/', CrashAll, CrashById, CrashToken);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

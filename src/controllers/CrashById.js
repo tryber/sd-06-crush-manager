@@ -12,7 +12,7 @@ const readCrushs = async () => {
   return JSON.parse(content.toString('utf8'));
 };
 
-router.get('/:id', async (req, res) => {
+router.get('/crush/:id', async (req, res) => {
   const contentCrushs = await readCrushs();
   const idCrush = req.params.id;
 
