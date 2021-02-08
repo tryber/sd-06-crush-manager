@@ -1,11 +1,11 @@
 const validateEmail = (email) => {
-  const reg = /^[^@]+@[^@]+\.[^@]+$/;
-  return reg.test(String(email).toLowerCase());
+  const reg = /\S+@\S+\.\S+/;
+  return reg.test(email);
 };
 
 const validatePassword = (password) => {
-  if (password.length > 5) return true;
-  return false;
+  const reg = /^.{6,}$/;
+  return reg.test(password);
 };
 
 module.exports = { validateEmail, validatePassword };
