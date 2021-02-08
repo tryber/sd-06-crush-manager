@@ -3,6 +3,8 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 
+const { checkEmail, checkPasswordCont, createToken } = require('./validations.js');
+
 const app = express();
 const SUCCESS = 200;
 
@@ -29,6 +31,25 @@ app.get('/crush/:id', async (req, res) => {
     return res.status(404).json({ message: 'Crush não encontrado' });
   }
   res.status(200).json(crushSelected);
+});
+
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || email === '') {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (!checkEmail(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (!password || password.toString() === '') {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (!checkPasswordCont(password)) {
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+
+  const token = createToken();
+  res.status(200).json({ token });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
