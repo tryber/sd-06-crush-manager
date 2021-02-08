@@ -18,4 +18,23 @@ router.route('/')
     }
   });
 
+router.route('/:id')
+  .get(async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const crushData = await readFile();
+
+      const foundCrush = crushData.find((crush) => crush.id === Number(id));
+
+      if (!foundCrush) {
+        req.statusCode = 404;
+        return next('Crush não encontrado');
+      }
+      return res.status(200).json(foundCrush);
+    } catch (error) {
+      req.statusCode = 500;
+      next(error);
+    }
+  });
+
 module.exports = router;

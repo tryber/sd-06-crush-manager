@@ -5,7 +5,7 @@ const app = express();
 const SUCCESS = 200;
 const PORT = 3000;
 
-// Controllers
+// Routers
 const crush = require('./routers/crush');
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -18,8 +18,8 @@ app.use(bodyParser.json());
 app.use('/crush', crush);
 
 app.use((err, req, res, _next) => {
-  console.log(`${req.method} ${req.url} ${req.statusCode}, error: ${err.message}`);
-  res.status(req.statusCode).json({ message: err.message });
+  console.log(`${req.method} ${req.url} ${req.statusCode}, error: ${err}`);
+  res.status(req.statusCode).json({ message: err });
 });
 
 app.listen(PORT, () => console.log(`Crush Manager server listening on port ${PORT}`));
