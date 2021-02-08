@@ -26,5 +26,4 @@ module.exports = {
       res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
     }
   },
-  
 };
