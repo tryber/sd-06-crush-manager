@@ -1,9 +1,11 @@
 const express = require('express');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const app = express();
 const SUCCESS = 200;
 
+app.use(bodyParser.json());
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
@@ -27,8 +29,15 @@ app.get('/crush/:id', (request, response) => {
   if (dataFiltered.length !== 0) {
     response.status(200).send(dataFiltered);
   } else {
-    response.status(404).send(JSON.parse('{"message": "Crush não encontrado"}'));
+    response.status(404).send({ message: 'Crush não encontrado' });
   }
+});
+
+app.post('/crush', (request, response) => {
+  const { name, age, date } = request.body;
+  const { datedAt, rate } = date;
+  const newCrush = { name, age, date: { datedAt, rate } };
+  response.send(newCrush);
 });
 
 app.listen(3000);
