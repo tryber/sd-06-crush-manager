@@ -56,9 +56,11 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
   if (age < 18) return { message: 'O crush deve ser maior de idade' };
   if (date) {
     if (!dateValidate(date.datedAt)) return { message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' };
+    if (date.rate < 1 && date.rate > 5) return { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
+    if (!date || date === '' || !date.datedAt || !date.rate) {
+      return { message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' };
+    }
   }
-  if (date.rate < 1 && date.rate > 5) return { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
-  if (!date || date === '' || !date.datedAt || !date.rate) return { message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' };
   return true;
 };
 
