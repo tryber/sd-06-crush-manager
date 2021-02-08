@@ -1,6 +1,5 @@
 const express = require('express');
 const fs = require('fs');
-const { request } = require('http');
 
 const app = express();
 const SUCCESS = 200;
@@ -24,7 +23,7 @@ app.get('/crush/:id', (request, response) => {
   const { id } = request.params;
   const readData = fs.readFileSync('crush.json');
   const dataJson = JSON.parse(readData);
-  const dataFiltered = dataJson.filter(item => item.id === +id);
+  const dataFiltered = dataJson.filter((item) => item.id === +id);
   if (dataFiltered.length !== 0) {
     response.status(200).send(dataFiltered);
   } else {
