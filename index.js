@@ -4,8 +4,10 @@ const crushRegistered = require('./data');
 const app = express();
 const SUCCESS = 200;
 
+app.listen(3000, () => console.log('Executando'));
+
 app.get('/crush', (_req, res) => {
-  res.json(crushRegistered);
+  res.send(crushRegistered);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
