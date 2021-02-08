@@ -27,7 +27,7 @@ app.get('/:fileName', async (req, res) => {
   const { fileName } = req.params;
   const myCrushes = await readFile(fileName);
   if (myCrushes.length > 0) {
-    res.status(200).send(myCrushes);
+    res.status(200).send(JSON.parse(myCrushes));
   } else {
     res.status(200).send([]);
   }
