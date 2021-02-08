@@ -55,7 +55,7 @@ app.post('/login', (req, res) => {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (!checkPassword(password)) {
-    return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
+    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
 
   const token = createToken();
