@@ -50,8 +50,6 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
     const regex = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
     return regex.test(String(dates).toLowerCase());
   };
-
-  console.log(dateValidate(date.datedAt));
   if (!name || name === '') return { message: 'O campo "name" é obrigatório' };
   if (name < 3) return { message: 'O "name" deve ter pelo menos 2 caracteres' };
   if (!age || age === '') return { message: 'O campo "age" é obrigatório' };
@@ -62,19 +60,19 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
   return true;
 };
 
-app.post('/:id', async (req, res) => {
+app.post('/', validateToken, async (req, res) => {
   const crush = validateCreateAndUpdate(req.body);
   console.log(req.body);
   if (crush.message) return res.status(400).json(crush);
   const data = await readJson();
-  const result = data.concat({ id: Number(req.params.id), ...req.body })
+  const result = data.concat({ id: data.length + 1, ...req.body })
     .sort((a, b) => a.id - b.id);
   const json = JSON.stringify(result);
   fs.writeFileSync('crush.json', json);
-  return res.status(201).json({ id: Number(req.params.id), ...req.body });
+  return res.status(201).json({ id: data.length + 1, ...req.body });
 });
 
-app.put('/:id', async (req, res) => {
+app.put('/:id', validateToken, async (req, res) => {
   const crush = validateCreateAndUpdate(req.body);
   if (crush.message) return res.status(400).json(crush);
   const data = await readJson();
