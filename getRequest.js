@@ -12,4 +12,19 @@ module.exports = {
     // console.log(file)
     return response.status(200).json(file);
   },
+
+  async crushID(request, response) {
+    const file = await readCrushFile();
+
+    const id = Number(request.params.id);
+
+    // console.log(typeof id)
+
+    const filteredCrush = file.find((crush) => crush.id === id);
+
+    if (!filteredCrush) return response.status(404).json({ message: 'Crush não encontrado' });
+
+    return response.status(200).send(filteredCrush);
+  },
+
 };
