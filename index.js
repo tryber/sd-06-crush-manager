@@ -7,6 +7,9 @@ const SUCCESS = 200;
 app.listen(3000, () => console.log('Executando'));
 
 app.get('/crush', (_req, res) => {
+  if (crushRegistered.length < 1) {
+    res.status(SUCCESS).send([]);
+  }
   res.status(SUCCESS).send(crushRegistered);
 });
 
