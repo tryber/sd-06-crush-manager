@@ -9,9 +9,7 @@ const getCrushes = async () => {
   return JSON.parse(crushList);
 };
 
-const tokenGenerator = () => {
-  crypto.randomBytes(8).toString('hex');
-};
+const tokenGenerator = () => crypto.randomBytes(8).toString('hex');
 
 const validateEmail = (email) => {
   const pattern = /\S+@\S+\.\S+/;
