@@ -10,7 +10,14 @@ function validatePassword(password) {
   return passwordFormat.test(password);
 }
 
+function validateToken(token) {
+  if (!token) return;
+  const tokenFormat = /^\d{16}$/gm;
+  return tokenFormat.test(token);
+}
+
 module.exports = {
   validateEmail,
   validatePassword,
+  validateToken,
 };
