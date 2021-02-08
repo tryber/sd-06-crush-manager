@@ -1,18 +1,12 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const { readFile, writeFile } = require ('./utils/manageFiles');
+const routes = require('./routes');
 
 const app = express();
 const SUCCESS = 200;
 
 app.use(express.json());
-
-app.use(bodyParser.json());
-const crushes = require('./crush');
-
-app.get('/crush', (req, res, _next) => {
-  if (!crushes) return res.status(200).json([]);
-  res.status(200).json(crushes);
-});
+app.use(routes);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
