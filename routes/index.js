@@ -13,6 +13,9 @@ routes.post('/crush', middlewares.validateCrush, (req, res) => {
   res.send('/CRUSH SUCESSO: %s', req);
 });
 
+// CRUSH - GET
+routes.get('/crush', controllers.getAllCrushes);
+
 routes.use(middlewares.handleError);
 
 module.exports = routes;

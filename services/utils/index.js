@@ -1,7 +1,9 @@
-const objectify = require('./objectify');
 const generateToken = require('./generateToken');
+const objectify = require('./objectify');
+const readCrushFile = require('./readCrushFile');
 
 module.exports = {
-  objectify,
   generateToken,
+  objectify,
+  readCrushFile,
 };
