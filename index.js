@@ -4,14 +4,14 @@ const fs = require('fs');
 
 const app = express();
 const SUCCESS = 200;
-const data = fs.readFileSync('./crush.json', 'utf8');
 
 app.get('/crush', (_req, res) => {
+  const data = fs.readFileSync('./crush.json', 'utf8');
   const crushList = JSON.parse(data);
 
-  if (!crushList) return res.status(SUCCESS).send([]);
+  if (crushList && crushList.length > 0) return res.status(SUCCESS).send(crushList);
 
-  res.status(SUCCESS).send(crushList);
+  if (!crushList || crushList.length === 0) return res.status(SUCCESS).send([]);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
