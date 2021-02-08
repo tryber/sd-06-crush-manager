@@ -8,11 +8,6 @@ const checkPassword = (password) => {
   return true;
 };
 
-const checkToken = (token) => {
-  if (token.length !== 16) return false;
-  return true;
-};
-
 const checkName = (nome) => {
   if (nome.length < 3) return false;
   return true;
@@ -31,7 +26,6 @@ const checkDate = (data) => {
 module.exports = {
   checkEmail,
   checkPassword,
-  checkToken,
   checkName,
   checkAge,
   checkDate,

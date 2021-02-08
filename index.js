@@ -5,7 +5,6 @@ const fs = require('fs');
 const util = require('util');
 const { checkEmail,
   checkPassword,
-  checkToken,
   checkName,
   checkAge,
   checkDate,
@@ -53,25 +52,24 @@ app.post('/login', (req, res) => {
   res.status(200).send({ token });
 });
 
-app.use((req, res, next) => {
-  const { token } = req.headers;
-  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
-  if (!checkToken(token)) return res.status(401).send({ message: 'Token inválido' });
-  return next();
-});
+const validateToken = (req, res, next) => {
+  if (!req.headers.authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (req.headers.authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  next();
+};
 
-app.post('/crush', async (req, res) => {
+app.post('/crush', validateToken, async (req, res) => {
   const { name, age, date } = req.body;
 
-  if (!name === '') return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!name || name === '') return res.status(400).send({ message: 'O campo "name" é obrigatório' });
   if (!checkName(name)) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (!age || age === '') return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (!checkAge(age)) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!date || !date.datedAt || !date.rate) {
+  if (!date || date === '' || !date.datedAt || !date.rate) {
     return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
   if (!checkDate(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (!Number.isInteger(Number(date.rate)) || Number(date.rate) < 1 || (Number(date.rate) > 5)) {
+  if (Number(date.rate) < 1 || (Number(date.rate) > 5)) {
     return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
@@ -83,7 +81,7 @@ app.post('/crush', async (req, res) => {
   res.status(201).send(newCrush);
 });
 
-// app.delete('/crush:id', async (req, res) => {
+// app.delete('/crush:id', validateToken, async (req, res) => {
 //   const id = Number(req.params.id);
 //   console.log(id);
 //   const data = await getCrush();
