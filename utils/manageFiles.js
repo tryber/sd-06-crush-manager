@@ -17,5 +17,5 @@ const writeFile = async (fileName, content) => {
 
 module.exports = {
   readFile,
-  writeFile
+  writeFile,
 };
