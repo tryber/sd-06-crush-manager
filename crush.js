@@ -16,10 +16,17 @@ const readJson = async () => {
   return json;
 };
 
-app.get('/', validateToken, async (req, res) => {
+app.get('/', async (req, res) => {
   const data = await readJson();
   if (data === [] || data === null) return res.status(200).json([]);
   res.status(200).json(data);
+});
+
+app.get('/:id', async (req, res) => {
+  const data = await readJson();
+  const crush = await data.find((el) => el.id === Number(req.params.id));
+  if (crush === undefined) return res.status(404).json({ message: 'Crush não encontrado' });
+  res.status(200).json(crush);
 });
 
 app.get('/search', validateToken, async (req, res) => {
@@ -28,14 +35,6 @@ app.get('/search', validateToken, async (req, res) => {
   const filtered = data.filter((el) => el.name.includes(req.query.q));
   if (filtered === []) return res.status(200).json([]);
   return res.status(200).json(filtered);
-});
-
-app.get('/:id', validateToken, async (req, res) => {
-  const data = await readJson();
-  const crush = await data.find((el) => el.id === Number(req.params.id));
-  console.log(crush);
-  if (crush === undefined) return res.status(404).json({ message: 'Crush não encontrado' });
-  res.status(200).json(crush);
 });
 
 app.delete('/:id', validateToken, async (req, res) => {

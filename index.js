@@ -26,7 +26,7 @@ const validateLogin = ({ email, password }) => {
   if (!email || email === '') return { message: 'O campo "email" é obrigatório' };
   if (!emailValidate(email)) return { message: 'O "email" deve ter o formato "email@email.com"' };
   if (!password || password === '') return { message: 'O campo "password" é obrigatório' };
-  if (password.length < 6) return { message: 'O "password" ter pelo menos 6 caracteres' };
+  if (password.length < 6) return { message: 'A "senha" deve ter pelo menos 6 caracteres' };
   const token = randtoken.generate(16);
   return { token };
 };
