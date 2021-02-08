@@ -1,5 +1,5 @@
 const express = require('express');
-const crushRegistered = require('./data');
+const crushRegistered = require('./crush');
 
 const app = express();
 const SUCCESS = 200;
