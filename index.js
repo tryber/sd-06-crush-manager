@@ -51,7 +51,6 @@ app.post('/login', (req, res) => {
 app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
   const { authorization } = req.headers;
-  console.log(req.body);
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
@@ -80,8 +79,8 @@ app.post('/crush', (req, res) => {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   const crushes = getCrushes();
-  crushes.push(req.body);
-  res.status(201).send(req.body);
+  crushes.push({ age, date, id: crushes.length, name });
+  res.status(201).send({ age, date, id: crushes.length, name });
 });
 
 app.listen(port, () => console.log(`Aplicação rodando na porta ${port}!`));
