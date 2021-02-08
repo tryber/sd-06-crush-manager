@@ -1,6 +1,9 @@
 const express = require('express');
-const fs = require('fs');
+// const fs = require('fs');
 const bodyParser = require('body-parser');
+const { getAllCrushes } = require('./middlewares/getAllCrushes');
+const { getCrushById } = require('./middlewares/getCrushById');
+const { login } = require('./middlewares/login');
 
 const app = express();
 const SUCCESS = 200;
@@ -12,25 +15,10 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-const getCrushes = async () => {
-  const arrayCrushes = await fs.readFileSync('./crush.json', 'utf-8');
-  return JSON.parse(arrayCrushes);
-};
+app.get('/crush', getAllCrushes);
 
-app.get('/crush', async (req, res) => {
-  const crushData = await getCrushes();
-  res.status(200).send(crushData);
-});
+app.get('/crush/:id', getCrushById);
 
-app.get('/crush/:id', async (req, res) => {
-  const reqId = parseInt(req.params.id, 10);
-  const arrayCrushes = await getCrushes();
-
-  const foundCrush = arrayCrushes.find((crush) => crush.id === reqId);
-
-  if (!foundCrush) res.status(404).json({ message: 'Crush não encontrado' });
-
-  res.status(200).json(foundCrush);
-});
+app.post('/login', login);
 
 app.listen(3000);
