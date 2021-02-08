@@ -20,11 +20,11 @@ const getById = async (request, response) => {
     const { fileName, id } = request.params;
     const crushes = await readFile(fileName);
     const myFile = JSON.parse(crushes);
-    const crushFound = myFile.filter((crush) => crush.id === +id);
-    console.log(crushFound);
-    response.status(200).send(JSON.parse(crushFound));
+    const crushFound = myFile.find((crush) => crush.id === parseInt(id, 10));
+    if (!crushFound) return response.status(404).json({ message: 'Crush não encontrado' });
+    return response.status(200).json(crushFound);
   } catch (err) {
-    response.status(500).json({ message: err.message });
+    return response.status(404).json({ message: 'Crush não encontrado' });
   }
 };
 
