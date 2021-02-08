@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 
 const app = express();
 const SUCCESS = 200;
@@ -7,3 +8,14 @@ const SUCCESS = 200;
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.get('/crush', (req, res) => {
+  fs.readFile('./crush.json', 'utf8', (err, data) => {
+    if (!data) {
+      res.send('[]');
+    }
+    res.send(data);
+  });
+});
+
+app.listen(3000);
