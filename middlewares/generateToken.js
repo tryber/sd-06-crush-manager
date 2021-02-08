@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const generateToken = (request, response) => {
+const generateLoginToken = (request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
 
   const { email, password } = request.body;
@@ -31,5 +31,5 @@ const generateToken = (request, response) => {
 };
 
 module.exports = {
-  generateToken,
+  generateLoginToken,
 };

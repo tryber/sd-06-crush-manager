@@ -1,9 +1,15 @@
 const { getAllCrushes } = require('./getAllCrushes');
 const { getCrushById } = require('./getCrushById');
-const { generateToken } = require('./generateToken');
+const { generateLoginToken } = require('./generateToken');
+const { authToken } = require('./authToken');
+const { validateCrush } = require('./validateCrush');
+const { createANewCrush } = require('./createNewCrush');
 
 module.exports = {
   getAllCrushes,
   getCrushById,
-  generateToken,
+  generateLoginToken,
+  authToken,
+  validateCrush,
+  createANewCrush,
 };
