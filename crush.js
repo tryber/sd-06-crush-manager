@@ -54,7 +54,7 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
   if (name.length < 3) return { message: 'O "name" deve ter pelo menos 3 caracteres' };
   if (!age || age === '') return { message: 'O campo "age" é obrigatório' };
   if (age < 18) return { message: 'O crush deve ser maior de idade' };
-  if (date.datedAt) {
+  if (date) {
     if (!dateValidate(date.datedAt)) return { message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' };
   }
   if (date.rate < 1 && date.rate > 5) return { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
@@ -63,7 +63,7 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
 };
 
 app.post('/', validateToken, async (req, res) => {
-  const crush = validateCreateAndUpdate(req.body);
+  const crush = await validateCreateAndUpdate(req.body);
   if (crush.message) return res.status(400).json(crush);
   const data = await readJson();
   const result = data.concat({ id: data.length + 1, ...req.body })
