@@ -15,4 +15,8 @@ module.exports = {
     if (reqPass === undefined) return next({ message: 'O campo "password" é obrigatório', statusCode: 400 });
     if (!reqPass) return next({ message: 'O "password" ter pelo menos 6 caracteres', statusCode: 400 });
   },
+
+  // async postToken(req, res, next) {
+  //   const readToken = req.headers.Authorization;
+  // },
 };
