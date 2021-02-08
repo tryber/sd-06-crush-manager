@@ -2,8 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const util = require('util');
 const path = require('path');
-const { checkEmail, checkPasswordCont, createToken } = require('./validations.js');
 const bodyParser = require('body-parser');
+const { checkEmail, checkPasswordCont, createToken } = require('./validations.js');
 
 const app = express();
 const SUCCESS = 200;
@@ -54,12 +54,6 @@ app.post('/login', (req, res) => {
   const token = createToken();
   res.status(200).json({ token });
 });
-
-// Desafio 04 - endpoint POST /crush
-// app.post('/crush', (req, res) => {
-//   const 
-//   res.send('POST request to the homepage');
-// });
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
