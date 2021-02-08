@@ -1,8 +1,9 @@
+const auth = require('./auth');
 const logger = require('./logger');
 const { getCrushs } = require('./gets');
-// const auth = require('./auth');
 
 module.exports = {
+  auth,
   logger,
   getCrushs,
 };
