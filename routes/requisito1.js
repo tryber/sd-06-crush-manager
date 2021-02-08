@@ -1,12 +1,13 @@
-const crushJson = require('../crush.json');
+const { readFile } = require('../utils/manageFiles');
 
 const SUCCESS = 200;
+const file = 'crush.json';
 
-const getCrushes = (_request, response) => {
-  if (!crushJson[0]) {
-    response.status(SUCCESS).send([]);
-  }
-  response.status(SUCCESS).send(crushJson);
+const getCrushes = async (_request, response, next) => {
+  const crushList = await readFile(file);
+
+  response.status(SUCCESS).send(JSON.parse(crushList));
+  next();
 };
 
 module.exports = getCrushes;
