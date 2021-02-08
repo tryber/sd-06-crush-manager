@@ -15,4 +15,4 @@ app.all(/\//, routes)
 
 
 
-app.listen(3040, () => console.log('rodando na porta 3040'))
+app.listen(3000, () => console.log('rodando na porta 3000'))
