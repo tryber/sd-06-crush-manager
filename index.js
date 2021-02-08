@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const crushes = require('./crush.json');
 
 const app = express();
@@ -11,7 +10,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', (req, res) => {
-  res.status(SUCCESS).json(require('./crush.json'));
+  res.status(SUCCESS).json(crushes);
 });
 
 app.listen(3000);
