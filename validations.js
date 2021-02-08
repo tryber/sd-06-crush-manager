@@ -5,7 +5,7 @@ const checkEmail = (email) => {
   return regex.test(email);
 };
 const checkPasswordCont = (password) => {
-  const passwordCont = password.toString.length > 6;
+  const passwordCont = password.toString().length >= 6;
   return passwordCont;
 };
 const createToken = () => {
