@@ -1,6 +1,5 @@
 const express = require('express');
-
-const crushs = require('./crush.json');
+const { readFile, writeFile } = require('./utils/managerFiles');
 
 const app = express();
 const SUCCESS = 200;
@@ -12,6 +11,11 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', (req, res) => res.status(200).send(crushs));
+// requeriment 1
+app.get('/crush', async (req, res) => {
+  const crushs = await readFile('crush.json');
+  res.status(200).send(crushs);
+});
+// end requeriment 1
 
-app.listen(PORT, () => console.log('funcional'));
+app.listen(PORT, () => console.log('funcional na porta 3000'));
