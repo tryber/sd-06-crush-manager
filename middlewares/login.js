@@ -10,7 +10,7 @@ const login = (req, res) => {
 
   if (!password) return res.status(400).json({ message: 'O campo "password" é obrigatório' });
 
-  if (!validatePassword(password)) return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
+  if (!validatePassword(password)) return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 
   res.status(200).json({ token: createToken() });
 };
