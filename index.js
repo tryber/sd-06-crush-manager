@@ -9,11 +9,10 @@ const port = 3000;
 app.use(express.json());
 
 app.get('/crush', (_req, res) => {
- 
   const crushList = 'crush.json';
 
   const data = fs.readFileSync(crushList, 'utf8');
-  
+
   res.status(200).send(data);
 });
 
