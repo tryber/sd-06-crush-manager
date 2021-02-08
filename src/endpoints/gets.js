@@ -7,7 +7,7 @@ const firstIndex = 0;
 const minimumLength = 1;
 
 module.exports = {
-  async getChrushes(_req, res) {
+  async getCrushes(_req, res) {
     const data = await fs.readFile('./crush.json', 'utf-8');
     if (data) {
       res.status(SUCCESS).send(JSON.parse(data));
