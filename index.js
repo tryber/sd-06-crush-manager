@@ -29,8 +29,8 @@ app.get('/crush/:id', async (req, res) => {
   const id = Number(req.params.id);
   const data = await getCrush();
   const treatedData = JSON.parse(data);
-  const user = treatedData.filter((crush) => crush.id === id);
-  if (user.length === 0) return res.status(404).send({ message: 'Crush not found' });
+  const user = treatedData.find((crush) => crush.id === id);
+  if (!user) return res.status(404).send({ message: 'Crush not found' });
   res.status(200).send(user);
 });
 
