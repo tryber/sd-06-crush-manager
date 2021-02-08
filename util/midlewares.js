@@ -15,17 +15,18 @@ const parser = (request, _response, next) => {
   next();
 };
 
-// const getById = async (request, response) => {
-//   const { fileName, id } = request.params;
-//   // const myFile = await JSON.parse(readFile(fileName));
-//   console.log(`id: ${id}, filename: ${fileName}`);
-//   // const crushFound = myFile.filter((crush) => crush.id === parseInt(id));
+const getById = async (request, response) => {
+  const { fileName, id } = request.params;
+  const crushes = await readFile(fileName);
+  const myFile = JSON.parse(crushes);
+  console.log(myFile);
+  // const crushFound = myFile.filter((crush) => crush.id === parseInt(id, 10));
 
-//   // response.status(200).json(JSON.parse(crushFound));
-// };
+  // response.status(200).json(JSON.parse(crushFound));
+};
 
 module.exports = {
   read,
   parser,
-  // getById,
+  getById,
 };
