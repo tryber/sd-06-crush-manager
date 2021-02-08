@@ -1,4 +1,4 @@
-const crushReader = require('../services/crushReader');
+const crushReader = require('../utils/crushReader');
 
 const getAllCrushes = async (_req, res) => {
   const file = await crushReader();
