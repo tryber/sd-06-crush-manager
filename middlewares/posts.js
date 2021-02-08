@@ -13,7 +13,7 @@ module.exports = {
     if (reqEmail === undefined) return next({ message: 'O campo "email" é obrigatório', statusCode: 400 });
     if (!reqEmail) return next({ message: 'O "email" deve ter o formato "email@email.com"', statusCode: 400 });
     if (reqPass === undefined) return next({ message: 'O campo "password" é obrigatório', statusCode: 400 });
-    if (!reqPass) return next({ message: 'O "senha" ter pelo menos 6 caracteres', statusCode: 400 });
+    if (!reqPass) return next({ message: 'A "senha" deve ter pelo menos 6 caracteres', statusCode: 400 });
   },
 
   // async postToken(req, res, next) {
