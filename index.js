@@ -7,6 +7,8 @@ app.use(bodyParser.json());
 
 const crushList = require('./middlewares/crushList');
 
+const crushId = require('./middlewares/crushId');
+
 const SUCCESS = 200;
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -15,5 +17,6 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', crushList);
+app.get('/crush/:id', crushId);
 
 app.listen(port, () => console.log(`Serviço rodando na porta ${port}`));
