@@ -3,6 +3,7 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const { checkEmail, checkPasswordCont, createToken } = require('./validations.js');
+const bodyParser = require('body-parser');
 
 const app = express();
 const SUCCESS = 200;
@@ -14,6 +15,8 @@ const getData = async () => {
   const data = await readFile(fileName);
   return JSON.parse(data);
 };
+
+app.use(bodyParser.json());
 
 // Desafio 01 - endpoint GET /crush
 app.get('/crush', async (req, res) => {
@@ -33,7 +36,7 @@ app.get('/crush/:id', async (req, res) => {
 });
 
 // Desafio 03 - endpoint POST /login
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || email === '') {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
@@ -51,6 +54,12 @@ app.post('/login', async (req, res) => {
   const token = createToken();
   res.status(200).json({ token });
 });
+
+// Desafio 04 - endpoint POST /crush
+// app.post('/crush', (req, res) => {
+//   const 
+//   res.send('POST request to the homepage');
+// });
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
