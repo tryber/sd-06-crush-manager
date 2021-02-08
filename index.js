@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const { getAllCrushes } = require('./controller/getAllCrushes');
 const { getCrushById } = require('./controller/getCrushById');
 const { login } = require('./controller/login');
+const { validateCrush } = require('./controller/validateCrush');
+const { createCrush } = require('./controller/newCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -18,7 +20,8 @@ app.post('/login', login);
 
 app.get('/crush', getAllCrushes);
 app.get('/crush/:id', getCrushById);
+app.post('/crush', validateCrush, createCrush);
 
 app.listen(3000, () => {
-  console.log('WORKING UHUL');
+  console.log('Working 3000');
 });
