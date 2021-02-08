@@ -14,4 +14,4 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', (req, res) => res.status(200).send(crushs));
 
-app.listen(PORT, () => console.log('funcional')); 
+app.listen(PORT, () => console.log('funcional'));
