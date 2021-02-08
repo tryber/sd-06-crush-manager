@@ -1,9 +1,11 @@
 const express = require('express');
-const { logger, getCrushs } = require('./middlewares');
+const bodyParser = require('body-parser');
+const { logger, getCrushs, getCrushById } = require('./middlewares');
 
 const app = express();
 const SUCCESS = 200;
 app.use(logger);
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -11,6 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', getCrushs);
+app.get('/crush/:id', getCrushById);
 
 const PORT = 3000;
 app.listen(PORT, () => {
