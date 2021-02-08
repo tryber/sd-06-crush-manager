@@ -25,12 +25,12 @@ app.get('/crush', async (_req, res) => {
   res.status(200).send(treatedData);
 });
 
-app.get('/crush/:id',async (req, res) => {
+app.get('/crush/:id', async (req, res) => {
   const id = Number(req.params.id);
   const data = await getCrush();
   const treatedData = JSON.parse(data);
   const user = treatedData.filter((crush) => crush.id === id);
-  if (!user) return res.status(404).send({ message: 'Crush não encontrado' })
+  if (!user) return res.status(404).send({ message: 'Crush não encontrado' });
   res.status(200).send(user);
 });
 
