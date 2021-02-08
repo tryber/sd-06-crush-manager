@@ -1,4 +1,5 @@
 const express = require('express');
+const crush = require('./crush.json');
 
 const app = express();
 const SUCCESS = 200;
@@ -7,3 +8,9 @@ const SUCCESS = 200;
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.get('/crush', (_request, response) => {
+  response.status(SUCCESS).send(crush);
+});
+
+app.listen(3000);
