@@ -1,19 +1,18 @@
-const fs = require('fs').promises;
+const { parsedData } = require('./utils/readCrushData');
 
-const crushData = 'crush.json';
+async function getCrush(_request, response) {
+  const data = await parsedData();
+  return response.status(200).send(data);
+}
 
-const crush = fs.readFile(crushData, 'utf8', (err, data) => {
-  const parsedData = JSON.parse(data);
-  if (err) {
-    console.error(`Não foi possível ler o arquivo ${crushData}\n Erro: ${err}`);
-    process.exit(1);
-  }
-  return parsedData;
-});
+async function getCrushId(request, response) {
+  const data = await parsedData();
+  const crushId = parseInt(request.params.id, 10);
+  const crushById = data.find((item) => item.id === crushId);
+  response.status(200).send(crushById);
+}
 
 module.exports = {
-  async getCrush(_request, response) {
-    const data = await crush;
-    return response.status(200).send(data);
-  },
+  getCrush,
+  getCrushId,
 };
