@@ -9,7 +9,7 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (req, res) => {
+app.get('/crush', async (_req, res) => {
   const crush = await readFile('crush');
   console.log(crush);
   return res.status(200).send(crush);
