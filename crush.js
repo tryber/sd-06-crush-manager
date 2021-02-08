@@ -12,7 +12,6 @@ const validateToken = (req, res, next) => {
 const readJson = async () => {
   const data = await fs.readFileSync('crush.json');
   const json = await JSON.parse(data);
-  console.log(json);
   return json;
 };
 
@@ -50,8 +49,9 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
     const regex = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
     return regex.test(String(dates).toLowerCase());
   };
+  console.log(name, age);
   if (!name || name === '') return { message: 'O campo "name" é obrigatório' };
-  if (name < 3) return { message: 'O "name" deve ter pelo menos 2 caracteres' };
+  if (name.length < 3) return { message: 'O "name" deve ter pelo menos 2 caracteres' };
   if (!age || age === '') return { message: 'O campo "age" é obrigatório' };
   if (age < 18) return { message: 'O crush deve ser maior de idade' };
   if (!dateValidate(date.datedAt)) return { message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' };
@@ -62,7 +62,6 @@ const validateCreateAndUpdate = ({ name, age, date }) => {
 
 app.post('/', validateToken, async (req, res) => {
   const crush = validateCreateAndUpdate(req.body);
-  console.log(req.body);
   if (crush.message) return res.status(400).json(crush);
   const data = await readJson();
   const result = data.concat({ id: data.length + 1, ...req.body })
