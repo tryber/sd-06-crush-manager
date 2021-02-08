@@ -8,16 +8,16 @@ const fs = require('fs').promises;
 
 const arquive = './crush.json';
 
-const data = async () => {
-  const newData = await fs.readFile(arquive, 'utf8', (err, data)  => {
+const getData = async () => {
+  const newData = await fs.readFile(arquive, 'utf8', (err, data) => {
     if (err) {
       console.error(`Não foi possível ler o arquivo ${arquive}\n Erro: ${err}`);
       process.exit(1);
     }
-   return data;
+    return data;
   });
   return newData;
-}
+};
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -27,7 +27,7 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 app.get('/crush', async (req, res) => {
-  const response = await data();
+  const response = await getData();
   res.send(response);
 });
 
