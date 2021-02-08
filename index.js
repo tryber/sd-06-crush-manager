@@ -1,19 +1,18 @@
 const express = require('express');
-const { FrisbySpec } = require('frisby');
+// const { FrisbySpec } = require('frisby');
 const fs = require('fs');
 
 const app = express();
 const SUCCESS = 200;
 const port = 3000;
+const data = fs.readFileSync('./crush.json', 'utf8');
 
 app.use(express.json());
 
-app.get('/crush', (_req, res) => {
-  const crushList = 'crush.json';
+app.get('/crush', (req, res) => {
+  if (!data) return res.status(SUCCESS).send([]);
 
-  const data = fs.readFileSync(crushList, 'utf8');
-
-  res.status(200).send(data);
+  res.status(SUCCESS).send(data);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
