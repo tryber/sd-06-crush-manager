@@ -5,6 +5,7 @@ const { getCrushById } = require('./controller/getCrushById');
 const { login } = require('./controller/login');
 const { validateCrush } = require('./controller/validateCrush');
 const { createCrush } = require('./controller/newCrush');
+const { checkToken } = require('./services');
 
 const app = express();
 const SUCCESS = 200;
@@ -17,6 +18,8 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 app.post('/login', login);
+
+app.use(checkToken);
 
 app.get('/crush', getAllCrushes);
 app.get('/crush/:id', getCrushById);
