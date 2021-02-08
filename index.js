@@ -18,14 +18,15 @@ app.get('/crush/:id', (req, res) => {
 
   if (result) return res.status(SUCCESS).send(result);
 
-  res.status(404).send('{ "message": "Crush não encontrado" }');
+  res.status(404).send({ message: 'Crush não encontrado' });
 });
 
 app.get('/crush', (req, res) => {
   if (crush.length > 0) {
     return res.status(SUCCESS).send(crush);
   }
-  res.status(200).send([]);
+  const array = [];
+  res.status(200).send(array);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
