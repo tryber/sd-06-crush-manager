@@ -1,5 +1,5 @@
-module.exports = {
-  async idError(err, _req, res, _next) {
-    res.status(err.statusCode || 500).json({ erro: err.message });
-  },
+module.exports = (err, _req, res, next) => {
+  console.log(err);
+  res.status(err.statusCode || 500).json({ message: err.message });
+  next();
 };

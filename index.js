@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { logger, getCrushs, getCrushById } = require('./middlewares');
+const { logger, error, getCrushs, getCrushById } = require('./middlewares');
 
 const app = express();
 const SUCCESS = 200;
@@ -15,6 +15,7 @@ app.get('/', (_request, response) => {
 app.get('/crush', getCrushs);
 app.get('/crush/:id', getCrushById);
 
+app.use(error);
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`O PAI TÁ ON ${PORT} VEZES!`);
