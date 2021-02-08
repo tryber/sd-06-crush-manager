@@ -14,7 +14,7 @@ app.get('/crush', (req, res) => {
   fs.readFile('./crush.json', (err, data) => {
     // if (err) return console.error(err);
     // console.log(data.toString());
-    res.status(200).send(data.toString());
+    res.status(200).send(JSON.parse(data.toString()));
   });
 });
 
