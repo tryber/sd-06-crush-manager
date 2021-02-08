@@ -19,4 +19,4 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.listen(3000, () => console.log(`"Crush Manager" running on 3000 port!`));
+app.listen(3000, () => console.log(`'Crush Manager' running on 3000 port!`));
