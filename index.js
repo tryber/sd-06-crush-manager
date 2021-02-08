@@ -1,7 +1,9 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const crypto = require('crypto');
 const fs = require('fs');
 const util = require('util');
+const { checkEmail, checkPassword } = require('./login');
 
 const app = express();
 const SUCCESS = 200;
@@ -33,5 +35,17 @@ app.get('/crush/:id', async (req, res) => {
   if (!user) return res.status(404).send({ message: 'Crush não encontrado' });
   res.status(200).send(user);
 });
+
+app.use((req, res) => {
+  const { email, password } = req.body;
+  if (!email) return res.status(400).send({ message: 'O campo "email" é obrigatório' });
+  if (!checkEmail(email)) return res.status(400).send({ message: 'O campo "email" deve ter o formato "email@email.com"' });
+  if (!password) return res.status(400).send({ message: 'O campo "password" é obrigatório' });
+  if (!checkPassword(password)) return res.status(400).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(200).send(token);
+});
+
+app.post('/login');
 
 app.listen(3000, () => console.log('servidor online porta 3000'));
