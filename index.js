@@ -11,8 +11,14 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', (_request, response) => {
   const readData = fs.readFileSync('crush.json');
-  const dataJson = JSON.parse(readData)
-  response.status(200).send(dataJson);
+  if (readData) {
+    const dataJson = JSON.parse(readData)
+    response.status(200).send(dataJson);
+  } else {
+    response.status(200).send(JSON.parse([]));
+  }
+
+  
 });
 
 app.listen(3000);
