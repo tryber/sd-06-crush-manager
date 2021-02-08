@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 
+const port = 3000;
+
 const app = express();
 const SUCCESS = 200;
 
@@ -14,6 +16,8 @@ app.get('/crush', (_req, res) => {
     if (err) {
       console.error(`Não foi possível ler o arquivo. Erro: ${err}`);
     }
-    res.status(SUCCESS).send(data);
+    res.status(SUCCESS).send(JSON.parse(data));
   });
 });
+
+app.listen(port, () => console.log(`Aplicação rodando na porta ${port}!`));
