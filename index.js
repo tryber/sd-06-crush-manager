@@ -1,5 +1,5 @@
 const express = require('express');
-const { readFile, writeFile } = require('./utils/managerFiles');
+const { readFile } = require('./utils/managerFiles');
 
 const app = express();
 const SUCCESS = 200;
