@@ -22,7 +22,7 @@ function fileContent(filePath) {
 
 app.get('/crush', async (request, response) => {
   const data = await fileContent(file);
-  response.status(200).send(data);
+  response.status(200).send(JSON.parse(data));
 });
 
 app.listen(3000, () => console.log('Rodando na porta 3000'));
