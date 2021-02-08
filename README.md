@@ -81,7 +81,7 @@ O projeto tem até a seguinte data: `23/02/2021 - 14:00h`. Para ser entregue a a
 
 1. Clone o repositório
 
-- `git clone https://github.com/betrybe/sd-06-crush-manager.git`.
+- `git clone https://github.com/tryber/sd-06-crush-manager.git`.
 - Entre na pasta do repositório que você acabou de clonar:
   - `cd sd-06-crush-manager`
 
@@ -314,7 +314,7 @@ Isso está configurado para o avaliador funcionar.
 
     ```js
     {
-      "message": "O \"password\" ter pelo menos 6 caracteres"
+      "message": "A \"senha\" deve ter pelo menos 6 caracteres"
     }
     ```
 
