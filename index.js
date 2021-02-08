@@ -11,7 +11,11 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', (_req, res) => {
-  res.status(200).send(crushes);
+  if (crushes) {
+    res.status(200).send(crushes);
+  } else {
+    res.status(200).send([]);
+  }
 });
 
 app.listen(port, () => console.log('Listening on 3000...'));
