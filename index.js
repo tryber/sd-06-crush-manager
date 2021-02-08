@@ -1,9 +1,9 @@
 const express = require('express');
+const fs = require('fs');
 
 const app = express();
 const SUCCESS = 200;
 const port = 3000;
-const crushes = require('./crush.json');
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -11,8 +11,9 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', (_req, res) => {
+  const crushes = fs.readFileSync('./crush.json');
   if (crushes.length > 0) {
-    res.status(200).send(crushes);
+    res.status(200).send(JSON.parse(crushes));
   } else {
     res.status(200).send([]);
   }
