@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 
 app.get('/crush', async (req, res) => {
   const response = await getData();
-  res.send(response);
+  res.send(JSON.parse(response));
 });
 
 app.listen('3000');
