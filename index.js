@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const crushes = require('./getCrushes');
+const crushes = require('./crushRouter');
 const login = require('./login');
 
 const app = express();
