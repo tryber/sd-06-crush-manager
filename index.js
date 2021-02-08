@@ -1,6 +1,6 @@
 const express = require('express');
-const { getCrushes, getCrushById } = require('./src/endpoints/gets');
-const { postLogin } = require('./src/endpoints/posts');
+const { getCrushes, getCrushById, getLogin } = require('./src/endpoints/gets');
+// const { postLogin } = require('./src/endpoints/posts');
 
 const app = express();
 const SUCCESS = 200;
@@ -15,6 +15,6 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', getCrushes);
 app.get('/crush/:id', getCrushById);
-app.post('/login', postLogin);
+app.get('/login', getLogin);
 
 app.listen(PORT, () => console.log('Voando na Nimbus 3000'));
