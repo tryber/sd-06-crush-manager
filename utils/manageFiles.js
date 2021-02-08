@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 const path = require('path').resolve;
 
 const currentPath = path();
@@ -17,5 +17,5 @@ const writeFile = async (fileName, content) => {
 
 module.exports = {
   readFile,
-  writeFile,
+  writeFile
 };
