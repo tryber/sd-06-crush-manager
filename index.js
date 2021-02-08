@@ -5,14 +5,13 @@ const app = express();
 const SUCCESS = 200;
 const port = 3000;
 
-const crushes = JSON.parse(fs.readFileSync('./crush.json'));
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
 app.get('/crush', (_req, res) => {
+  const crushes = JSON.parse(fs.readFileSync('./crush.json'));
   if (crushes.length > 0) {
     res.status(200).send(crushes);
   } else {
@@ -22,6 +21,7 @@ app.get('/crush', (_req, res) => {
 });
 
 app.get('/crush/:id', (req, res) => {
+  const crushes = JSON.parse(fs.readFileSync('./crush.json'));
   const crush = crushes.find((c) => c.id === parseInt(req.params.id, 10));
   if (!crush) return res.status(404).send({ message: 'Crush não encontrado' });
   res.status(200).send(crush);
