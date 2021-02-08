@@ -13,8 +13,12 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 app.get('/crush', async (req, res) => {
-  const crushData = await fs.readFileSync('./crush.json', 'utf-8');
+  const crushData = await JSON.parse(fs.readFileSync('./crush.json', 'utf-8'));
   res.status(200).send(crushData);
 });
+
+// app.get('/crush/:id', (req, res) => {
+//   const reqId = parseInt(req.params.id, 10);
+// });
 
 app.listen(3000);
