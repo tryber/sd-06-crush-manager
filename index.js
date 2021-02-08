@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllCrushes, getCrushById } = require('./middlewares');
+const { getAllCrushes, getCrushById, generateToken } = require('./middlewares');
 
 const app = express();
 
@@ -18,5 +18,8 @@ app.get('/crush', getAllCrushes);
 
 // Requisito 2
 app.get('/crush/:id', getCrushById);
+
+// Requisito 3
+app.post('/login', generateToken);
 
 app.listen(3000, () => console.log('Server has been started.'));
