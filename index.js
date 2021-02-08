@@ -30,7 +30,7 @@ app.get('/crush', async (req, res) => {
 });
 
 // endpoint GET /crush/:id - Requirement 02
-app.get('/login', async (req, res) => {
+app.get('/crush/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const crushes = await getData();
   const crushSelected = crushes.find((crush) => crush.id === id);
@@ -44,18 +44,20 @@ app.get('/login', async (req, res) => {
 // endpoint POST /login - Requirement 03
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
+
   if (!email || email === '') {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (!checkEmail(email)) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com' });
   }
-  if (!password || password === '') {
+  if (!password || password.toString() === '') {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (!checkPassword(password)) {
     return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
   }
+
   const token = createToken();
   res.status(200).json({ token });
 });
