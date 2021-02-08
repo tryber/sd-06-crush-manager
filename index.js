@@ -12,7 +12,7 @@ app.get('/', (_request, response) => {
 app.get('/crush', (req, res) => {
   fs.readFile('./crush.json', 'utf8', (err, data) => {
     if (!data) {
-      res.sataus(SUCCESS).send('[]');
+      res.status(SUCCESS).send('[]');
     }
     res.status(SUCCESS).send(data);
   });
