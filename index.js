@@ -8,12 +8,16 @@ const SUCCESS = 200;
 
 const readFile = util.promisify(fs.readFile);
 
-app.get('/crush', async (req, res) => {
+const getData = async () => {
   const fileName = path.join(__dirname, 'crush.json');
-  console.log(fileName);
   const data = await readFile(fileName);
+  return JSON.parse(data);
+};
 
-  res.status(200).send(data.toString('utf-8'));
+// Desafio 01 - endpoint GET /crush
+app.get('/crush', async (req, res) => {
+  const crushes = await getData();
+  res.status(200).send(crushes);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
