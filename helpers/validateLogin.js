@@ -4,7 +4,7 @@ const validateEmail = (email) => {
 };
 
 const validatePassword = (password) => {
-  if (password > 5) return true;
+  if (password.length > 5) return true;
   return false;
 };
 
