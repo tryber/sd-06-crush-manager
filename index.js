@@ -11,8 +11,8 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-const getAllCrush = require('./getAllCrushs');
-const getCrushById = require('./getCrushsById');
+const getAllCrush = require('./getAllCrushes');
+const getCrushById = require('./getCrushById');
 
 app.get('/crush', getAllCrush);
 
