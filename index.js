@@ -11,7 +11,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', (_req, res) => {
-  if (crushes) {
+  if (crushes.length > 0) {
     res.status(200).send(crushes);
   } else {
     res.status(200).send([]);
