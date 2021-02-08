@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { emptyCrushes } = require('./middlewares');
+const { getAllCrushes, getCrushById } = require('./middlewares');
 
 const app = express();
 
@@ -14,7 +14,9 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1
+app.get('/crush', getAllCrushes);
 
-app.get('/crush', emptyCrushes);
+// Requisito 2
+app.get('/crush/:id', getCrushById);
 
-app.listen(3000, () => console.log('Server has been started'));
+app.listen(3000, () => console.log('Server has been started.'));
