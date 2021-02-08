@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const util = require('util');
 const path = require('path');
-
 const { checkEmail, checkPasswordCont, createToken } = require('./validations.js');
 
 const app = express();
@@ -33,6 +32,7 @@ app.get('/crush/:id', async (req, res) => {
   res.status(200).json(crushSelected);
 });
 
+// Desafio 03 - endpoint POST /login
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || email === '') {
@@ -45,7 +45,7 @@ app.post('/login', async (req, res) => {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (!checkPasswordCont(password)) {
-    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
 
   const token = createToken();
