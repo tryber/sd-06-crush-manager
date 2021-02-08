@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
   if (!email || email === '') return res.status(400).send({ message: 'O campo "email" é obrigatório' });
   if (validateEmail(email)) return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
   if (!password || password === '') return res.status(400).send({ message: 'O campo "password" é obrigatório' });
-  if (password.toString().length < 6) return res.status(400).send({ message: 'O "senha" ter pelo menos 6 caracteres' });
+  if (password.toString().length < 6) return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 
   const token = generateToken();
   res.send({ token });
