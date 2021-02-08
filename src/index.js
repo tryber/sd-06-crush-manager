@@ -1,5 +1,5 @@
 const express = require('express');
-const { readFile, writeFile } = require('./utils/manageFiles');
+const { readFile } = require('./utils/manageFiles');
 
 const app = express();
 const SUCCESS = 200;
@@ -26,7 +26,6 @@ app.use((req, res, next) => {
 app.get('/:fileName', async (req, res) => {
   const { fileName } = req.params;
   const myCrushes = await readFile(fileName);
-  // res.status(200).send(myCrushes);
   if (myCrushes.length > 0) {
     res.status(200).send(myCrushes);
   } else {
