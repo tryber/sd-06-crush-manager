@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { getAllCrushes } = require('./controller/getAllCrushes');
 const { getCrushById } = require('./controller/getCrushById');
+const { login } = require('./controller/login');
 
 const app = express();
 const SUCCESS = 200;
@@ -12,6 +13,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use(bodyParser.json());
+
+app.post('/login', login);
 
 app.get('/crush', getAllCrushes);
 app.get('/crush/:id', getCrushById);
