@@ -8,6 +8,7 @@ const {
   generateToken,
   postCrush,
   putCrush,
+  deleteCrush,
 } = require('../controllers');
 
 // Task 1
@@ -24,5 +25,8 @@ router.post('/crush', postCrush);
 
 // Task 5
 router.put('/crush/:id', putCrush);
+
+// Task 6
+router.delete('/crush/:id', deleteCrush);
 
 module.exports = router;
