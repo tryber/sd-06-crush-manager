@@ -1,6 +1,6 @@
 const validaEmail = (req, res, next) => {
   const { email } = req.body;
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const emailRegex = /^([\w]+)@([\w]+)((\.(\w){2,3})+)$/;
 
   if (email === undefined || email === '') {
     return res.status(400).json({
