@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { getData, getDataById } = require('./services/getCrush');
-const validateInfo = require('./services/validate');
+const validateCrush = require('./services/validateCrush');
+const validateInfo = require('./services/validateUser');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,5 +19,6 @@ app.get('/', (_request, response) => {
 app.get('/crush', getData);
 app.get('/crush/:id', getDataById);
 app.post('/login', validateInfo);
+app.post('/crush', validateCrush);
 
 app.listen(port, () => console.log(`Aplicação executando na porta: ${port}!`));
