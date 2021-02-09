@@ -48,9 +48,12 @@ const validateCrush = async (request, response, next) => {
   if (!data) return response.status(INTERNAL_ERROR).send({ message: 'Não foi possível ler o arquivo!' });
   const id = data.length + 1;
 
-  data.push({ name, age, id, date });
+  // data.push({ name, age, id, date });
+  const newCrush = { name, age, id, date };
+  data.push(newCrush);
+  console.log(data);
   next();
-  return response.status(SUCCESS).json(data);
+  return response.status(SUCCESS).json(newCrush);
 };
 
 module.exports = validateCrush;
