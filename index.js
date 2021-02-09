@@ -21,7 +21,7 @@ app.use('/login', login);
 
 app.use((err, req, res, _next) => {
   console.log(`${req.method} ${req.url} ${res.statusCode}, error: ${err}`);
-  res.json({ message: err.toString() });
+  return res.json({ message: err.toString() });
 });
 
 app.listen(PORT, () => console.log(`Crush Manager server listening on port ${PORT}`));
