@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
 
 // Requisito 1
 app.get('/crush', (_req, res) => {
-  if (data.length < 1) {
+  if (data.length === 0) {
     res.status(SUCCESS).send([]);
   } else {
     res.status(SUCCESS).send(data);
