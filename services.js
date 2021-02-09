@@ -13,8 +13,12 @@ const validatePassword = (password) => {
 };
 
 const checkToken = (req, res, next) => {
-  !req.headers.authorization ? res.status(401).json({ message: 'Token não encontrado' }) : null;
-  req.headers.authorization.length !== 16 ? res.status(401).json({ message: 'Token inválido' }) : null;
+  if (!req.headers.authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (req.headers.authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
   next();
 };
 
