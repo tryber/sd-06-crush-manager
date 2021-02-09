@@ -10,7 +10,7 @@ module.exports = {
     const { name, age, date } = req.body;
     if (!name) return next({ statusCode: 400, message: 'O campo "name" é obrigatório' });
     if (!age) return next({ statusCode: 400, message: 'O campo "age" é obrigatório' });
-    if (!date || !date.datedAt || date.rate !== 0) return next({ statusCode: 400, message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (!date) return next({ statusCode: 400, message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
     const trueName = validateName(name);
     if (!trueName) return next({ statusCode: 400, message: 'O "name" deve ter pelo menos 3 caracteres' });
