@@ -8,10 +8,7 @@ const routes = express.Router();
 routes.post('/login', middlewares.validateLogin, controllers.login);
 
 // CRUSH - POST
-routes.post('/crush', middlewares.validateCrush, (req, res) => {
-  console.log(req);
-  res.send('/CRUSH SUCESSO: %s', req);
-});
+routes.post('/crush', middlewares.auth, middlewares.validateCrush, controllers.createCrush);
 
 // CRUSH - GET
 routes.get('/crush', controllers.getRequestedCrushes);

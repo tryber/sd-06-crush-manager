@@ -1,14 +1,11 @@
-const {
-  validateName, validateAge, validateDate, validateToken,
-} = require('../services/validators');
+const { validateName, validateAge, validateDate } = require('../services/validators');
 
 const { error } = require('../services/dictionary');
 
-module.exports = (req, res, next) => {
-  const { body: { name, age, date }, headers: { authorization } } = req;
-  // if (!authorization) throw new Error(error.noToken);
+module.exports = (req, _res, next) => {
+  const { body: { name, age, date } } = req;
   const isValid = validateName(name)
-    && validateAge(age) && validateDate(date) && validateToken(authorization);
+    && validateAge(age) && validateDate(date);
   if (!isValid) throw new Error(error.unexpected);
   next();
 };
