@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 app.get('/crush', async (_req, res) => {
   const crush = await readFile('crush');
   console.log(crush);
-  return res.status(200).send(crush);
+  return res.status(200).json(crush);
 });
 
 app.listen(port, () => console.log('running port', port));
