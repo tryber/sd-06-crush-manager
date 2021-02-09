@@ -74,7 +74,7 @@ app.post('/login', (request, response) => {
 
   if (!validatePassword(requestObject.password)) {
     return response.status(400).send({
-      message: 'message: "A "senha" deve ter pelo menos 6 caracteres',
+      message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
   }
   response.status(SUCCESS).send(generateToken(16));
