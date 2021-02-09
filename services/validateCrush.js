@@ -1,43 +1,11 @@
 const readFile = require('./readFile.js');
 
-const validateDate = async (myDate) => {
-  const regex = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
-  return regex.test(String(myDate).toLocaleLowerCase());
-};
-
-// const validateToken = async (req, res) => {
-//   const TOKEN_STATUS = 401;
-
-//   const { authorization } = req.headers;
-
-//   if (!authorization) {
-//     return res.status(TOKEN_STATUS).json({ message: 'Token não encontrado' });
-//   }
-//   if (authorization.length !== 16) {
-//     return res.status(TOKEN_STATUS).json({ message: 'Token inválido' });
-//   }
-// };
-
-const validateCrush = async (request, response) => {
+const validateCrush = async (request, response, next) => {
   const { name, age, date } = request.body;
-  // const { datedAt, rate } = date;
-
   let message = '';
   const FAIL = 400;
   const SUCCESS = 201;
   const INTERNAL_ERROR = 500;
-
-  const TOKEN_STATUS = 401;
-
-  const { authorization } = request.headers;
-
-  if (!authorization) {
-    return response.status(TOKEN_STATUS).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return response.status(TOKEN_STATUS).json({ message: 'Token inválido' });
-  }
-  // fim
 
   if (!name) {
     message = 'O campo "name" é obrigatório';
@@ -66,7 +34,11 @@ const validateCrush = async (request, response) => {
     message = 'O campo "rate" deve ser um inteiro de 1 à 5';
     return response.status(FAIL).json({ message });
   }
-  if (!validateDate(date.datedAt)) {
+
+  const regexDate = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
+  const isDateValid = regexDate.test(String(date.datedAt).toLocaleLowerCase());
+
+  if (!isDateValid) {
     message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
     return response.status(FAIL).json({ message });
   }
@@ -77,6 +49,7 @@ const validateCrush = async (request, response) => {
   const id = data.length + 1;
 
   data.push({ name, age, id, date });
+  next();
   return response.status(SUCCESS).json(data);
 };
 
