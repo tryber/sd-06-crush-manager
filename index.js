@@ -16,7 +16,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', async (_req, res) => {
-  const crushes = await JSON.parse(fs.readFile('./crush.json'));
+  const crushes = JSON.parse(await fs.readFile('./crush.json'));
   if (crushes.length > 0) {
     res.status(200).send(crushes);
   } else {
@@ -26,8 +26,8 @@ app.get('/crush', async (_req, res) => {
 });
 
 app.get('/crush/:id', async (req, res) => {
-  const crushes = await JSON.parse(fs.readFile('./crush.json'));
-  const crush = crushes.find((c) => c.id === parseInt(req.params.id, 10));
+  const crushes = JSON.parse(await fs.readFile('./crush.json'));
+  const crush = await crushes.find((c) => c.id === parseInt(req.params.id, 10));
   if (!crush) return res.status(404).send({ message: 'Crush não encontrado' });
   res.status(200).send(crush);
 });
