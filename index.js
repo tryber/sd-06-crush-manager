@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllCrushes, getCrushById, generateLoginToken, authToken, validateCrush, createANewCrush } = require('./middlewares');
+const { getAllCrushes, getCrushById, generateLoginToken, authToken, validateCrush, createANewCrush, editCrush } = require('./middlewares');
 
 const app = express();
 
@@ -24,5 +24,8 @@ app.post('/login', generateLoginToken);
 
 // Requisito 4
 app.post('/crush', authToken, validateCrush, createANewCrush);
+
+// Requisito 5
+app.put('/crush/:id', authToken, validateCrush, editCrush);
 
 app.listen(3000, () => console.log('Server has been started.'));

@@ -4,6 +4,7 @@ const { generateLoginToken } = require('./generateToken');
 const { authToken } = require('./authToken');
 const { validateCrush } = require('./validateCrush');
 const { createANewCrush } = require('./createNewCrush');
+const { editCrush } = require('./editCrush');
 
 module.exports = {
   getAllCrushes,
@@ -12,4 +13,5 @@ module.exports = {
   authToken,
   validateCrush,
   createANewCrush,
+  editCrush,
 };

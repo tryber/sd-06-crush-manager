@@ -1,5 +1,4 @@
-const { readFile } = require('../utils/readFile');
-const { writeNewCrush } = require('../utils/writeNewCrush');
+const { readFile, addANewCrush } = require('../utils/index');
 
 const createANewCrush = async (request, response) => {
   const { name, age, date } = request.body;
@@ -10,7 +9,8 @@ const createANewCrush = async (request, response) => {
 
   const id = listOfCrushesJSONParsed.length + 1;
 
-  writeNewCrush(listOfCrushesJSONParsed, { id, name, age, date });
+  addANewCrush(listOfCrushesJSONParsed, { id, name, age, date })
+    .catch((error) => console.log(error.message));
 
   response.status(201).json({ id, name, age, date });
 };
