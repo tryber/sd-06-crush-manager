@@ -11,18 +11,21 @@ class SessionController {
     const { email, password } = request.body;
 
     if (!email || !password) {
-      const message = `
-        O campo "${email ? 'password' : 'email'}" é obrigatório
-      `;
+      const message = `O campo "${email ? 'password' : 'email'}" é obrigatório`;
 
       throw new AppError(message);
     }
 
     const listAllCrushesService = new CreateSessionService();
 
-    const token = listAllCrushesService.execute();
+    const userData = {
+      email,
+      password,
+    };
 
-    return response.status(201).json({ token });
+    const token = listAllCrushesService.execute(userData);
+
+    return response.status(200).json({ token });
   }
 }
 

@@ -8,11 +8,11 @@ const crushRoutes = Router();
 
 const crushController = new CrushController();
 
+crushRoutes.get('/search', ensureAuth, crushController.findByPattern);
 crushRoutes.get('/', crushController.list);
-crushRoutes.get('//:id', crushController.find);
+crushRoutes.get('/:id', crushController.find);
 crushRoutes.post('/', ensureAuth, crushController.create);
 crushRoutes.put('/:id', ensureAuth, crushController.update);
 crushRoutes.delete('/:id', ensureAuth, crushController.remove);
-crushRoutes.get('/search', ensureAuth, crushController.findByPattern);
 
 module.exports = crushRoutes;

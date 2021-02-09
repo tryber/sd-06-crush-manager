@@ -52,7 +52,7 @@ class CrushController {
       throw new AppError(message);
     }
 
-    if (!date || !date.datedAt || !date.rate) {
+    if (!date || !date.datedAt || typeof date.rate !== 'number') {
       throw new AppError('O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios');
     }
 
@@ -82,7 +82,7 @@ class CrushController {
       throw new AppError(message);
     }
 
-    if (!date || !date.datedAt || !date.rate) {
+    if (!date || typeof date.datedAt !== 'string' || typeof date.rate !== 'number') {
       throw new AppError('O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios');
     }
 
