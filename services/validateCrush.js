@@ -51,6 +51,7 @@ const validateCrush = async (request, response, _next) => {
 
   const newCrush = { name, age, id, date };
   data.push(newCrush);
+
   writeFile(data);
 
   return response.status(SUCCESS).send(newCrush);
