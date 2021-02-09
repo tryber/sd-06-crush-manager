@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const getAllCrushs = require('./getAllCrushs');
 const findOneCrushById = require('./findOneCrushById');
 const login = require('./login');
+const verifyToken = require('./verifyToken');
+const addCrush = require('./addCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -19,5 +21,9 @@ app.get('/crush', getAllCrushs);
 app.get('/crush/:id', findOneCrushById);
 
 app.post('/login', login);
+
+app.use(verifyToken);
+
+app.post('/crush', addCrush);
 
 app.listen(3000, () => console.log('Rodando na porta 3000'));
