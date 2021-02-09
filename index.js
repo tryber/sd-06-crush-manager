@@ -58,7 +58,7 @@ const validateToken = (req, res, next) => {
   next();
 };
 
-app.post('/crush', validateToken, async (req, res) => {
+const validateCrush = (req, res, next) => {
   const { name, age, date } = req.body;
 
   if (!name || name === '') return res.status(400).send({ message: 'O campo "name" é obrigatório' });
@@ -72,7 +72,10 @@ app.post('/crush', validateToken, async (req, res) => {
   if (Number(date.rate) < 1 || (Number(date.rate) > 5)) {
     return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+  next();
+};
 
+app.post('/crush', validateToken, validateCrush, async (req, res) => {
   const data = await getCrush();
   const treatedData = JSON.parse(data);
   const newCrush = { id: treatedData.length + 1, ...req.body };
@@ -81,20 +84,7 @@ app.post('/crush', validateToken, async (req, res) => {
   res.status(201).send(newCrush);
 });
 
-app.put('/crush/:id', async (req, res) => {
-  const { name, age, date } = req.body;
-
-  if (!name || name === '') return res.status(400).send({ message: 'O campo "name" é obrigatório' });
-  if (!checkName(name)) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  if (!age || age === '') return res.status(400).send({ message: 'O campo "age" é obrigatório' });
-  if (!checkAge(age)) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!date || date === '' || !date.datedAt || !date.rate) {
-    return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-  }
-  if (!checkDate(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (Number(date.rate) < 1 || (Number(date.rate) > 5)) {
-    return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
+app.put('/crush/:id', validateToken, validateCrush, async (req, res) => {
   const id = Number(req.params.id);
 
   const data = await getCrush();
@@ -118,12 +108,12 @@ app.delete('/crush/:id', validateToken, async (req, res) => {
 });
 
 app.get('/crush/search', validateToken, async (req, res) => {
-  const { q } = req.query;
   const data = await getCrush();
   const treatedData = JSON.parse(data);
+  console.log(treatedData);
 
-  if (!q || q === '') return res.status(200).send(treatedData);
-  const result = treatedData.filter((crush) => crush.name.includes(q));
+  if (!req.query.q || req.query.q === '') return res.status(200).send(treatedData);
+  const result = treatedData.filter((crush) => crush.name.includes(req.query.q));
   res.status(200).send(result);
 });
 
