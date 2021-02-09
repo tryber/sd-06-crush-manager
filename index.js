@@ -2,7 +2,7 @@ const express = require('express');
 
 const app = express();
 const SUCCESS = 200;
-const port = 5000;
+const port = 3000;
 
 const { getCrush, getCrushId } = require('./getRequest');
 const { handleLogin, addCrush } = require('./postRequest');
