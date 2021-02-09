@@ -12,9 +12,9 @@ const PORT = 3000;
 app.use(middlewares.logger);
 
 const tokenValidator = (req, res, next) => {
-  const { authorization } = req.headers;
-  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
-  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  const { Authorization } = req.headers;
+  if (!Authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (Authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   next();
 };
 
@@ -26,7 +26,6 @@ app.get('/', (_request, response) => {
 // req 1
 app.get('/crush',
   async (_req, res) => {
-    console.log('a');
     const file = await utils.readFile();
     res.status(200).json(JSON.parse(file));
   });
@@ -39,7 +38,7 @@ app.get('/crush/search', tokenValidator,
     res.json(response);
   });
 // req 2
-app.get('/crush/:id', tokenValidator,
+app.get('/crush/:id',
   async (req, res) => {
     const { id } = req.params;
     const file = await utils.readFile();
@@ -56,9 +55,9 @@ app.post('/login',
     const isValid = validator.test(String(email).toLowerCase());
     if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
     if (!isValid) return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-    if (senha === '') return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-    if (toString(senha).length < 6) return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
-    res.status(200).json({ token });
+    if (!senha) return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+    if (senha.length < 6) return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+    return res.status(200).json({ token });
   });
 app.post('/crush', tokenValidator,
   async (req, res) => {
