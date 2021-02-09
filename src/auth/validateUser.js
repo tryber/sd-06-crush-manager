@@ -15,8 +15,12 @@ const validateCrush = async (req, res, next) => {
   if (!reqToken) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (reqToken !== authToken) {
+  if (reqToken.length !== 16 || reqToken !== authToken) {
     return res.status(401).send({ message: 'Token inválido' });
+  }
+
+  if (!name || name === undefined) {
+    return res.status(400).send({ message: 'O campo "name" é obrigatório' });
   }
   if (name && name === '') {
     return res.status(400).send({ message: 'O campo "name" é obrigatório' });
@@ -24,19 +28,21 @@ const validateCrush = async (req, res, next) => {
   if (name && name.length < 3) {
     return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
-  if (!age) {
+
+  if (!age || age === null || age === undefined) {
     return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   }
-  if (age === '') {
+  if (age && age === '') {
     return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   }
-  if (typeof age !== 'number') {
+  if (age && typeof age !== 'number') {
     return res.status(400).send({ message: 'O campo "age" deve ser um inteiro' });
   }
-  if (age < 18) {
+  if (age && age < 18) {
     return res.status(400).send({ message: 'O crush deve ser maior de idade' });
   }
-  if (!datedAt || !rate) {
+
+  if (!datedAt || !rate || datedAt === undefined || rate === undefined) {
     return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
   if (datedAt === '' || rate === '') {
@@ -48,6 +54,7 @@ const validateCrush = async (req, res, next) => {
   if (rate < 1 || rate > 5) {
     return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
   next();
 };
 

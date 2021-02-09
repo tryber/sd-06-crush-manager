@@ -1,15 +1,32 @@
-const arrayCrushs = require('../../crush.json');
-// const { writeCrushFile } = require('../utils/manageFiles');
+const { readCrushs, writeCrushFile } = require('../utils/manageFiles');
+
+const pathCrush = '../../crush.json';
 
 const updateCrushs = async (req, res) => {
-  const idCrush = req.params.id;
-  // const { name, age, date: { datedAt, rate } } = req.body;
+  const { id } = req.params;
+  const { name, age, date: { datedAt, rate } } = req.body;
 
-  const resultFilterIdCrush = arrayCrushs.find((crush) => crush.id === Number(idCrush));
+  const arrayCrushs = await readCrushs(pathCrush);
 
-  console.log();
+  const crushIndex = arrayCrushs.findIndex((crush) => crush.id === Number(id));
 
-  res.status(200).send(resultFilterIdCrush);
+  if (crushIndex === -1) {
+    return res.status(401).send({ message: 'Id inválido' });
+  }
+
+  arrayCrushs[crushIndex] = {
+    name,
+    age,
+    id: Number(id),
+    date: {
+      datedAt,
+      rate,
+    },
+  };
+
+  writeCrushFile(pathCrush, arrayCrushs);
+
+  res.status(200).send(arrayCrushs[crushIndex]);
 };
 
 module.exports = updateCrushs;
