@@ -20,7 +20,7 @@ app.get('/crush', async (_request, response) => {
   const crushes = await readFile('crush');
 
   try {
-    response.status(200).send(crushes);
+    response.status(200).json(JSON.parse(crushes));
   } catch (error) {
     console.log(error);
     response.status(200).json([]);
