@@ -7,6 +7,7 @@ const { validateCrush } = require('./controller/validateCrush');
 const { createCrush } = require('./controller/newCrush');
 const { checkToken } = require('./services');
 const { editCrushes } = require('./controller/editCrushes');
+const { deleteCrush } = require('./controller/deleteCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -26,6 +27,7 @@ app.use(checkToken);
 
 app.post('/crush', validateCrush, createCrush);
 app.put('/crush/:id', validateCrush, editCrushes);
+app.delete('/crush/:id', deleteCrush);
 
 app.listen(3000, () => {
   console.log('Working 3000');
