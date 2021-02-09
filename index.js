@@ -52,19 +52,19 @@ app.post('/login', (req, res) => {
   const testPassword = passwordTest(password);
 
   if (!email || !email.length) {
-    return res.status(BADREQUEST).send({ 'message': 'O campo \"email\" é obrigatório' });
+    return res.status(BADREQUEST).send({ message: 'O campo "email" é obrigatório' });
   }
   if (!testEmail) {
-    return res.status(BADREQUEST).send({ 'message': 'O \"email\" deve ter o formato \"email@email.com\"' });
+    return res.status(BADREQUEST).send({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   if (!password) {
-    return res.status(BADREQUEST).send({ 'message': 'O campo \"password\" é obrigatório' });
+    return res.status(BADREQUEST).send({ message: 'O campo "password" é obrigatório' });
   }
   if (!testPassword) {
-    return res.status(BADREQUEST).send({ 'message': 'O \"password\" ter pelo menos 6 caracteres' });
+    return res.status(BADREQUEST).send({ message: 'O "password" ter pelo menos 6 caracteres' });
   }
 
   const token = crypto.randomBytes(8).toString('hex');
 
-  return res.status(200).send({ token });
+  return res.json({ token });
 });
