@@ -29,7 +29,6 @@ const addCrush = async (request, response) => {
   const newCrush = { id, ...request.body };
   const newList = JSON.stringify([...crushList, newCrush]);
   await writeFile(file, (newList));
-  console.log(newCrush);
   response.status(201).send(newCrush);
 };
 
