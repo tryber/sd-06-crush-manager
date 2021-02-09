@@ -18,11 +18,11 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 app.post('/login', login);
+app.get('/crush', getAllCrushes);
+app.get('/crush/:id', getCrushById);
 
 app.use(checkToken);
 
-app.get('/crush', getAllCrushes);
-app.get('/crush/:id', getCrushById);
 app.post('/crush', validateCrush, createCrush);
 
 app.listen(3000, () => {

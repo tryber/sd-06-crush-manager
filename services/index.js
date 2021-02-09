@@ -1,11 +1,8 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const crypto = require('crypto');
 
 const getCrushes = async () => {
-  const crushList = await fs.readFileSync('./crush.json', 'utf-8', (err) => {
-    if (err) throw new Error(err);
-    console.log('File read');
-  });
+  const crushList = await fs.readFile('./crush.json');
   return JSON.parse(crushList);
 };
 
@@ -22,8 +19,8 @@ const validatePassword = (password) => {
 };
 
 const checkToken = (req, res, next) => {
-  if (!req.headers.token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (req.headers.token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  if (!req.headers.authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (req.headers.authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
 
   return next();
 };

@@ -14,7 +14,6 @@ const createCrush = async (req, res) => {
   const id = crushData.length + 1;
   const newCrush = { id, ...req.body };
   addCrush(newCrush, crushData);
-
   res.status(201).json(newCrush);
 };
 
