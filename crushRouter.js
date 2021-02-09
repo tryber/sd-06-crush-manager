@@ -79,8 +79,8 @@ router.put('/:id', (req, res) => {
   if (!age || age === null || !Number.isInteger(age)) return res.status(badRequest).send({ message: 'O campo "age" é obrigatório' });
   if (age && Number.isInteger(age) && age < 18) return res.status(badRequest).send({ message: 'O crush deve ser maior de idade' });
 
-  if (!date || date === null
-    || !date.datedAt || date.datedAt === null || !date.rate || date.rate === null) {
+  if (!date
+    || !date.datedAt || (!date.rate && date.rate !== 0)) {
     return res.status(badRequest)
       .send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
