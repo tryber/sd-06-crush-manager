@@ -23,6 +23,12 @@ app.use(bodyParser.json());
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
+const validateToken = (req, res, next) => {
+  if (!req.headers.authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (req.headers.authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  next();
+};
+
 function getCrush() {
   return readFile('./crush.json', 'utf-8');
 }
@@ -31,6 +37,16 @@ app.get('/crush', async (_req, res) => {
   const data = await getCrush();
   const treatedData = JSON.parse(data);
   res.status(200).send(treatedData);
+});
+
+app.get('/crush/search', validateToken, async (req, res) => {
+  const data = await getCrush();
+  const treatedData = JSON.parse(data);
+  console.log(treatedData);
+
+  if (!req.query.q || req.query.q === '') return res.status(200).send(treatedData);
+  const result = treatedData.filter((crush) => crush.name.includes(req.query.q));
+  res.status(200).send(result);
 });
 
 app.get('/crush/:id', async (req, res) => {
@@ -52,12 +68,6 @@ app.post('/login', (req, res) => {
   res.status(200).send({ token });
 });
 
-const validateToken = (req, res, next) => {
-  if (!req.headers.authorization) return res.status(401).json({ message: 'Token não encontrado' });
-  if (req.headers.authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
-  next();
-};
-
 const validateCrush = (req, res, next) => {
   const { name, age, date } = req.body;
 
@@ -65,11 +75,11 @@ const validateCrush = (req, res, next) => {
   if (!checkName(name)) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (!age || age === '') return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (!checkAge(age)) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!date || date === '' || !date.datedAt || !date.rate) {
+  if (!date || !date.datedAt || (!date.rate && date.rate !== 0)) {
     return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
   if (!checkDate(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (Number(date.rate) < 1 || (Number(date.rate) > 5)) {
+  if (date.rate < 1 || date.rate > 5) {
     return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
@@ -105,16 +115,6 @@ app.delete('/crush/:id', validateToken, async (req, res) => {
   const result = treatedData.filter((crush) => crush.id !== id);
   await writeFile('./crush.json', JSON.stringify(result));
   res.status(200).send({ message: 'Crush deletado com sucesso' });
-});
-
-app.get('/crush/search', validateToken, async (req, res) => {
-  const data = await getCrush();
-  const treatedData = JSON.parse(data);
-  console.log(treatedData);
-
-  if (!req.query.q || req.query.q === '') return res.status(200).send(treatedData);
-  const result = treatedData.filter((crush) => crush.name.includes(req.query.q));
-  res.status(200).send(result);
 });
 
 app.listen(3000, () => console.log('servidor online porta 3000'));
