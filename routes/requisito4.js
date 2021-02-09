@@ -1,6 +1,6 @@
 const { writeFile, readFile } = require('../utils/manageFiles');
 
-const SUCCESS = 200;
+const SUCCESS = 201;
 const ERROR401 = 401;
 const ERROR400 = 400;
 const fileName = 'crush.json';
@@ -9,7 +9,7 @@ const addCrush = async (request, response, _next) => {
   const requestHeaders = request.headers;
   const { token } = requestHeaders;
   const crushToAdd = request.body;
-  const dateFormat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+  const dateFormat = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
 
   if (!token) response.status(ERROR401).json({ message: 'Token não encontrado' });
   if (token) {
