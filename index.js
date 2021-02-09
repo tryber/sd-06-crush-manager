@@ -6,6 +6,7 @@ const { login } = require('./middlewares/login');
 const { checkToken } = require('./middlewares/checkToken');
 const { validateCrush } = require('./middlewares/validateCrush');
 const { addNewCrush } = require('./middlewares/addNewCrush');
+const { updateCrush } = require('./middlewares/updateCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -24,5 +25,7 @@ app.get('/crush/:id', getCrushById);
 app.use(checkToken);
 
 app.post('/crush', validateCrush, addNewCrush);
+
+app.put('/crush/:id', validateCrush, updateCrush);
 
 app.listen(3000);
