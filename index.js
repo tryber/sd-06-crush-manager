@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 
 const app = express();
 const SUCCESS = 200;
@@ -41,6 +42,52 @@ app.get('/crush/:id', async (req, res) => {
   } else {
     res.status(404).json({ message: 'Crush não encontrado' });
   }
+});
+
+// _______________________________________________________
+
+// Requisito 3
+
+const { emailValidation, passwordValidation } = require('./src/utils/validator');
+
+app.use(express.json());
+
+app.use((req, res, next) => {
+  const { email, password } = req.body;
+  // console.log(email, password);
+  if (emailValidation(email)) {
+    if (email.length === 0) {
+      res.status(400).json({
+        message: 'O campo "email" é obrigatório',
+      });
+    } else {
+      res.status(400).json({
+        message: 'O "email" deve ter o formato "email@email.com"',
+      });
+    }
+  }
+  if (email.length === 0) {
+    res.status(400).json({
+      message: 'O campo "email" é obrigatório',
+    });
+  }
+  if (passwordValidation(password)) {
+    if (password.length === 0) {
+      res.status(400).json({
+        message: 'O campo "password" é obrigatório',
+      });
+    } else {
+      res.status(400).json({
+        message: 'A "senha" deve ter pelo menos 6 caracteres',
+      });
+    }
+  }
+  next();
+});
+
+app.post('/login', (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  return res.json(token);
 });
 
 // _______________________________________________________
