@@ -12,7 +12,7 @@ app.get('/', (_request, response) => {
 
 async function getData(arq) {
   const data = await fs.readFile(arq);
-  return data;
+  return JSON.parse(data);
 }
 
 // function readFilePromise(fileName) {
