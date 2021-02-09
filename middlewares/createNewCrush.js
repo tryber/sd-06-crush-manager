@@ -3,13 +3,13 @@ const { readFile, writeCrushList } = require('../utils/index');
 const createANewCrush = async (request, response) => {
   const { name, age, date } = request.body;
 
-  const listOfCrushes = await readFile();
+  const crushList = await readFile();
 
-  const listOfCrushesJSONParsed = JSON.parse(listOfCrushes);
+  const crushListPARSED = JSON.parse(crushList);
 
-  const id = listOfCrushesJSONParsed.length + 1;
+  const id = crushListPARSED.length + 1;
 
-  writeCrushList(listOfCrushesJSONParsed, { id, name, age, date })
+  writeCrushList(crushListPARSED, { id, name, age, date })
     .catch((error) => console.log(error.message));
 
   response.status(201).json({ id, name, age, date });
