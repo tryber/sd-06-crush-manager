@@ -7,9 +7,11 @@ const readCrushFile = async () => {
 };
 
 module.exports = {
-  async readCrush(request, response) {
+  async readCrush(_request, response) {
     const file = await readCrushFile();
+
     // console.log(file)
+
     return response.status(200).json(file);
   },
 

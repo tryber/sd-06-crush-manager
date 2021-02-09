@@ -16,4 +16,6 @@ app.use(routes);
 
 app.listen(3000, () => console.log('Running'));
 
-app.use((err, req, res) => res.status(err.status || 500).send(`Error, error message: ${err.message}`));
+app.use((error, _request, response) => {
+  response.status(error.status || 500).send(`Error, error message: ${error.message}`);
+});
