@@ -1,9 +1,9 @@
 const generateToken = require('./generateToken');
+const getCrush = require('./getCrush');
 const objectify = require('./objectify');
-const readCrushFile = require('./readCrushFile');
 
 module.exports = {
   generateToken,
+  getCrush,
   objectify,
-  readCrushFile,
 };

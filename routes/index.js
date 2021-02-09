@@ -14,7 +14,9 @@ routes.post('/crush', middlewares.validateCrush, (req, res) => {
 });
 
 // CRUSH - GET
-routes.get('/crush', controllers.getAllCrushes);
+routes.get('/crush', controllers.getRequestedCrushes);
+
+routes.get('/crush/:id', controllers.getRequestedCrushes);
 
 routes.use(middlewares.handleError);
 

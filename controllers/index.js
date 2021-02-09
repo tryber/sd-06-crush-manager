@@ -1,7 +1,7 @@
+const getRequestedCrushes = require('./getRequestedCrushes');
 const login = require('./login');
-const getAllCrushes = require('./getAllCrushes');
 
 module.exports = {
+  getRequestedCrushes,
   login,
-  getAllCrushes,
 };

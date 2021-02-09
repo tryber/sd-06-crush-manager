@@ -10,6 +10,7 @@ module.exports = {
     invalidRate: objectify('O campo "rate" deve ser um inteiro de 1 à 5'),
     invalidToken: objectify('Token inválido', 401),
     noAge: objectify('O campo "age" é obrigatório'),
+    noCrush: objectify('Crush não encontrado', 404),
     noDate: objectify('O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios'),
     noEmail: objectify('O campo "email" é obrigatório'),
     noName: objectify('O campo "name" é obrigatório'),
