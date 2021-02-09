@@ -77,7 +77,16 @@ app.post('/login', (request, response) => {
       message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
   }
-  response.status(SUCCESS).send(generateToken(16));
+
+  response.status(SUCCESS).send(
+    {
+      token: `${generateToken(16)}`,
+    },
+  );
+});
+
+app.all('/crush', (request, response) => {
+  response.status(SUCCESS).send('CRUSH');
 });
 
 app.listen(3000, () => {
