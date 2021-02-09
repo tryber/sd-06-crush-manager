@@ -2,7 +2,10 @@ const { parsedData } = require('./utils/readCrushData');
 
 async function getCrush(_request, response) {
   const data = await parsedData();
-  if (data.length > 0) return response.status(200).json(data);
+  // console.log(data.length);
+  if (data.length > 0) {
+    return response.status(200).json(data);
+  }
 
   response.status(200).json([]);
 }
