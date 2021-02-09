@@ -10,6 +10,6 @@ module.exports = {
     if (authorization.length !== minimumTokenLength) {
       return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
     }
-    next();
+    return next();
   },
 };
