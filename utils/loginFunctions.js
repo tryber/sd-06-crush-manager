@@ -1,7 +1,11 @@
-export const validateEmail = (_email) => {
-
+const validateEmail = (email) => {
+  const comparison = /\S+@\S+\.\S+/;
+  return comparison.test(email);
 };
 
-export const validatePassword = (_password) => {
+const validatePassword = (password) => password.length >= 6;
 
+module.exports = {
+  validateEmail,
+  validatePassword,
 };
