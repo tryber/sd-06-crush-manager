@@ -81,6 +81,32 @@ app.post('/crush', validateToken, async (req, res) => {
   res.status(201).send(newCrush);
 });
 
+app.put('/crush/:id', async (req, res) => {
+  const { name, age, date } = req.body;
+
+  if (!name || name === '') return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!checkName(name)) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!age || age === '') return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (!checkAge(age)) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+  if (!date || date === '' || !date.datedAt || !date.rate) {
+    return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
+  if (!checkDate(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (Number(date.rate) < 1 || (Number(date.rate) > 5)) {
+    return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  const id = Number(req.params.id);
+
+  const data = await getCrush();
+  const treatedData = JSON.parse(data);
+  const result = treatedData.filter((crush) => crush.id !== id);
+  const editedCrush = { id, ...req.body };
+  result.push(editedCrush);
+  await writeFile('./crush.json', JSON.stringify(result));
+
+  res.status(200).send(editedCrush);
+});
+
 app.delete('/crush/:id', validateToken, async (req, res) => {
   const id = Number(req.params.id);
   console.log(id);
@@ -89,6 +115,16 @@ app.delete('/crush/:id', validateToken, async (req, res) => {
   const result = treatedData.filter((crush) => crush.id !== id);
   await writeFile('./crush.json', JSON.stringify(result));
   res.status(200).send({ message: 'Crush deletado com sucesso' });
+});
+
+app.get('/crush/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const data = await getCrush();
+  const treatedData = JSON.parse(data);
+
+  if (!q || q === '') return res.status(200).send(treatedData);
+  const result = treatedData.filter((crush) => crush.name.includes(q));
+  res.status(200).send(result);
 });
 
 app.listen(3000, () => console.log('servidor online porta 3000'));
