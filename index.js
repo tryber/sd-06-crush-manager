@@ -25,7 +25,10 @@ app.get('/', (_request, response) => {
 
 // get all crushes
 app.get('/crush', (_req, res) => {
-  res.status(200).send(crushes);
+  if (crushes === []) {
+    return res.status(200).send(crushes);
+  }
+  return res.status(200).send(crushes);
 }).listen(PORT, console.log(`Server is running on port ${PORT}`));
 
 // get crush by id
