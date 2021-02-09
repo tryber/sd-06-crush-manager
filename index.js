@@ -42,7 +42,7 @@ const emailTest = (email) => {
 };
 
 const passwordTest = (passWord) => {
-  const toString = password.toString();
+  const toString = passWord.toString();
   return (toString.length >= 6) || false;
 };
 
