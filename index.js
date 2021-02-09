@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const { gen } = require('n-digit-token');
+const Joi = require('joi');
 const fileCrush = require('./crush.json');
 
 const app = express();
@@ -34,12 +35,36 @@ app.get('/crush/:id', (req, res) => {
 app.post('/login', (req, res) => {
   const myToken = gen(16);
 
-  // const data = JSON.stringify(req.body);
-  // fileCrush.push(data);
-  // console.log(fileCrush);
-  // // console.log(file_crush);
-  // fs.writeFileSync('crush.json', fileCrush);
-  console.log(fileCrush);
+  // VALIDAÇÃO
+  const schema = Joi.object({
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+      .required()
+      .messages({
+        'any.required': 'O campo "email" é obrigatório',
+        'string.email': 'O "email" deve ter o formato "email@email.com"',
+      }),
+    password: Joi.string()
+      .min(6)
+      .required()
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .messages({
+        'any.required': 'O campo "password" é obrigatório',
+        'string.empty': 'O campo "password" é obrigatório',
+        'string.min': 'A "senha" deve ter pelo menos 6 caracteres',
+      }),
+  });
+
+  const result = schema.validate({ email: req.body.email, password: req.body.password });
+  if (result.error) {
+    return res.status(400).send(result.error.details[0].message);
+  }
+  // --
+
+  const data = req.body;
+  fileCrush.push(data);
+
+  fs.writeFileSync('crush.json', JSON.stringify(fileCrush));
 
   res.send({ token: myToken });
 });
