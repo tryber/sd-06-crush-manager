@@ -45,7 +45,7 @@ app.use(express.json());
 app.use((req, res, next) => {
   const { email, password } = req.body;
   if (emailValidate(email)) {
-    if (email.length === 0) {
+    if (!email) {
       res.status(400).json({
         message: 'O campo "email" é obrigatório',
       });
@@ -57,7 +57,7 @@ app.use((req, res, next) => {
   }
 
   if (passwordValidate(password)) {
-    if (password.length === 0) {
+    if (!password) {
       res.status(400).json({
         message: 'O campo "password" é obrigatório',
       });
