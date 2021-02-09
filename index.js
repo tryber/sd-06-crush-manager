@@ -4,7 +4,7 @@ const { readerFile } = require('./utils/managerFiles');
 const app = express();
 const SUCCESS = 200;
 const NOTFOUND = 400;
-const PORT = 3037;
+const PORT = 3000;
 const notFoundCrush = { message: 'Crush não encontrado' };
 
 // quero que todas as requisições devolvam um json
