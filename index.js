@@ -13,9 +13,12 @@ app.use(bodyParser.json());
 
 const getAllCrush = require('./getAllCrushes');
 const getCrushById = require('./getCrushById');
+const { login } = require('./getToken');
 
 app.get('/crush', getAllCrush);
 
 app.get('/crush/:id', getCrushById);
+
+app.post('/login', login);
 
 app.listen(3000);
