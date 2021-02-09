@@ -6,6 +6,7 @@ const { login } = require('./controller/login');
 const { validateCrush } = require('./controller/validateCrush');
 const { createCrush } = require('./controller/newCrush');
 const { checkToken } = require('./services');
+const { editCrushes } = require('./controller/editCrushes');
 
 const app = express();
 const SUCCESS = 200;
@@ -24,6 +25,7 @@ app.get('/crush/:id', getCrushById);
 app.use(checkToken);
 
 app.post('/crush', validateCrush, createCrush);
+app.put('/crush/:id', validateCrush, editCrushes);
 
 app.listen(3000, () => {
   console.log('Working 3000');
