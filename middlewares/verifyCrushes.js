@@ -9,10 +9,7 @@ const verifyCrushes = async (_req, res) => {
       return data;
     }),
   );
-  if (crushes) {
-    return res.status(200).json(crushes);
-  }
-  return res.status(200).json([]);
+  return crushes ? res.status(200).json(crushes) : res.status(200).json([]);
 };
 
 module.exports = { verifyCrushes };

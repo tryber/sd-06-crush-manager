@@ -9,7 +9,7 @@ const { verifyCrushes } = require('./middlewares/verifyCrushes');
 
 app.use(bodyParser.json());
 
-app.get('/crush', (_req, res) => res.status(SUCCESS).send('oi', verifyCrushes));
+app.get('/crush', verifyCrushes);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
