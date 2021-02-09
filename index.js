@@ -115,4 +115,13 @@ app.put('/crush/:id', (req, res) => {
   res.status(SUCCESS).json(editCrush);
 });
 
+app.delete('/crush/:id', (req, res) => {
+  const { id } = req.params;
+  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(cruchesFile);
+  const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
+  crushes.splice(crushId, 1, crushes);
+  res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(3000, () => { console.log('porta: 3000 ativa'); });
