@@ -8,8 +8,9 @@ module.exports = {
   handleLogin(_req, res) {
     const newToken = randomString.generate(16);
     const generatedToken = { token: newToken };
-    res.status(SUCCESS).json(generatedToken);
+    return res.status(SUCCESS).json(generatedToken);
   },
+
   async addCrush(req, res) {
     const { name, age, date } = req.body;
     const previousList = await fs.readFile('./crush.json', 'utf-8');
@@ -23,6 +24,6 @@ module.exports = {
     };
     const newList = previousListJson.concat(newCrush);
     await fs.writeFile('./crush.json', JSON.stringify(newList));
-    res.status(CREATED).json(newCrush);
+    return res.status(CREATED).json(newCrush);
   },
 };

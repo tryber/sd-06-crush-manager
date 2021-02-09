@@ -11,7 +11,7 @@ module.exports = {
     const editedCrush = {
       name,
       age,
-      id,
+      id: +id,
       date,
     };
     const newList = previousListJson.map((crush) => {

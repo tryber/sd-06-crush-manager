@@ -10,10 +10,9 @@ module.exports = {
   async getCrushes(_req, res) {
     const data = await fs.readFile('./crush.json', 'utf-8');
     if (data) {
-      res.status(SUCCESS).send(JSON.parse(data));
-    } else {
-      res.status(SUCCESS).send(emptyCrushList);
+      return res.status(SUCCESS).send(JSON.parse(data));
     }
+    return res.status(SUCCESS).send(emptyCrushList);
   },
 
   async getCrushById(req, res) {
@@ -21,10 +20,9 @@ module.exports = {
     const data = await fs.readFile('./crush.json', 'utf-8');
     const selectedCrush = JSON.parse(data).filter((crush) => crush.id === crushId);
     if (selectedCrush.length >= minimumLength) {
-      res.status(SUCCESS).send(selectedCrush[firstIndex]);
-    } else {
-      res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
+      return res.status(SUCCESS).send(selectedCrush[firstIndex]);
     }
+    return res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
   },
 
   async getBySearchTerm(req, res) {
@@ -32,11 +30,10 @@ module.exports = {
     const previousList = await fs.readFile('./crush.json', 'utf-8');
     const previousListJson = JSON.parse(previousList);
     if (!searchTerm || searchTerm === '') {
-      res.status(SUCCESS).json(previousListJson);
-    } else {
-      const crushFound = previousListJson
-        .filter(({ name }) => name.includes(searchTerm));
-      res.status(SUCCESS).json(crushFound);
+      return res.status(SUCCESS).json(previousListJson);
     }
+    const crushFound = previousListJson
+      .filter(({ name }) => name.includes(searchTerm));
+    return res.status(SUCCESS).json(crushFound);
   },
 };
