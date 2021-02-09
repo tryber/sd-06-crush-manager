@@ -23,7 +23,7 @@ app.get('/crush/:id', async (req, res) => {
   const parameter = parseInt(req.params.id, 10);
   const result = crushs.filter((element) => element.id === parameter);
   if (result.length > 0) {
-    return res.status(200).send(result);
+    return res.status(200).send(result[0]);
   }
   const crushnotfound = { menssage: 'Crush não encontrado' };
   return res.status(404).send(crushnotfound);
