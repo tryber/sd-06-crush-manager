@@ -22,14 +22,12 @@ app.use(bodyParser.json());
 
 app.post('/login', login);
 
-app.use(checkToken);
-
 app.get('/crush', getAllCrushes);
-app.get('/crush/search', searchCrush);
+app.get('/crush/search', checkToken, searchCrush);
 app.get('/crush/:id', getCrushById);
-app.post('/crush', validateCrush, createCrush);
-app.put('/crush/:id', validateCrush, editCrushes);
-app.delete('/crush/:id', deleteCrush);
+app.post('/crush', checkToken, validateCrush, createCrush);
+app.put('/crush/:id', checkToken, validateCrush, editCrushes);
+app.delete('/crush/:id', checkToken, deleteCrush);
 
 app.listen(3000, () => {
   console.log('Working 3000');
