@@ -22,6 +22,26 @@ app.get('/crush', async (_req, res) => {
   return res.status(200).json(JSON.parse(file));
 });
 
+app.get('/crush/search', async (req, res) => {
+  console.log('entrou')
+  const file = await fs.readFile(fileName, 'utf-8');
+  const fileJson = JSON.parse(file);
+  const { searchTerm } = req.query;
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length < 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  if (searchTerm === '' || searchTerm === undefined) {
+    return res.status(200).json(fileJson);
+  }
+  const crushFound = fileJson.filter((crush) => crush.name.includes(searchTerm));
+  return res.status(200).json(crushFound);
+});
+
 app.get('/crush/:id', async (req, res) => {
   const file = await fs.readFile(fileName, 'utf-8');
   const fileJson = JSON.parse(file);
@@ -159,5 +179,7 @@ app.delete('/crush/:id', async (req, res) => {
   await fs.writeFile(fileName, JSON.stringify(fileJson));
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
+
+
 
 app.listen(3000, () => console.log('listening on port 3000'));
