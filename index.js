@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const app = express();
 const SUCCESS = 200;
@@ -28,19 +29,21 @@ app.get('/crush/:id', (req, res) => {
   return res.status(SUCCESS).send(crush[0]);
 });
 
+app.use(bodyParser.json());
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
+  if (!email || email === '') {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
-  if (email === '') {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  if (!password || password === '') {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (password.length < 6) {
     return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-  }
-  if (password === '') {
-    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   res.status(SUCCESS).send(token);
 });
