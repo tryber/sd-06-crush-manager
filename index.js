@@ -121,9 +121,9 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
-  if (!Number.isInteger(date.rate) && date.rate > 5 && date.rate < 1) {
+  if (!Number.isInteger(date.rate) || date.rate > 5 || date.rate < 1) {
     res.status(400).json({
-      message: 'O crush deve ser maior de idade',
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
   const crushes = await readFile('crush');
