@@ -5,4 +5,8 @@ const readFile = async () => {
   return JSON.parse(fileData);
 };
 
-module.exports = { readFile };
+const writeFile = async (file) => {
+  await fs.writeFileSync('crush.json', file);
+};
+
+module.exports = { readFile, writeFile };
