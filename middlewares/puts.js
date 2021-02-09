@@ -8,9 +8,9 @@ module.exports = {
     if (!id) return next({ message: 'Crush não encontrado', statusCode: 404 });
 
     const { name, age, date } = req.body;
-    if (!name) return next({ statusCode: 400, message: 'O campo "name" é obrigatório' });
-    if (!age) return next({ statusCode: 400, message: 'O campo "age" é obrigatório' });
-    if (!date) return next({ statusCode: 400, message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (!name && name !== '') return next({ statusCode: 400, message: 'O campo "name" é obrigatório' });
+    if (!age && age !== '') return next({ statusCode: 400, message: 'O campo "age" é obrigatório' });
+    if (!date && date !== '') return next({ statusCode: 400, message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
     const trueName = validateName(name);
     if (!trueName) return next({ statusCode: 400, message: 'O "name" deve ter pelo menos 3 caracteres' });
