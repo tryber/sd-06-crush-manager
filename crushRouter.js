@@ -37,23 +37,28 @@ router.get('/', (req, res) => {
   if (crushes && crushes.length > 0) return res.status(SUCCESS).send(crushes);
 });
 
-router.post('/', validToken, validateCrushData, (req, res) => {
+router.post('/', validToken, validateCrushData, async (req, res) => {
   const maxId = req.crushes.reduce((max, curr) => {
     if (max > curr.id) return max;
     return curr.id;
   });
 
   req.body.id = maxId + 1;
+  const newCrushes = [...req.crushes, req.body];
+  const newCrushJson = JSON.stringify(newCrushes);
+  await fs.writeFile('crush.json', newCrushJson, 'utf-8');
   res.status(CREATED).send(req.body);
 });
 
-router.put('/:id', validToken, validateCrushData, (req, res) => {
+router.put('/:id', validToken, validateCrushData, async (req, res) => {
   const { id } = req.params;
   const crushIndex = req.crushes.findIndex((person) => person.id === Number(id));
 
   const updatedCrush = { ...req.body, id: Number(id) };
   if (crushIndex >= 0) {
     req.crushes[crushIndex] = updatedCrush;
+    const crushesJson = await JSON.stringify(req.crushes);
+    await fs.writeFile('crush.json', crushesJson, 'utf-8');
   }
   res.status(SUCCESS).send(updatedCrush);
 });
@@ -65,7 +70,7 @@ router.delete('/:id', validToken, async (req, res) => {
   if (crushIndex > -1) {
     try {
       const deleteCrush = req.crushes.filter((person) => person.id !== Number(id));
-      const crushJson = await JSON.parse(deleteCrush);
+      const crushJson = await JSON.stringify(deleteCrush);
       await fs.writeFile('crush.json', crushJson, 'utf-8');
     } catch (e) {
       throw new Error(e);
