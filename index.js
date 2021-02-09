@@ -66,11 +66,6 @@ app.use((req, res, next) => {
       });
     }
   }
-  if (email.length === 0) {
-    res.status(400).json({
-      message: 'O campo "email" é obrigatório',
-    });
-  }
   if (passwordValidation(password)) {
     if (password.length === 0) {
       res.status(400).json({
