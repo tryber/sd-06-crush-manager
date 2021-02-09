@@ -1,11 +1,12 @@
 const fs = require('fs');
+const path = require('path');
 const util = require('util');
 
 // https://nodejs.org/api/util.html#util_util_promisify_original
 const readFilePromise = util.promisify(fs.readFile);
 
 const getAllCrushes = async (_req, res) => {
-  const file = './crush.json';
+  const file = path.join(__dirname, 'crush.json');
 
   readFilePromise(file)
     .then((content) => {
