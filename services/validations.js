@@ -36,7 +36,8 @@ function validateDate(date) {
 
 function validateRate(rate) {
   if (!rate) return false;
-  if (rate <= 0 || rate >= 6) return true;
+  const rateRegex = /^[1-5]$/;
+  return rateRegex.test(rate);
 }
 
 module.exports = {
