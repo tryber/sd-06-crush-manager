@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const SUCCESS = 200;
 const ERROR = 400;
 
-const loginControl = (request, response, next) => {
+const loginControl = (request, response, _next) => {
   const { email, password } = request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -29,7 +29,6 @@ const loginControl = (request, response, next) => {
   const generatedToken = { token };
 
   response.status(SUCCESS).json(generatedToken);
-  next();
 };
 
 module.exports = loginControl;
