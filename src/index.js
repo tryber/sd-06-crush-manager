@@ -1,11 +1,10 @@
 const express = require('express');
-const { readFile } = require('./utils/manageFiles');
+const { readMyFile } = require('./utils/middlewares');
 
 const app = express();
 const SUCCESS = 200;
 
 const port = 3000;
-// const crushes = require('./files/crush.json');
 
 app.use(express.json());
 
@@ -23,14 +22,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/:fileName', async (req, res) => {
-  const { fileName } = req.params;
-  const myCrushes = await readFile(fileName);
-  if (myCrushes.length > 0) {
-    res.status(SUCCESS).send(JSON.parse(myCrushes));
-  } else {
-    res.status(SUCCESS).send([]);
-  }
-});
+app.get('/:fileName', readMyFile);
 
 app.listen(port, () => console.log('Running Project Crush Manager!'));
