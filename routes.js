@@ -9,6 +9,7 @@ const { getAllCrushes,
   validateName,
   validateAge,
   validateDate,
+  updateCrush,
 } = require('./middleware');
 const { handleError } = require('./middleware/errorHandling/helpers');
 
@@ -20,6 +21,7 @@ router.post('/login', emailValidator, passwordValidator, login);
 
 router.use(validateToken, validateName, validateAge, validateDate);
 router.post('/crush', createCrush);
+router.put('/crush/:id', updateCrush);
 
 router.use((err, _req, res, _next) => {
   handleError(err, res);

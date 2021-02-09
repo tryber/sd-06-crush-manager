@@ -6,9 +6,7 @@ const { validateToken } = require('./validators/validateToken');
 const validateName = require('./validators/validateName');
 const validateAge = require('./validators/validateAge');
 const validateDate = require('./validators/validateDate');
-
-
-
+const updateCrush = require('./updateCrush');
 
 module.exports = {
   getAllCrushes,
@@ -21,4 +19,5 @@ module.exports = {
   validateName,
   validateAge,
   validateDate,
+  updateCrush,
 };
