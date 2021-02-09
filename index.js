@@ -20,7 +20,7 @@ app.get('/crush', async (req, res) => {
 // requeriment 2
 app.get('/crush/:id', async (req, res) => {
   const crushs = await readFile('crush.json');
-  const parameter = parseInt(req.params.id, 0);
+  const parameter = parseInt(req.params.id, 10);
   const result = crushs.filter((element) => element.id === parameter);
   if (result.length > 0) {
     return res.status(200).send(result);
