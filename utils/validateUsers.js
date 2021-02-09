@@ -12,7 +12,7 @@ function validatePassword(password) {
 
 function validateToken(token) {
   if (!token) return;
-  const tokenFormat = /^\d{16}$/gm;
+  const tokenFormat = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+){16}$/gm;
   return tokenFormat.test(token);
 }
 
