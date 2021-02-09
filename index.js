@@ -56,8 +56,8 @@ app.post('/login', (request, response) => {
 // Requisito 4
 const released = (request, response, next) => {
   const { release } = request.headers;
-  if (!release) return response.status(401).send({ message: 'Token não encontrado' });
-  if (release !== token.token) return response.status(401).send({ message: 'Token inválido' });
+  if (!release) return response.status(401).json({ message: 'Token não encontrado' });
+  if (release !== token.token) return response.status(401).json({ message: 'Token inválido' });
   next();
 };
 
@@ -88,7 +88,7 @@ const validationInfo = (name, age, date) => {
 app.post('/crush', (request, response) => {
   const { name, age, date } = request.body;
   const message = validationInfo(name, age, date);
-  if (message !== '') return response.status(400).send({ message });
+  if (message !== '') return response.status(400).json({ message });
   const crushes = readerFile();
   const crush = { age, date, id: crushes.length + 1, name };
   crushes.push(crush);
