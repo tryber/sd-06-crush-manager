@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 const CrashRoutes = require('./src/routes/crushRoutes');
 
-app.use('/', CrashRoutes);
+app.use(CrashRoutes);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

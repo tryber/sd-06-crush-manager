@@ -6,7 +6,7 @@ const authToken = require('../auth/token.json').token;
 
 const deleteCrushs = async (req, res) => {
   const { id } = req.params;
-  const reqToken = req.headers.token;
+  const reqToken = req.headers.authorization;
 
   if (!reqToken) {
     return res.status(401).send({ message: 'Token não encontrado' });
