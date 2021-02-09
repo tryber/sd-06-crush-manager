@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 const SUCCESS = 200;
 const NOT_FOUND = 404;
