@@ -8,12 +8,12 @@ module.exports = {
     const { name, age, date } = req.body;
     const previousList = await fs.readFile('./crush.json', 'utf-8');
     const previousListJson = JSON.parse(previousList);
-    const editedCrush = [{
+    const editedCrush = {
       name,
       age,
       id,
       date,
-    }];
+    };
     const newList = previousListJson.map((crush) => {
       if (crush.id === id) {
         return editedCrush;
