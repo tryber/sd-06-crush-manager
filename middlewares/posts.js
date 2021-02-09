@@ -36,7 +36,7 @@ module.exports = {
     const file = await readFiles();
     const id = file.length + 1;
     const newCrush = file.concat({ id, name, age, date });
-    writingFile(newCrush);
-    return res.status(201).json(newCrush);
+    res.status(201).json({ id, name, age, date });
+    return writingFile(newCrush);
   },
 };
