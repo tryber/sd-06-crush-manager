@@ -128,6 +128,15 @@ const updateCrushById = async (request, response) => {
   return response.status(200).json(updatedCrush);
 };
 
+const deleteCrushById = async (request, response) => {
+  const { fileName, id } = request.params;
+  const myFile = await readFile(fileName);
+  const crushNotFound = myFile.filter((crush) => crush.id !== parseInt(id, 10));
+
+  await writeFile(fileName, JSON.stringify(crushNotFound));
+  return response.status(200).json({ message: 'Crush deletado com sucesso' });
+};
+
 module.exports = {
   read,
   parser,
@@ -141,4 +150,5 @@ module.exports = {
   validateAge,
   validateDate,
   updateCrushById,
+  deleteCrushById,
 };
