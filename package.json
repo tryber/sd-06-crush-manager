@@ -2,7 +2,7 @@
   "name": "sd-0x-crush-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": ".src/index.js",
   "scripts": {
     "test": "jest --runInBand",
     "debug": "nodemon -w --exec node index.js",
