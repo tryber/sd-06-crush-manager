@@ -14,17 +14,27 @@ const {
   checkAgeOlder,
   formatDate,
   checkRate,
+  checkDateRate,
+  getNextId,
 } = require('./validations.js');
 
 const app = express();
 const SUCCESS = 200;
+const fileName = path.join(__dirname, 'crush.json');
 
 const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
 
 const getData = async () => {
-  const fileName = path.join(__dirname, 'crush.json');
   const data = await readFile(fileName);
   return JSON.parse(data);
+};
+
+// Salvar os dados no arquivo
+const setData = async (crushes, newCrush) => {
+  const newArrayCrushes = [...crushes, newCrush];
+  const newArrayCrushesFormated = JSON.stringify(newArrayCrushes, null, '\t');
+  await writeFile(fileName, newArrayCrushesFormated, 'utf-8');
 };
 
 app.use(bodyParser.json());
@@ -67,16 +77,7 @@ app.post('/login', (req, res) => {
 });
 
 // Desafio 04 - endpoint POST /crush
-// const crush = {
-//   name: 'Keanu Reeves',
-//   age: 56,
-//   date: {
-//     datedAt: '22/10/2019',
-//     rate: 5,
-//   },
-// };
-
-app.post('/crush', (req, res) => {
+app.post('/crush', async (req, res) => {
   const { token } = req.headers;
   const { name, age, date } = req.body;
   if (!token || token === '') {
@@ -97,14 +98,21 @@ app.post('/crush', (req, res) => {
   if (!checkAgeOlder(age)) {
     return res.status(400).json({ message: 'O crush deve ser maior de idade' });
   }
+  if (!checkDateRate(date.datedAt, date.rate)) {
+    return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
   if (!formatDate(date.datedAt)) {
     return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (checkRate(date.rate)) {
+  if (!checkRate(date.rate)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
-  res.send('POST request to the homepage');
+  const crushes = await getData();
+  const id = getNextId(crushes);
+  const newCrush = { name, age, id, date };
+  setData(crushes, newCrush);
+  res.status(201).json(newCrush);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

@@ -49,16 +49,28 @@ const checkAgeOlder = (age) => {
 };
 
 const formatDate = (datedAt) => {
-  console.log(datedAt);
   const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
   return dateRegex.test(datedAt);
 };
 
 const checkRate = (rate) => {
-  if (!Number.isInteger(rate) && rate <= 1 && rate >= 5) {
+  if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
     return false;
   }
   return true;
+};
+
+const checkDateRate = (datedAt, rate) => {
+  if (!datedAt || datedAt === '' || !rate || rate === '') {
+    return false;
+  }
+  return true;
+};
+
+const getNextId = (data) => {
+  const arrId = data.map((crush) => crush.id);
+  const nextId = Math.max.apply(this, arrId) + 1;
+  return nextId;
 };
 
 module.exports = {
@@ -72,4 +84,6 @@ module.exports = {
   checkAgeOlder,
   formatDate,
   checkRate,
+  checkDateRate,
+  getNextId,
 };
