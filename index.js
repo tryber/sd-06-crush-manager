@@ -12,7 +12,7 @@ const SUCCESS = 200;
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
-
+// teste
 app.use(bodyParser.json());
 
 app.get('/crush', getAllCrushes);
