@@ -1,7 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { read, parser, getById } = require('./util/midlewares');
+const {
+  read,
+  parser,
+  getById,
+  tokenResponse,
+  validateEmail,
+  validatePassword,
+} = require('./util/midlewares');
 
 const app = express();
 const SUCCESS = 200;
@@ -17,5 +24,6 @@ app.use(bodyParser.json());
 
 app.get('/:fileName', read);
 app.get('/:fileName/:id', getById);
+app.post('/login', validateEmail, validatePassword, tokenResponse);
 
 app.listen(port, () => console.log(`Executando na porta ${port}`));
