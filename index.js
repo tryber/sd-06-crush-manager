@@ -1,49 +1,34 @@
 const express = require('express');
 // const { FrisbySpec } = require('frisby');
-const fs = require('fs');
-const { checkEmail, checkPassword, createToken } = require('./functions/login');
+// const fs = require('fs');
+const crushRouter = require('./rotes/crushRotes');
+
+const loginRouter = require('./rotes/loginRote');
+
+const verifyToken = require('./functions/verifyToken');
 
 const app = express();
 const SUCCESS = 200;
 
 app.use(express.json());
 
-app.get('/crush', (_req, res) => {
-  const data = fs.readFileSync('./crush.json', 'utf8');
-  const crushList = JSON.parse(data);
+app.get('/crush', crushRouter);
 
-  if (crushList && crushList.length > 0) return res.status(SUCCESS).send(crushList);
+app.get('/crush/:id', crushRouter);
 
-  if (!crushList || crushList.length === 0) return res.status(SUCCESS).send([]);
+app.post('/login', loginRouter);
+
+app.use((req, res, next) => {
+  const { authorization } = req.headers;
+
+  const checkToken = verifyToken(authorization);
+
+  if (checkToken !== true) return res.status(401).send({ message: checkToken });
+
+  next();
 });
 
-app.get('/crush/:id', (req, res) => {
-  const data = fs.readFileSync('./crush.json', 'utf8');
-  const crushList = JSON.parse(data);
-  const { id } = req.params;
-
-  const crushIndex = crushList.findIndex((e) => e.id === parseInt(id, 10));
-
-  if (crushIndex === -1) return res.status(404).send({ message: 'Crush não encontrado' });
-
-  res.status(SUCCESS).send(crushList[crushIndex]);
-});
-
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-  const emailCheck = checkEmail(email);
-  const passwordCheck = checkPassword(password);
-
-  if (emailCheck === 'null') return res.status(400).send({ message: 'O campo "email" é obrigatório' });
-  if (emailCheck === 'regex') return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
-  if (passwordCheck === 'null') return res.status(400).send({ message: 'O campo "password" é obrigatório' });
-  if (passwordCheck === 'length') return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-
-  const token = createToken();
-
-  res.status(200).send({ token });
-});
+app.post('/crush', crushRouter);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
