@@ -1,11 +1,18 @@
 const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
 const { promisify } = require('util');
+const {
+  validateEmail,
+  validatePassword,
+  checkRequestField,
+  generateToken } = require('./utils');
 
 const readCrushes = promisify(fs.readFile);
-const express = require('express');
 
 const app = express();
 const SUCCESS = 200;
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -42,6 +49,35 @@ app.get('/crush/:id', async (request, response) => {
   const retrievedCrush = crushes.find((crush) => crush.id === id);
   if (!retrievedCrush) response.status(404).json({ message: 'Crush não encontrado' });
   response.status(SUCCESS).send(retrievedCrush);
+});
+
+app.post('/login', (request, response) => {
+  const requestObject = request.body;
+
+  if (!checkRequestField(requestObject, 'email')) {
+    return response.status(400).send({
+      message: 'O campo "email" é obrigatório',
+    });
+  }
+
+  if (!checkRequestField(requestObject, 'password')) {
+    return response.status(400).send({
+      message: 'O campo "password" é obrigatório',
+    });
+  }
+
+  if (!validateEmail(requestObject.email)) {
+    return response.status(400).send({
+      message: 'O "email" deve ter o formato "email@email.com"',
+    });
+  }
+
+  if (!validatePassword(requestObject.password)) {
+    return response.status(400).send({
+      message: 'message: "A "senha" deve ter pelo menos 6 caracteres',
+    });
+  }
+  response.status(SUCCESS).send(generateToken(16));
 });
 
 app.listen(3000, () => {
