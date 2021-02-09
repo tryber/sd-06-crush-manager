@@ -44,10 +44,14 @@ router.post('/', validToken, validateCrushData, async (req, res) => {
   });
 
   req.body.id = maxId + 1;
-  const newCrushes = [...req.crushes, req.body];
-  const newCrushJson = JSON.stringify(newCrushes);
-  await fs.writeFile('crush.json', newCrushJson, 'utf-8');
-  res.status(CREATED).send(req.body);
+  try {
+    const newCrushes = [...req.crushes, req.body];
+    const newCrushJson = JSON.stringify(newCrushes);
+    await fs.writeFile('crush.json', newCrushJson, 'utf-8');
+    res.status(CREATED).send(req.body);
+  } catch (e) {
+    throw new Error(e);
+  }
 });
 
 router.put('/:id', validToken, validateCrushData, async (req, res) => {
@@ -56,9 +60,13 @@ router.put('/:id', validToken, validateCrushData, async (req, res) => {
 
   const updatedCrush = { ...req.body, id: Number(id) };
   if (crushIndex >= 0) {
-    req.crushes[crushIndex] = updatedCrush;
-    const crushesJson = await JSON.stringify(req.crushes);
-    await fs.writeFile('crush.json', crushesJson, 'utf-8');
+    try {
+      req.crushes[crushIndex] = updatedCrush;
+      const crushesJson = await JSON.stringify(req.crushes);
+      await fs.writeFile('crush.json', crushesJson, 'utf-8');
+    } catch (e) {
+      throw new Error(e);
+    }
   }
   res.status(SUCCESS).send(updatedCrush);
 });
