@@ -36,7 +36,7 @@ app.get('/crush/:id', async (request, response) => {
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
   if (!email) return response.status(400).send({ message: 'O campo "email" é obrigatório' });
-  if (email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)) return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (!email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)) return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
   if (!password) return response.status(400).send({ message: 'O campo "password" é obrigatório' });
   if (password.length < 6) return response.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   const token = '7mqaVRXJSp886CGr';
@@ -47,7 +47,7 @@ app.post('/crush', async (request, response) => {
   const { token } = request.headers;
   const { name, age, date } = request.body;
   if (!token) return response.status(401).send({ message: 'Token não encontrado' });
-  if (token.test(/^(\d|\w){16}$/gm)) return response.status(401).send({ message: 'Token inválido' });
+  if (!token.test(/^(\d|\w){16}$/gm)) return response.status(401).send({ message: 'Token inválido' });
   if (!name || name === '') return response.status(400).send({ message: 'O campo "name" é obrigatório' });
   if (name.length < 3) return response.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
 
@@ -71,7 +71,7 @@ app.put('/crush/:id', async (request, response) => {
   const { name, age, date } = request.body;
   const { id } = request.params;
   if (!token) return response.status(401).send({ message: 'Token não encontrado' });
-  if (token.test(/^(\d|\w){16}$/gm)) return response.status(401).send({ message: 'Token inválido' });
+  if (!token.test(/^(\d|\w){16}$/gm)) return response.status(401).send({ message: 'Token inválido' });
 
   if (!name || name === '') return response.status(400).send({ message: 'O campo "name" é obrigatório' });
   if (name.length < 3) return response.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
@@ -96,7 +96,7 @@ app.delete('/crush/:id', async (request, response) => {
   const { token } = request.headers;
   const { id } = request.params;
   if (!token) return response.status(401).send({ message: 'Token não encontrado' });
-  if (token.test(/^(\d|\w){16}$/gm)) return response.status(401).send({ message: 'Token inválido' });
+  if (!token.test(/^(\d|\w){16}$/gm)) return response.status(401).send({ message: 'Token inválido' });
 
   const readData = await fs.readFile('crush.json');
   const dataJson = await JSON.parse(readData);
