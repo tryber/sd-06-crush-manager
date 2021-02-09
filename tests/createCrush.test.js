@@ -25,6 +25,19 @@ describe('4 - Crie o endpoint POST /crush', () => {
     );
   });
 
+  afterEach(() => {
+    const crushSeed = fs.readFileSync(
+      path.join(__dirname, 'seed.json'),
+      'utf8',
+    );
+
+    fs.writeFileSync(
+      path.join(__dirname, '..', 'crush.json'),
+      crushSeed,
+      'utf8',
+    );
+  });
+  
   it('Será validado que é possível cadastrar um crush com sucesso', async () => {
     await frisby
       .post(`${url}/login`, {

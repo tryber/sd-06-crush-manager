@@ -18,6 +18,20 @@ describe('2 - Crie o endpoint GET /crush/:id', () => {
     );
   });
 
+
+  afterEach(() => {
+    const crushSeed = fs.readFileSync(
+      path.join(__dirname, 'seed.json'),
+      'utf8',
+    );
+
+    fs.writeFileSync(
+      path.join(__dirname, '..', 'crush.json'),
+      crushSeed,
+      'utf8',
+    );
+  });
+  
   it('Será validado que o endpoint retorna um crush baseado no id da rota', async () => {
     await frisby
       .get(`${url}/crush/1`)

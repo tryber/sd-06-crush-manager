@@ -6,7 +6,7 @@ const myFile = path.resolve(__dirname, '../crush.json');
 
 const getData = async (_request, response) => {
   const data = await readFile(myFile);
-  if (readFile(data)) return response.status(SUCCESS).send(data);
+  if (data.length) return response.status(SUCCESS).send(data);
   return response.status(SUCCESS).send([]);
 };
 
