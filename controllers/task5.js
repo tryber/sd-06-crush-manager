@@ -1,3 +1,41 @@
+const fs = require('fs');
+
+const getCrushes = () => new Promise(
+  (resolve, reject) => {
+    fs.readFile('./crush.json', (err, data) => {
+      if (err) reject(new Error('Não foi possível ler o arquivo'));
+      resolve(JSON.parse(data));
+    });
+  },
+);
+
+const updateCrush = (id, bodyData) => new Promise(
+  (resolve, reject) => {
+    getCrushes()
+      .then((r) => {
+        const crushes = r;
+        let indexOfCrush;
+        r.map((crush, index) => {
+          if (crush.id === id) indexOfCrush = index;
+          return '';
+        });
+        crushes[indexOfCrush] = { ...bodyData, id };
+        fs.writeFile('./crush.json', JSON.stringify(crushes), (err) => {
+          if (err) reject(new Error('Não foi possível atualizar o crush na base de dados'));
+        });
+      })
+      .then((response) => {
+        getCrushes()
+          .then((r) => {
+            const updatedCrush = r.find((c) => c.id === id);
+            resolve(updatedCrush);
+          })
+          .catch((error) => reject(error));
+      })
+      .catch((error) => reject(error));
+  },
+);
+
 const checkToken = (token) => {
   let msg = 'ok';
   if (!token) {
@@ -62,8 +100,15 @@ const putCrush = (req, res) => {
   } else if (msgDate !== 'ok') {
     res.status(400).send({ message: msgDate });
   } else {
-    const resBody = { ...req.body, id };
-    res.status(200).send(resBody);
+    updateCrush(id, req.body)
+      .then((response) => {
+        if (response !== undefined) {
+          res.status(200).send(response);
+        } else {
+          res.status(404).send({ message: 'Não foi possível atualizar o crush' });
+        }
+      })
+      .catch((error) => res.status(400).send(error));
   }
 };
 

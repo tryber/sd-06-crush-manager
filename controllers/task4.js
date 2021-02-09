@@ -1,14 +1,38 @@
 const fs = require('fs');
 
-const getNumberOfCrushes = () =>
-  new Promise(
-    (resolve, reject) => {
-      fs.readFile('./crush.json', (err, data) => {
-        if (err) reject(new Error('Não foi possível ler o arquivo'));
-        resolve(JSON.parse(data).length);
-      });
-    },
-  );
+const getCrushes = () => new Promise(
+  (resolve, reject) => {
+    fs.readFile('./crush.json', (err, data) => {
+      if (err) reject(new Error('Não foi possível ler o arquivo'));
+      resolve(JSON.parse(data));
+    });
+  },
+);
+
+const insertCrush = (bodyData) => new Promise(
+  (resolve, reject) => {
+    getCrushes()
+      .then((r) => {
+        const crushes = r;
+        const newId = crushes.length + 1;
+        const newCrush = { ...bodyData, id: newId };
+        crushes.push(newCrush);
+        fs.writeFile('./crush.json', JSON.stringify(crushes), (err) => {
+          if (err) reject(new Error('Não foi possível incluir o crush na base de dados'));
+        });
+      })
+      .then((response) => {
+        getCrushes()
+          .then((r) => {
+            const newCrushes = r;
+            const lastCrush = newCrushes[newCrushes.length - 1];
+            resolve(lastCrush);
+          })
+          .catch((error) => reject(error));
+      })
+      .catch((error) => reject(error));
+  },
+);
 
 const checkToken = (token) => {
   let msg = 'ok';
@@ -73,11 +97,9 @@ const postCrush = (req, res) => {
   } else if (msgDate !== 'ok') {
     res.status(400).send({ message: msgDate });
   } else {
-    getNumberOfCrushes()
-      .then((r) => {
-        const resBody = { ...req.body, id: r + 1 };
-        res.status(201).send(resBody);
-      });
+    insertCrush(req.body)
+      .then((response) => res.status(201).send(response))
+      .catch((error) => res.status(400).send(error));
   }
 };
 
