@@ -99,7 +99,9 @@ app.post('/crush', (request, response) => {
 // Requisito 5
 app.put('/crush/:id', (request, response) => {
   const { name, age, date } = request.body;
-  const { id } = request.params;
+  let { id } = request.params;
+  // test pede id seja inteiro tem converter
+  id = parseInt(id, 10);
   const message = validationInfo(name, age, date);
   if (message !== '') return response.status(400).json({ message });
   const crushes = readerFile();
