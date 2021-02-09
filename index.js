@@ -19,21 +19,25 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (req, res) => {
+const getData = async () => {
   const data = await readFile('./crush.json');
-  res.status(200).send(JSON.parse(data.toString()));
+  return JSON.parse(data);
+};
+
+app.get('/crush', async (req, res) => {
+  const data = await getData();
+  res.status(200).send(data);
 });
 
 app.get('/crush/:id', async (req, res) => {
-  const data = await readFile('./crush.json');
+  const data = await getData();
   const { id } = req.params;
   const crushID = parseInt(id, 10);
-  const dataObject = JSON.parse(data);
-  const index = dataObject.findIndex((person) => person.id === crushID);
+  const index = data.findIndex((person) => person.id === crushID);
 
   if (index === -1) return res.status(404).send({ message: 'Crush não encontrado' });
 
-  res.status(200).send(dataObject[index]);
+  res.status(200).send(data[index]);
 });
 
 app.post('/login', (req, res) => {
@@ -58,11 +62,10 @@ app.post('/crush', async (req, res) => {
   if (validateAge(age) !== true) return res.status(400).send({ message: `${validateAge(age)}` });
   if (validateDate(date, datedAt, rate) !== true) res.status(400).send({ message: `${validateDate(date, datedAt, rate)}` });
 
-  const crushData = await readFile('./crush.json');
-  const dataObject = JSON.parse(crushData);
-  const nextId = getNextId(dataObject);
+  const data = await getData();
+  const nextId = getNextId(data);
   const newCrush = { id: nextId, ...req.body };
-  const text = [...dataObject, newCrush];
+  const text = [...data, newCrush];
   const textJSON = JSON.stringify(text, null, '\t');
 
   await writeFile('./crush.json', textJSON);
