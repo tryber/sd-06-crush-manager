@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const SUCCESS = 200;
 
-app.use(bodyParser.send());
+app.use(bodyParser.json());
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
