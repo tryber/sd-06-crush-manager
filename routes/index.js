@@ -16,7 +16,7 @@ routes.get('/crush', async (req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
-routes.post('/login', async (req, res) => {
+routes.post('/login', (req, res) => {
   const { email, password } = req.body;
   const token = crypto.randomBytes(8).toString('hex');
   const emailValidation = email && email !== '' ? validateEmail(email) : '';
