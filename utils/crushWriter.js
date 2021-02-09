@@ -5,7 +5,7 @@ const path = require('path');
 const filePath = path.basename('../crush.json');
 
 const crushWriter = async (crushes) => {
-  await fs.writeFile(filePath, JSON.stringify(crushes), (error, data) => {
+  await fs.writeFile(filePath, JSON.stringify(crushes), (error, _data) => {
     if (error) throw new Error('coudl not write to file');
   });
 };
