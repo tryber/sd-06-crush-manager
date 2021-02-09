@@ -1,5 +1,6 @@
 const express = require('express');
 const routes = require('./routes');
+const bodyParser = require('body-parser');
 
 const app = express();
 const SUCCESS = 200;
@@ -9,6 +10,8 @@ const port = 3000;
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.use(bodyParser.json());
 
 app.use('/', routes);
 

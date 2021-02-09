@@ -14,4 +14,9 @@ routes.get('/crush/:id', async (req, res) => {
   res.status(404).json({ message: 'Crush não encontrado' });
 });
 
+routes.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  res.status(200).send({ email, password });
+});
+
 module.exports = routes;
