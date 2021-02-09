@@ -1,16 +1,22 @@
 const express = require('express');
-const crushRegistered = require('./crush');
+const fs = require('fs').promises;
+
+const crushRegistered = 'crush.json';
+
+console.log(crushRegistered);
 
 const app = express();
 const SUCCESS = 200;
 
+app.use(express.json());
 app.listen(3000, () => console.log('Executando'));
 
-app.get('/crush', (_req, res) => {
-  if (crushRegistered.length < 1) {
-    res.status(SUCCESS).send([]);
+app.get('/crush', async (_req, res) => {
+  const read = await fs.readFile(crushRegistered);
+  if (read < 1) {
+    return res.status(SUCCESS).json([]);
   }
-  res.status(SUCCESS).send(crushRegistered);
+  return res.status(SUCCESS).json(JSON.parse(read));
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
