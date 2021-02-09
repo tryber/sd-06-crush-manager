@@ -6,6 +6,8 @@ const fs = require('fs');
 
 const verifyCrush = require('../functions/verifyCrush');
 
+const asyncWrite = require('../functions/asyncWrite');
+
 const SUCCESS = 200;
 
 router.get('/crush', (_req, res) => {
@@ -48,7 +50,7 @@ router.post('/crush', (req, res) => {
   const newList = crushList.concat(newCrush);
   const file = JSON.stringify(newList);
 
-  fs.writeFileSync('./crush.json', file);
+  asyncWrite(file);
 
   res.status(201).send(newCrush);
 });
@@ -73,7 +75,7 @@ router.put('/crush/:id', (req, res) => {
 
   const file = JSON.stringify(crushList);
 
-  fs.writeFileSync('./crush.json', file);
+  asyncWrite(file);
 
   res.status(200).send(editedCrush);
 });
