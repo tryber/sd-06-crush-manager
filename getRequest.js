@@ -2,9 +2,7 @@ const { parsedData } = require('./utils/readCrushData');
 
 async function getCrush(_request, response) {
   const data = await parsedData();
-  console.log(data);
   return response.status(200).json(data);
-  // response.status(200).json([]);
 }
 
 async function getCrushId(request, response) {

@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs').promises;
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -7,8 +6,7 @@ const crypto = require('crypto');
 const { validateEmail, validatePassword, validateToken } = require('./utils/validateUsers');
 const { validateCrushName } = require('./utils/validateCrush');
 const { parsedData } = require('./utils/readCrushData');
-
-const crushData = 'crush.json';
+const { modifyFile } = require('./utils/writeCrushData');
 
 app.use(bodyParser.json());
 
@@ -54,18 +52,6 @@ async function handleCrushValidation(request, response, next) {
   next();
 }
 
-function modifyFile(newCrushArray) {
-  const convertedArray = JSON.stringify(newCrushArray);
-  const updatedFile = fs.writeFile(crushData, convertedArray, (err, data) => {
-    if (err) {
-      console.error(`Não foi possível ler o arquivo ${crushData}\n Erro: ${err}`);
-      process.exit(1);
-    }
-    return data;
-  });
-  return updatedFile;
-}
-
 async function addCrush(request, response) {
   const { name, age, date } = request.body;
   const data = await parsedData();
@@ -79,7 +65,6 @@ async function addCrush(request, response) {
 module.exports = {
   handleLogin,
   addCrush,
-  modifyFile,
   handleLoginValidation,
   handleCrushValidation,
 };
