@@ -1,6 +1,6 @@
 const readFile = require('./readFile.js');
 
-const validateCrush = async (request, response, next) => {
+const validateCrush = async (request, response, _next) => {
   const { name, age, date } = request.body;
   let message = '';
   const FAIL = 400;
@@ -52,7 +52,7 @@ const validateCrush = async (request, response, next) => {
   const newCrush = { name, age, id, date };
   data.push(newCrush);
   // console.log(data);
-  next();
+  // next();
   return response.status(SUCCESS).json(newCrush);
 };
 

@@ -1,6 +1,6 @@
 const readFile = require('./readFile.js');
 
-const validateCrushId = async (request, response, next) => {
+const validateCrushId = async (request, response, _next) => {
   const { id } = request.params;
   const { name, age, date } = request.body;
   let message = '';
@@ -51,9 +51,9 @@ const validateCrushId = async (request, response, next) => {
   const index = data.findIndex((crush) => crush.id === id);
 
   const newCrush = { id, name, age, date };
-  data.push(newCrush);
+  // data.push(newCrush);
 
-  next();
+  // next();
   response.status(SUCCESS).send(data[index] = newCrush);
 };
 
