@@ -8,12 +8,9 @@ const readFilePromise = util.promisify(fs.readFile);
 const getAllCrushes = async (_req, res) => {
   const file = path.join(__dirname, 'crush.json');
 
-  readFilePromise(file)
-    .then((content) => {
-      res.status(200);
-      return res.send(JSON.parse(content));
-    })
-    .catch((error) => console.log(error));
+  const allCrushes = await readFilePromise(file);
+
+  return res.send(JSON.parse(allCrushes));
 };
 
 module.exports = { getAllCrushes };
