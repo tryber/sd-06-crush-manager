@@ -6,6 +6,7 @@ const login = require('./login');
 const verifyToken = require('./verifyToken');
 const addCrush = require('./addCrush');
 const deleteCrush = require('./deleteCrush');
+const editCrush = require('./editCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -26,6 +27,8 @@ app.post('/login', login);
 app.use(verifyToken);
 
 app.post('/crush', addCrush);
+
+app.put('/crush/:id', editCrush);
 
 app.delete('/crush/:id', deleteCrush);
 
