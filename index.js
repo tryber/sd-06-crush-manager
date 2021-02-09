@@ -73,7 +73,7 @@ app.post('/crush', async (req, res) => {
   }
   const validCrush = validateCrush(name, age, date);
   if (validCrush !== 'OK') {
-    return res.status(401).json({ message: validCrush });
+    return res.status(400).json({ message: validCrush });
   }
 
   const crushes = await getData();
