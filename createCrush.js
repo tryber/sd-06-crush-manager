@@ -14,6 +14,6 @@ const createCrush = async (req, res) => {
   const newCrush = { id, ...req.body };
   addCrush(newCrush, JSON.parse(crushData));
   res.status(201).json(newCrush);
-}
+};
 
 module.exports = { createCrush };
