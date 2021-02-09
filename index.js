@@ -1,5 +1,6 @@
 const express = require('express');
-const fs = require('fs/promises');
+const fs = require('fs').promises;
+
 const fileName = 'crush.json';
 
 const app = express();
@@ -8,14 +9,14 @@ const SUCCESS = 200;
 const FAILURE = 404;
 
 app.listen(3000, () => {
-  console.log('Ouvindo a porta 3000')
+  console.log('Ouvindo a porta 3000');
 });
 
 app.use((req, _res, next) => {
   console.log({
     Date: new Date(),
     Method: req.method,
-    URL: req.originalUrl
+    URL: req.originalUrl,
   });
 
   next();
@@ -37,8 +38,8 @@ app.get('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const filteredCrush = parsedJson.find((crush) => crush.id === +id);
 
- if (!filteredCrush) {
-    return res.status(FAILURE).send({"message": "Crush não encontrado"});
+  if (!filteredCrush) {
+    return res.status(FAILURE).send({ message: 'Crush não encontrado' });
   }
   return res.status(SUCCESS).send(filteredCrush);
 });
