@@ -7,6 +7,7 @@ const validateName = require('./validators/validateName');
 const validateAge = require('./validators/validateAge');
 const validateDate = require('./validators/validateDate');
 const updateCrush = require('./updateCrush');
+const deleteCrush = require('./deleteCrush');
 
 module.exports = {
   getAllCrushes,
@@ -20,4 +21,5 @@ module.exports = {
   validateAge,
   validateDate,
   updateCrush,
+  deleteCrush,
 };

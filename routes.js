@@ -10,6 +10,7 @@ const { getAllCrushes,
   validateAge,
   validateDate,
   updateCrush,
+  deleteCrush,
 } = require('./middleware');
 const { handleError } = require('./middleware/errorHandling/helpers');
 
@@ -18,6 +19,8 @@ const router = express.Router();
 router.get('/crush', getAllCrushes);
 router.get('/crush/:id', getCrushById);
 router.post('/login', emailValidator, passwordValidator, login);
+
+router.delete('/crush/:id', validateToken, deleteCrush);
 
 router.use(validateToken, validateName, validateAge, validateDate);
 router.post('/crush', createCrush);
