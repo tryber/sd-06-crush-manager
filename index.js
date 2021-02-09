@@ -80,8 +80,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/login', (_req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
+app.post('/login', async (_req, res) => {
+  const token = await crypto.randomBytes(8).toString('hex');
   return res.json(token);
 });
 
