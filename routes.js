@@ -1,8 +1,8 @@
-const express = require('express');
+// const express = require('express');
 
-const routes = express.Router();
-const { getAllCrushes } = require('./getAllCrushes');
+// const routes = express.Router();
+// const { getAllCrushes } = require('./getAllCrushes');
 
-routes.get('/crush', getAllCrushes);
+// routes.get('/crush', getAllCrushes);
 
-module.exports = routes;
+// module.exports = routes;
