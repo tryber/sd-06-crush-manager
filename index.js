@@ -1,3 +1,4 @@
+const { request } = require('express');
 const express = require('express');
 const fs = require('fs');
 
@@ -115,6 +116,15 @@ app.delete('/crush/:id', (request, response) => {
   const { id } = request.params;
   readerFile().filter((element) => element.id !== id);
   response.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
+// Requisito 7
+app.get('/crush/search?q=searchTerm', (request, response) => {
+  const { searchTerm } = request.query;
+  const crushes = readerFile();
+  if (!searchTerm || searchTerm === '') return response.status(200).send(crushes);
+  const crush = crushes.filter((element) => element.searchTerm === searchTerm);
+  response.status(200).send(crush);
 });
 
 app.listen(PORT, () => console.log(`Em execução ${PORT}`));
