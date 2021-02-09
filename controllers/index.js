@@ -10,9 +10,13 @@ const generateToken = require('./task3');
 // Task 4
 const postCrush = require('./task4');
 
+// Task 5
+const putCrush = require('./task5');
+
 module.exports = {
   getAllCrushes,
   getSpecificCrush,
   generateToken,
   postCrush,
+  putCrush,
 };
