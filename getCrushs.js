@@ -14,7 +14,7 @@ const getAllCrushs = async (_req, res) => {
 const getCrushById = async (req, res) => {
   const data = await readFile('./crush.json', 'utf8');
   const dataId = req.params.id;
-  if (!JSON.parse(data)[+dataId] || +dataId === 0) {
+  if (!JSON.parse(data)[+dataId - 1] || +dataId === 0) {
     res.status(NOT_FOUND).send({ message: 'Crush não encontrado' });
   }
   res.status(SUCCESS).send(JSON.parse(data)[+dataId - 1]);
