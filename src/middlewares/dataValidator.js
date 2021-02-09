@@ -23,7 +23,7 @@ module.exports = {
     next();
   },
 
-  addCrushValidator(req, res, next) {
+  alterCrushValidator(req, res, next) {
     const dateValidationRegex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
     const rateValidationRegex = /[1-5]/;
     const { name, age, date } = req.body;

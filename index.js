@@ -2,7 +2,7 @@ const express = require('express');
 const { getCrushes, getCrushById } = require('./src/endpoints/gets');
 const { handleLogin, addCrush } = require('./src/endpoints/posts');
 const { editCrush } = require('./src/endpoints/puts');
-const { loginValidator, addCrushValidator } = require('./src/middlewares/dataValidator');
+const { loginValidator, alterCrushValidator } = require('./src/middlewares/dataValidator');
 const { tokenAuthenticator } = require('./src/middlewares/tokenAuthenticator');
 
 const app = express();
@@ -20,8 +20,8 @@ app.get('/crush', getCrushes);
 app.get('/crush/:id', getCrushById);
 
 app.post('/login', loginValidator, handleLogin);
-app.post('/crush', tokenAuthenticator, addCrushValidator, addCrush);
+app.post('/crush', tokenAuthenticator, alterCrushValidator, addCrush);
 
-app.put('/crush/:id', tokenAuthenticator, addCrushValidator, editCrush);
+app.put('/crush/:id', tokenAuthenticator, alterCrushValidator, editCrush);
 
 app.listen(PORT, () => console.log('Voando na Nimbus 3000'));
