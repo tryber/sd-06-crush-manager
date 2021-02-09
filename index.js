@@ -27,7 +27,7 @@ app.get('/crush/:id', async (req, res) => {
   if (verifyCrushId < 1) {
     return res.status(404).json({ message: 'Crush não encontrado' });
   }
-  return res.status(404).send(verifyCrushId);
+  return res.status(SUCCESS).send(verifyCrushId);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
