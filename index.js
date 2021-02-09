@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCrushes, getCrushById } = require('./src/endpoints/gets');
+const { getCrushes, getCrushById, getBySearchTerm } = require('./src/endpoints/gets');
 const { handleLogin, addCrush } = require('./src/endpoints/posts');
 const { editCrush } = require('./src/endpoints/puts');
 const { deleteCrush } = require('./src/endpoints/deletes');
@@ -19,6 +19,7 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', getCrushes);
 app.get('/crush/:id', getCrushById);
+app.get('/crush/search?q=searchTerm', tokenAuthenticator, getBySearchTerm);
 
 app.post('/login', loginValidator, handleLogin);
 app.post('/crush', tokenAuthenticator, alterCrushValidator, addCrush);

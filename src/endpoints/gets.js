@@ -26,4 +26,17 @@ module.exports = {
       res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
     }
   },
+
+  async getBySearchTerm(req, res) {
+    const { searchTerm } = req.query.q;
+    const previousList = await fs.readFile('./crush.json', 'utf-8');
+    const previousListJson = JSON.parse(previousList);
+    if (!searchTerm || searchTerm === '') {
+      res.status(SUCCESS).json(previousListJson);
+    } else {
+      const crushFound = previousListJson
+        .filter(({ name }) => name.includes(searchTerm));
+      res.status(SUCCESS).json(crushFound);
+    }
+  },
 };
