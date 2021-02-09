@@ -17,5 +17,17 @@ app.get('/crush', async (req, res) => {
   res.status(200).send(crushs);
 });
 // end requeriment 1
+// requeriment 2
+app.get('/crush/:id', async(req, res) => {
+  const crushs = await readFile('crush.json');
+  const parameter = parseInt(req.params.id);
+  const result = crushs.filter(element => element.id === parameter);
+  if(result.length > 0) {
+    return res.status(200).send(result);
+  }
+  const crushnotfound = { menssage: "Crush não encontrado" };
+  return res.status(200).send(crushnotfound);
+})
+// end requeriment 2
 
 app.listen(PORT, () => console.log('funcional na porta 3000'));
