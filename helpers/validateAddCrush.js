@@ -1,11 +1,11 @@
 const validateName = (name) => {
-  if (name.length < 3) return false;
-  return true;
+  if (name.length < 3) return true;
+  return false;
 };
 
 const validateAge = (age) => {
-  if (age < 18) return false;
-  return true;
+  if (age < 18) return true;
+  return false;
 };
 
 const validateDatePattern = (date) => {
