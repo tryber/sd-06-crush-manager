@@ -1,4 +1,5 @@
-const { readFile } = require('./manageFiles');
+// const { response } = require('express');
+const { readFile, writeFile } = require('./manageFiles');
 
 const read = async (request, response) => {
   const { fileName } = request.params;
@@ -53,6 +54,69 @@ const validatePassword = (request, response, next) => {
   next();
 };
 
+const updateCrushes = async (request, response) => {
+  const newCrush = request.body;
+  const { fileName } = request.params;
+  const myFile = await readFile('crush');
+  newCrush.id = myFile.length + 1;
+  const newFile = [...myFile, newCrush];
+
+  await writeFile(fileName, JSON.stringify(newFile));
+  return response.status(201).json(newCrush);
+};
+
+const validateToken = (request, response, next) => {
+  const { authorization } = request.headers;
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+
+  if (authorization.length !== 16) return response.status(401).json({ message: 'Token inválido' });
+
+  // console.log(authorization.length);
+  next();
+};
+
+const validateName = (request, response, next) => {
+  const newCrush = request.body;
+  const { name } = newCrush;
+
+  if (!name) return response.status(400).json({ message: 'O campo "name" é obrigatório' });
+
+  if (name.length < 3) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+
+  next();
+};
+
+const validateAge = (request, response, next) => {
+  const newCrush = request.body;
+  const { age } = newCrush;
+
+  if (!age) return response.status(400).json({ message: 'O campo "age" é obrigatório' });
+
+  if (age < 18) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
+
+  next();
+};
+
+const validateDate = (request, response, next) => {
+  const newCrush = request.body;
+  const { date } = newCrush;
+  // const path = request.params;
+  const validDate = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26]))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+
+  if (date) {
+    const { datedAt, rate } = date;
+    if (!datedAt || !rate) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  } else {
+    return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
+
+  if (date.rate > 5 || date.rate < 1 || date.rate === 0) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+
+  if (!validDate.test(date.datedAt)) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+
+  next();
+};
+
 module.exports = {
   read,
   parser,
@@ -60,4 +124,9 @@ module.exports = {
   tokenResponse,
   validateEmail,
   validatePassword,
+  updateCrushes,
+  validateToken,
+  validateName,
+  validateAge,
+  validateDate,
 };

@@ -8,6 +8,11 @@ const {
   tokenResponse,
   validateEmail,
   validatePassword,
+  updateCrushes,
+  validateToken,
+  validateName,
+  validateAge,
+  validateDate,
 } = require('./util/midlewares');
 
 const app = express();
@@ -25,5 +30,6 @@ app.use(bodyParser.json());
 app.get('/:fileName', read);
 app.get('/:fileName/:id', getById);
 app.post('/login', validateEmail, validatePassword, tokenResponse);
+app.post('/:fileName', validateToken, validateName, validateAge, validateDate, updateCrushes);
 
 app.listen(port, () => console.log(`Executando na porta ${port}`));
