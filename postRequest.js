@@ -16,10 +16,10 @@ async function handleLogin(request, response, next) {
     const token = crypto.randomBytes(16).toString('hex');
     response.status(200).json({ token });
   }
-  if (emailIsValid === undefined) return next({ message: 'O campo email é obrigatório', statusCode: 400 });
-  if (!emailIsValid) return next({ message: 'O email deve ter o formato email@email.com', statusCode: 400 });
-  if (passwordIsValid === undefined) return next({ message: 'O campo password é obrigatório', statusCode: 400 });
-  if (!passwordIsValid) return next({ message: 'A senha deve ter pelo menos 6 caracteres', statusCode: 400 });
+  if (emailIsValid === undefined) return next({ message: 'O campo "email" é obrigatório', statusCode: 400 });
+  if (!emailIsValid) return next({ message: 'O "email" deve ter o "formato email@email.com"', statusCode: 400 });
+  if (passwordIsValid === undefined) return next({ message: 'O campo "password" é obrigatório', statusCode: 400 });
+  if (!passwordIsValid) return next({ message: 'A "senha" deve ter pelo menos 6 caracteres', statusCode: 400 });
 }
 
 async function addCrush(request, response, next) {
