@@ -56,7 +56,7 @@ app.use((req, res, next) => {
   const { email, password } = req.body;
   // console.log(email, password);
   if (emailValidation(email)) {
-    if (email.length === 0) {
+    if (!email || email === '') {
       res.status(400).json({
         message: 'O campo "email" é obrigatório',
       });
@@ -67,7 +67,7 @@ app.use((req, res, next) => {
     }
   }
   if (passwordValidation(password)) {
-    if (password.length === 0) {
+    if (!password || password === '') {
       res.status(400).json({
         message: 'O campo "password" é obrigatório',
       });
