@@ -1,10 +1,14 @@
 const express = require('express');
+const fs = require('fs').promises;
 
 const app = express();
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const { validateEmail, validatePassword, validateToken } = require('./utils/validateUsers');
+const { validateCrushName } = require('./utils/validateCrush');
 const { parsedData } = require('./utils/readCrushData');
+
+const crushData = 'crush.json';
 
 app.use(bodyParser.json());
 
@@ -22,20 +26,59 @@ async function handleLogin(request, response) {
   if (!passwordIsValid) return response.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 }
 
-async function addCrush(request, response, next) {
-  const readToken = request.headers.Authorization;
+async function handleLoginValidation(request, response, next) {
+  const readToken = request.headers.authorization;
   const tokenIsValid = validateToken(readToken);
-  if (!tokenIsValid) return next({ message: 'Token inválido', statusCode: 401 });
-  if (tokenIsValid === undefined) next({ message: 'Token não encontrado', statusCode: 401 });
+  if (tokenIsValid === undefined) return response.status(401).send({ message: 'Token não encontrado' });
+  if (!tokenIsValid) return response.status(401).send({ message: 'Token inválido' });
+  return next();
+}
 
+async function handleCrushValidation(request, response, next) {
+  const { name, age, date } = request.body;
+  const nameIsValid = validateCrushName(name);
+  if (nameIsValid === undefined) return response.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!nameIsValid) return response.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+
+  const minAge = 18;
+  if (!age || typeof age !== 'number') return response.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (age < minAge) return response.status(400).send({ message: 'O crush deve ser maior de idade' });
+
+  const rateFormat = /^[1-5]$/gm;
+  const dateFormat = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+
+  if (date === undefined || date.datedAt === undefined || date.rate === undefined) return response.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (!rateFormat.test(date.rate)) return response.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (!dateFormat.test(date.datedAt)) return response.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+
+  next();
+}
+
+function modifyFile(newCrushArray) {
+  const updatedFile = fs.writeFile(crushData, newCrushArray, (err, data) => {
+    if (err) {
+      console.error(`Não foi possível ler o arquivo ${crushData}\n Erro: ${err}`);
+      process.exit(1);
+    }
+    return data;
+  });
+  return updatedFile;
+}
+
+async function addCrush(request, response) {
   const { name, age, date } = request.body;
   const data = await parsedData();
   const id = data.length + 1;
-  const newCrush = data.concat({ name, age, id, date });
-  response.status(201).json(newCrush);
+  const crushAdded = { name, age, id, date };
+  const newCrushArray = data.concat({ name, age, id, date });
+  modifyFile(newCrushArray);
+  response.status(201).json(crushAdded);
 }
 
 module.exports = {
   handleLogin,
   addCrush,
+  modifyFile,
+  handleLoginValidation,
+  handleCrushValidation,
 };

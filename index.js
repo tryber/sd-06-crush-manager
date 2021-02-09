@@ -5,7 +5,7 @@ const SUCCESS = 200;
 const port = 3000;
 
 const { getCrush, getCrushId } = require('./getRequest');
-const { handleLogin, addCrush } = require('./postRequest');
+const { handleLogin, addCrush, handleLoginValidation, handleCrushValidation } = require('./postRequest');
 const { handleError } = require('./utils/middlewareError');
 
 app.use(express.json());
@@ -17,7 +17,7 @@ app.get('/crush', getCrush);
 app.get('/crush/:id', getCrushId);
 
 app.post('/login', handleLogin);
-app.post('/crush', addCrush);
+app.post('/crush', handleLoginValidation, handleCrushValidation, addCrush);
 
 app.use(handleError);
 
