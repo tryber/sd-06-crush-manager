@@ -12,13 +12,4 @@ const readFile = () => new Promise((resolve, reject) => {
   });
 });
 
-// const teste = async () => {
-//   const pwd = await readFile('');
-//   console.log(pwd);
-// };
-
-// teste();
-
-// node services/readFile.js
-
 module.exports = readFile;
