@@ -16,15 +16,24 @@ routes.get('/crush', async (req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
-routes.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  const token = crypto.randomBytes(8).toString('hex');
+const validatingEmail = (err, req, res, next) => {
+  const { email } = req.body;
   const emailValidation = email && email !== '' ? validateEmail(email) : '';
-  const passwordValidation = password && password !== '' ? validatePassword(password) : '';
   if (emailValidation === '' || emailValidation === undefined) res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  if (passwordValidation === '' || passwordValidation === undefined) res.status(400).json({ message: 'O campo "password  " é obrigatório' });
-  if (emailValidation === false) res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com' });
+  if (emailValidation === false) res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  next();
+};
+
+const validatingPassword = (req, res, next) => {
+  const { password } = req.body;
+  const passwordValidation = password && password !== '' ? validatePassword(password) : '';
+  if (passwordValidation === '' || passwordValidation === undefined) res.status(400).json({ message: 'O campo "password" é obrigatório' });
   if (passwordValidation === false) res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  next();
+};
+
+routes.post('/login', validatingEmail, validatingPassword, (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
   res.status(200).send({ token });
 });
 
