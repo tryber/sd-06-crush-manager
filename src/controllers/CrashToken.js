@@ -1,11 +1,10 @@
-const express = require('express');
 const cryptoRandomString = require('crypto-random-string');
 
-// const crushs = '../../crush.json';
+const { writeCrushFile } = require('../utils/manageFiles');
 
-const router = express.Router();
+const crashToken = '../auth/token.json';
 
-router.post('/login', async (req, res) => {
+const crushToken = async (req, res) => {
   const { email, password } = req.body;
   const token = cryptoRandomString({ length: 16 });
   const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
@@ -23,7 +22,9 @@ router.post('/login', async (req, res) => {
     return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
 
-  return res.status(200).send({ token });
-});
+  writeCrushFile(crashToken, { token });
 
-module.exports = router;
+  return res.status(200).send({ token });
+};
+
+module.exports = crushToken;

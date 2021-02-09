@@ -6,11 +6,9 @@ const SUCCESS = 200;
 
 app.use(bodyParser.json());
 
-const CrashAll = require('./src/controllers/CrashAll');
-const CrashById = require('./src/controllers/CrashById');
-const CrashToken = require('./src/controllers/CrashToken');
+const CrashRoutes = require('./src/routes/crushRoutes');
 
-app.use('/', CrashAll, CrashById, CrashToken);
+app.use('/', CrashRoutes);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
