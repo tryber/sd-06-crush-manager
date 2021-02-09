@@ -10,8 +10,8 @@ function verifyCrush(name, age, date) {
   const { datedAt, rate } = date;
 
   if (!datedAt || datedAt.length === 0) return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
-  // regex de data dd/mm/aaaa obtido em https://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy
-  const datePattern = /^(0?[1-9]|[12][0-9]|3[01])(0?[1-9]|1[012])\d{4}$/;
+
+  const datePattern = /^\s*(3[01]|[12][0-9]|0?[1-9])\/(1[012]|0?[1-9])\/((?:19|20)\d{2})\s*$/;
   if (!datePattern.test(datedAt)) return 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
 
   if (!rate || rate === '') return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';

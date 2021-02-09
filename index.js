@@ -30,6 +30,8 @@ app.use((req, res, next) => {
 
 app.post('/crush', crushRouter);
 
+app.put('/crush/:id', crushRouter);
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();

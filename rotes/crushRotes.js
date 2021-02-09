@@ -53,4 +53,29 @@ router.post('/crush', (req, res) => {
   res.status(201).send(newCrush);
 });
 
+router.put('/crush/:id', (req, res) => {
+  const data = fs.readFileSync('./crush.json', 'utf8');
+  const crushList = JSON.parse(data);
+  const { id } = req.params;
+  const { name, age, date } = req.body;
+
+  const crushIndex = crushList.findIndex((e) => e.id === parseInt(id, 10));
+
+  if (crushIndex === -1) return res.status(404).send({ message: 'Crush não encontrado' });
+
+  const crushCheck = verifyCrush(name, age, date);
+
+  if (crushCheck !== true) return res.status(400).send({ message: crushCheck });
+
+  const editedCrush = { id, name, age, date };
+
+  crushList[crushIndex] = editedCrush;
+
+  const file = JSON.stringify(crushList);
+
+  fs.writeFileSync('./crush.json', file);
+
+  res.status(200).send(editedCrush);
+});
+
 module.exports = router;
