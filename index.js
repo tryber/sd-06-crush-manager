@@ -105,7 +105,7 @@ app.put('/crush/:id', (request, response) => {
   const crushes = readerFile();
   let crush = crushes.filter((element) => element.id === id);
   crush = ({ age, date, id, name });
-  response.status(201).send(crush);
+  response.status(200).send(crush);
 });
 
 app.listen(PORT, () => console.log(`Em execução ${PORT}`));
