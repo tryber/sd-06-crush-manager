@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs').promises;
 const { gen } = require('n-digit-token');
 const Joi = require('joi');
-const fileCrush = require('./crush.json');
+// const fileCrush = require('./crush.json');
 
 const app = express();
 const SUCCESS = 200;
