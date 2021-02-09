@@ -86,7 +86,9 @@ app.post('/login', (request, response) => {
 });
 
 app.all('/crush', (request, response) => {
-  response.status(SUCCESS).send('CRUSH');
+  const requestObject = request.body;
+
+  response.status(SUCCESS).send(requestObject);
 });
 
 app.listen(3000, () => {

@@ -8,7 +8,7 @@ function sortCharIndex() {
 
 module.exports = function generateToken(tokenSize) {
   const tokenAggregator = [];
-  for (let i = 0; i <= tokenSize; i += 1) {
+  for (let i = 1; i <= tokenSize; i += 1) {
     const index = sortCharIndex();
     const char = charList[index];
     tokenAggregator.push(char);
