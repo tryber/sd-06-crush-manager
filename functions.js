@@ -27,11 +27,11 @@ const createToken = () => {
   return token;
 };
 
-const validateToken = (token) => {
-  if (!token || token.toString() === '') {
+const validateToken = (authorization) => {
+  if (!authorization || authorization.toString() === '') {
     return 'Token não encontrado';
   }
-  if (token.length !== 16) {
+  if (authorization.length !== 16) {
     return 'Token inválido';
   }
   return 'OK';
