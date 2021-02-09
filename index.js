@@ -71,7 +71,6 @@ app.post('/crush', async (req, res) => {
   const { authorization } = req.headers;
   const { name, age, date } = req.body;
 
-  console.log('Authorization: ', authorization);
   const validToken = validateToken(authorization);
   if (validToken !== 'OK') {
     return res.status(UNAUTHORIZED).json({ message: validToken });
@@ -89,4 +88,4 @@ app.post('/crush', async (req, res) => {
   res.status(CREATED).json(newCrush);
 });
 
-app.listen(3000);
+app.listen(3000, () => console.log('Crush Magager Started: Port 3000'));
