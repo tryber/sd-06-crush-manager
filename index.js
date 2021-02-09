@@ -19,6 +19,7 @@ app.get('/', (_request, response) => {
 });
 
 const getAllCrushes = () => JSON.parse(fs.readFileSync('./crush.json', 'utf8'));
+const writeFile = async (content) => fs.writeFileSync('./crush.json', content);
 
 app.get('/crush', (request, response) => {
   response.status(SUCCESS).send(getAllCrushes());
@@ -88,18 +89,24 @@ const validateCrushInformation = (name, age, date) => {
   return 'OK';
 };
 
-app.post('/crush', (request, response) => {
+app.post('/crush', async (request, response) => {
   const { name, age, date } = request.body;
   const message = validateCrushInformation(name, age, date);
 
   if (message !== 'OK') {
     return response.status(BADREQUEST).json({ message });
   }
-  const user = request.body;
-  response.status(CREATED).json(user);
+
+  const crushes = getAllCrushes();
+  const newCrush = { id: crushes.length + 1, ...request.body };
+  const newCrushData = crushes.concat(newCrush);
+
+  await writeFile(JSON.stringify(newCrushData));
+
+  response.status(CREATED).json(newCrush);
 });
 
-app.put('/crush/:id', (request, response) => {
+app.put('/crush/:id', async (request, response) => {
   const { name, age, date } = request.body;
   const message = validateCrushInformation(name, age, date);
   if (message !== 'OK') {
@@ -108,12 +115,22 @@ app.put('/crush/:id', (request, response) => {
 
   const { id } = request.params;
   const crushes = getAllCrushes();
-  let crushToEdit = crushes.find((crush) => crush.id === +id);
-  crushToEdit = ({ name, age, id, date });
-  response.status(SUCCESS).send(crushToEdit);
+  const crushNewInfo = ({ name, age, id: +id, date });
+  crushes[id] = crushNewInfo;
+  await writeFile(JSON.stringify(crushes));
+
+  console.log('test', crushes);
+  response.status(SUCCESS).json(crushNewInfo);
 });
 
-// app.delete('/crush/:id', deleteCrush);
+app.delete('/crush/:id', async (request, response) => {
+  const { id } = request.params;
+  const filteredCrushes = getAllCrushes().filter((crush) => crush.id !== +id);
+
+  await writeFile(JSON.stringify(filteredCrushes));
+
+  response.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
 
 // app.get('/crush/search?q=searchTerm', searchCrushByTerm);
 
