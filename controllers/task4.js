@@ -21,7 +21,7 @@ const insertCrush = (bodyData) => new Promise(
           if (err) reject(new Error('Não foi possível incluir o crush na base de dados'));
         });
       })
-      .then((response) => {
+      .then(() => {
         getCrushes()
           .then((r) => {
             const newCrushes = r;

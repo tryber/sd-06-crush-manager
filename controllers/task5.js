@@ -24,7 +24,7 @@ const updateCrush = (id, bodyData) => new Promise(
           if (err) reject(new Error('Não foi possível atualizar o crush na base de dados'));
         });
       })
-      .then((response) => {
+      .then(() => {
         getCrushes()
           .then((r) => {
             const updatedCrush = r.find((c) => c.id === id);
