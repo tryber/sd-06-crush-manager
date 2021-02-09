@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const SUCCESS = 200;
 const ERROR = 400;
 
@@ -20,12 +22,8 @@ const loginControl = (request, response, next) => {
       message: 'O campo "password" é obrigatório',
     });
   }
-  const tokenGenerator = () => {
-    const random = Math.random().toString(36).substr(5);
-    return random;
-  };
 
-  const token = tokenGenerator() + tokenGenerator();
+  const token = crypto.randomBytes(8).toString('hex');
   const generatedToken = { token };
 
   response.status(SUCCESS).json(generatedToken);
