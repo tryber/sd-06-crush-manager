@@ -78,7 +78,7 @@ const validationInfo = (name, age, date) => {
 app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
   const message = validationInfo(name, age, date);
-  if (message !== '') return res.status(400).json({ message });
+  if (message !== '') return res.status(400).send({ message });
   const crushes = readerFile();
   const crush = { age, date, id: crushes.length + 1, name };
   crushes.push(crush);
