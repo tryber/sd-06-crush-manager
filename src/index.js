@@ -10,6 +10,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use(bodyParser.json());
+app.listen(3000, () => console.log('running'));
 
 // ------- Requisito 1 --------
 
