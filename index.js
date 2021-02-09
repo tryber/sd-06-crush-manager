@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const crypto = require('crypto');
+const crypto = require('crypto');
 
 const app = express();
 const SUCCESS = 200;
@@ -48,43 +48,43 @@ app.get('/crush/:id', async (req, res) => {
 
 // Requisito 3
 
-// const { emailValidation, passwordValidation } = require('./src/utils/validator');
+const { emailValidation, passwordValidation } = require('./src/utils/validator');
 
-// const token = crypto.randomBytes(8).toString('hex');
+const token = crypto.randomBytes(8).toString('hex');
 
-// app.use(express.json());
+app.use(express.json());
 
-// app.use((req, res, next) => {
-//   const { email, password } = req.body;
-//   // console.log(email, password);
-//   if (emailValidation(email)) {
-//     if (!email || email === '') {
-//       res.status(400).json({
-//         message: 'O campo "email" é obrigatório',
-//       });
-//     } else {
-//       res.status(400).json({
-//         message: 'O "email" deve ter o formato "email@email.com"',
-//       });
-//     }
-//   }
-//   if (passwordValidation(password)) {
-//     if (!password || password === '') {
-//       res.status(400).json({
-//         message: 'O campo "password" é obrigatório',
-//       });
-//     } else {
-//       res.status(400).json({
-//         message: 'A "senha" deve ter pelo menos 6 caracteres',
-//       });
-//     }
-//   }
-//   next();
-// });
+app.use(async (req, res, next) => {
+  const { email, password } = req.body;
+  // console.log(email, password);
+  if (emailValidation(email)) {
+    if (!email || email === '') {
+      await res.status(400).json({
+        message: 'O campo "email" é obrigatório',
+      });
+    } else {
+      await res.status(400).json({
+        message: 'O "email" deve ter o formato "email@email.com"',
+      });
+    }
+  }
+  if (passwordValidation(password)) {
+    if (!password || password === '') {
+      await res.status(400).json({
+        message: 'O campo "password" é obrigatório',
+      });
+    } else {
+      await res.status(400).json({
+        message: 'A "senha" deve ter pelo menos 6 caracteres',
+      });
+    }
+  }
+  next();
+});
 
-// app.post('/login', (_req, res) => {
-//   res.json(token);
-// });
+app.post('/login', async (_req, res) => {
+  await res.json(token);
+});
 
 // _______________________________________________________
 
