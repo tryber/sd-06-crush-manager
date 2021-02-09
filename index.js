@@ -3,7 +3,7 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { checkEmail, checkPasswordCont, createToken } = require('./validations.js');
+const { checkEmail, checkPasswordCont, createToken, verifyToken } = require('./validations.js');
 
 const app = express();
 const SUCCESS = 200;
@@ -53,6 +53,28 @@ app.post('/login', (req, res) => {
 
   const token = createToken();
   res.status(200).json({ token });
+});
+
+// Desafio 04 - endpoint POST /crush
+const posts = {
+  name: 'Keanu Reeves',
+  age: 56,
+  date: {
+    datedAt: '22/10/2019',
+    rate: 5,
+  },
+};
+
+app.post('/crush', (req, res) => {
+  const { authorization: token } = req.header;
+  if (!token || token === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (!verifyToken(token)) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  res.send('POST request to the homepage');
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

@@ -4,16 +4,25 @@ const checkEmail = (email) => {
   const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
   return regex.test(email);
 };
+
 const checkPasswordCont = (password) => {
   const passwordCont = password.toString().length >= 6;
   return passwordCont;
 };
+
 const createToken = () => {
   const token = crypto.randomBytes(8).toString('hex');
   return token;
 };
+
+const verifyToken = (token) => {
+  const tokenRegex = /^(\d|\w){12}$/gm;
+  return tokenRegex.test(token);
+};
+
 module.exports = {
   checkEmail,
   checkPasswordCont,
   createToken,
+  verifyToken,
 };
