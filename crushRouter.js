@@ -102,4 +102,24 @@ router.put('/:id', (req, res) => {
   res.status(SUCCESS).send(updatedCrush);
 });
 
+router.delete('/:id', async (req, res) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(Unauthorized).send({ message: 'Token não encontrado' });
+  if (authorization && authorization.length !== 16) return res.status(Unauthorized).send({ message: 'Token inválido' });
+
+  const { id } = req.params;
+  const crushIndex = req.crushes.findIndex((person) => person.id === Number(id));
+
+  if (crushIndex >= 0) {
+    try {
+      const deleteCrush = req.crushes.filter((person) => person.id !== Number(id));
+      const crushJson = await JSON.parse(deleteCrush);
+      await fs.writeFile('crush.json', crushJson, 'utf-8');
+      res.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+});
+
 module.exports = router;
