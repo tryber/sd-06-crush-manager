@@ -19,6 +19,7 @@ module.exports = {
     const crushId = +req.params.id;
     const data = await fs.readFile('./crush.json', 'utf-8');
     const selectedCrush = JSON.parse(data).filter((crush) => crush.id === crushId);
+
     if (selectedCrush.length >= minimumLength) {
       return res.status(SUCCESS).send(selectedCrush[firstIndex]);
     }
@@ -29,11 +30,11 @@ module.exports = {
     const { searchTerm } = req.query.q;
     const previousList = await fs.readFile('./crush.json', 'utf-8');
     const previousListJson = JSON.parse(previousList);
-    if (!searchTerm || searchTerm === '') {
+    const crushFound = previousListJson
+      .find((crush) => crush.name === searchTerm);
+    if (!crushFound || crushFound === '') {
       return res.status(SUCCESS).json(previousListJson);
     }
-    const crushFound = previousListJson
-      .filter(({ name }) => name.includes(searchTerm));
     return res.status(SUCCESS).json(crushFound);
   },
 };

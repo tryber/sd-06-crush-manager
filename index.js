@@ -18,8 +18,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', getCrushes);
-app.get('/crush/:id', getCrushById);
 app.get('/crush/search', tokenAuthenticator, getBySearchTerm);
+app.get('/crush/:id', getCrushById);
 
 app.post('/login', loginValidator, handleLogin);
 app.post('/crush', tokenAuthenticator, alterCrushValidator, addCrush);
