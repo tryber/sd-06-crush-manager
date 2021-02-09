@@ -47,6 +47,13 @@ module.exports = {
         .json({ message: 'O crush deve ser maior de idade' });
     }
 
+    if (date) {
+      if (date.rate < 1 || date.rate > 5) {
+        return res.status(BAD_REQUEST)
+          .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      }
+    }
+
     if (!date || !date.datedAt || !date.rate) {
       return res.status(BAD_REQUEST)
         .json({
@@ -59,11 +66,6 @@ module.exports = {
       if (!validatedDate) {
         return res.status(BAD_REQUEST)
           .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-      }
-
-      if (date.rate < 1 || date.rate > 5) {
-        return res.status(BAD_REQUEST)
-          .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
       }
     }
     return next();
