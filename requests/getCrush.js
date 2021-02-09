@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+// const { readerFile, writerFile } = require('../utils/managerFiles');
 
 const readerFileCrush = async () => {
   const content = await fs.readFile(path.resolve(__dirname, '..', 'crush.json'));
