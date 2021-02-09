@@ -5,23 +5,20 @@ const validateDate = (myDate) => {
   return regex.test(String(myDate).toLocaleLowerCase());
 };
 
-const validateToken = async (req, res) => {
-  const TOKEN_STATUS = 401;
+// const validateToken = async (req, res) => {
+//   const TOKEN_STATUS = 401;
 
-  const { authorization } = req.headers;
+//   const { authorization } = req.headers;
 
-  if (!authorization) {
-    return res.status(TOKEN_STATUS).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return res.status(TOKEN_STATUS).json({ message: 'Token inválido' });
-  }
-};
+//   if (!authorization) {
+//     return res.status(TOKEN_STATUS).json({ message: 'Token não encontrado' });
+//   }
+//   if (authorization.length !== 16) {
+//     return res.status(TOKEN_STATUS).json({ message: 'Token inválido' });
+//   }
+// };
 
 const validateCrush = async (request, response) => {
-  const data = await readFile();
-  console.log(data);
-
   const { name, age, date } = request.body;
   // const { datedAt, rate } = date;
 
@@ -31,8 +28,18 @@ const validateCrush = async (request, response) => {
   const INTERNAL_ERROR = 500;
 
   //
-  validateToken(request, response);
-  // asd
+  // validateToken(request, response);
+  const TOKEN_STATUS = 401;
+
+  const { authorization } = request.headers;
+
+  if (!authorization) {
+    return response.status(TOKEN_STATUS).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return response.status(TOKEN_STATUS).json({ message: 'Token inválido' });
+  }
+  // fim
 
   if (!name) {
     message = 'O campo "name" é obrigatório';
@@ -66,11 +73,13 @@ const validateCrush = async (request, response) => {
     return response.status(FAIL).json({ message });
   }
 
+  const data = await readFile();
+
   if (!data) return response.status(INTERNAL_ERROR).send({ message: 'Não foi possível ler o arquivo!' });
   const id = data.length + 1;
 
   data.push({ name, age, id, date });
-  response.status(SUCCESS).json(data);
+  return response.status(SUCCESS).json(data);
 };
 
 module.exports = validateCrush;
