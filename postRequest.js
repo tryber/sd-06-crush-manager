@@ -1,34 +1,28 @@
 const crypto = require('crypto');
 
 const verifyEmail = (email) => {
-  const emailRegex = /^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-z]+$/;
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
   return emailRegex.test(email);
 };
 
 const verifyPassword = (password) => {
-  const passwordRegex = /^\d{4,8}$/gm;
+  const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
   return passwordRegex.test(password);
 };
 
 module.exports = {
-  async login(request, response, next) {
+  async login(request, response) {
     const { email, password } = request.body;
 
-    const validEmail = verifyEmail(email);
+    if (email === '' || !email) return response.status(400).json({ message: 'O campo "email" é obrigatório' });
 
-    const validPassword = verifyPassword(password);
+    if (verifyEmail(email) === false) return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
 
-    if (validEmail && validPassword) {
-      const token = crypto.randomBytes(8).toString('hex');
-      return response.status(200).json({ token });
-    }
+    if (password === '' || !password) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
 
-    if (email === '' || !email) return next({ message: 'O campo "email" é obrigatório' });
+    if (verifyPassword(password) === false) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 
-    if (!validEmail) return next({ message: 'O "email" deve ter o formato "email@email.com"' });
-
-    if (password === '' || !password) return next({ message: 'O campo "password" é obrigatório' });
-
-    if (password.length < 6) return next({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+    const token = crypto.randomBytes(8).toString('hex');
+    return response.json({ token });
   },
 };
