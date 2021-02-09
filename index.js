@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readMyFile } = require('./manageFiles/middlewares');
+const { readMyFile, getCrushByID, error } = require('./manageFiles/middlewares');
 
 const app = express();
 const SUCCESS = 200;
@@ -23,5 +23,8 @@ app.use((req, res, next) => {
 });
 
 app.get('/:fileName', readMyFile);
+app.get('/:fileName/:id', getCrushByID);
+
+app.use(error);
 
 app.listen(port, () => console.log('Running Project Crush Manager!'));
