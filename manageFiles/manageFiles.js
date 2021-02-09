@@ -6,7 +6,7 @@ const readFile = async (fileName) => {
   return JSON.parse(file);
 };
 
-// const writeFile = async (fileName, content) => {
+// const writeFile = async (fileName, _content) => {
 //   await fs.writeFile(path(__dirname, '..', `${fileName} + '.json'`), 'utf-8');
 //   return true;
 // };
