@@ -1,5 +1,6 @@
 const express = require('express');
-const { readFile } = require('./useful/readAndWriteFiles');
+
+const chushRouter = require('./chushRouter');
 
 const app = express();
 const SUCCESS = 200;
@@ -10,10 +11,15 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (_req, res) => {
-  const crush = await readFile('crush');
-  console.log(crush);
-  return res.status(200).send(crush);
-});
+// app.use((req, _res, next) => {
+//   console.log({
+//     data: new Date(),
+//     method: req.method,
+//     router: req.originalUrl,
+//   });
+//   next();
+// });
+
+app.use('/crush', chushRouter);
 
 app.listen(port, () => console.log('running port', port));
