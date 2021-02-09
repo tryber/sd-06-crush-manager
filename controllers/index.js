@@ -16,6 +16,9 @@ const putCrush = require('./task5');
 // Task 6
 const deleteCrush = require('./task6');
 
+// Task 6
+const search = require('./task7');
+
 module.exports = {
   getAllCrushes,
   getSpecificCrush,
@@ -23,4 +26,5 @@ module.exports = {
   postCrush,
   putCrush,
   deleteCrush,
+  search,
 };

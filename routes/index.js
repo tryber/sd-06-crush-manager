@@ -9,7 +9,11 @@ const {
   postCrush,
   putCrush,
   deleteCrush,
+  search,
 } = require('../controllers');
+
+// Task 7
+router.get('/crush/search', search);
 
 // Task 1
 router.get('/crush', getAllCrushes);
