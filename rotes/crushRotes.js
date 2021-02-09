@@ -67,7 +67,7 @@ router.put('/crush/:id', (req, res) => {
 
   if (crushCheck !== true) return res.status(400).send({ message: crushCheck });
 
-  const editedCrush = { id, name, age, date };
+  const editedCrush = { id: parseInt(id, 10), name, age, date };
 
   crushList[crushIndex] = editedCrush;
 
