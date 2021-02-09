@@ -60,7 +60,7 @@ const validateCrush = async (request, response) => {
   }
 
   if (!date || date === '' || !date.datedAt || date.rate === undefined) {
-    message = 'O campo date é obrigatório e datedAt e rate não podem ser vazios';
+    message = 'O campo "date" é obrigatório e datedAt e rate não podem ser vazios';
     return response.status(FAIL).json({ message });
   }
 
@@ -69,7 +69,7 @@ const validateCrush = async (request, response) => {
     return response.status(FAIL).json({ message });
   }
   if (!validateDate(date.datedAt)) {
-    message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa';
+    message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
     return response.status(FAIL).json({ message });
   }
 
