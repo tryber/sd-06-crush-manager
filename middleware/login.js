@@ -11,7 +11,6 @@ const validateEmail = (email) => {
 const emailValidator = async (req, res, next) => {
   try {
     const { email } = req.body;
-    console.log(email);
     if (!email || email.length === 0) {
       throw new ErrorHandler(400, 'O campo "email" é obrigatório');
     } else if (!validateEmail(email)) {
@@ -43,7 +42,6 @@ const passwordValidator = async (req, res, next) => {
 };
 
 const login = (req, res) => {
-  console.log('login');
   const token = tokenGenerator();
   res.status(200).json({
     token,
