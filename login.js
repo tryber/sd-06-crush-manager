@@ -7,7 +7,6 @@ const token = crypto.randomBytes(8).toString('hex');
 
 const getToken = (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
 
   if (!email) {
     res.status(400).send({ message: 'O campo "email" é obrigatório' });
