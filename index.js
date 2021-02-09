@@ -25,7 +25,11 @@ app.get('/crush/:id', async (request, response) => {
   response.status(SUCCESS).send(crush);
 });
 
-// Requisito 4
+// Requisito 3
+app.post('/login', async (request, _response) => {
+  const { content } = request.body;
+  console.log(content);
+});
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
