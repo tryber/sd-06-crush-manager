@@ -5,8 +5,8 @@ routes.get('/crush/:id', async (req, res) => {
   const crushId = parseInt(req.params.id, 10);
   const fullFile = await readFile('crush');
   const idFile = JSON.parse(fullFile).find((crush) => crush.id === crushId);
-  if (idFile !== undefined) res.status(200).json(idFile);
-  res.status(404).json({ message: 'Crush não encontrado' });
+  if (idFile === undefined) res.status(404).json({ message: 'Crush não encontrado' });
+  res.status(200).json(idFile);
 });
 
 routes.get('/crush', async (req, res) => {
