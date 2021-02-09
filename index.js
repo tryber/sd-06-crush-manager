@@ -8,6 +8,7 @@ const { validateCrush } = require('./middlewares/validateCrush');
 const { addNewCrush } = require('./middlewares/addNewCrush');
 const { updateCrush } = require('./middlewares/updateCrush');
 const { deleteCrush } = require('./middlewares/deleteCrush');
+const { searchCrush } = require('./middlewares/searchCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -22,6 +23,8 @@ app.use(bodyParser.json());
 app.post('/login', login);
 app.get('/crush', getAllCrushes);
 app.get('/crush/:id', getCrushById);
+
+app.get('/crush/search', checkToken, searchCrush);
 
 app.post('/crush', checkToken, validateCrush, addNewCrush);
 
