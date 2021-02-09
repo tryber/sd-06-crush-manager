@@ -18,7 +18,7 @@ async function getData(arq) {
 }
 
 function generateToken() {
-  const token = crypto.randomBytes(20).toString('hex');
+  const token = crypto.randomBytes(8).toString('hex');
   return token;
 }
 
@@ -36,11 +36,11 @@ app.get('/crush/:id', async (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const token = generateToken();
+  const tokenGenerate = generateToken();
   const bodyData = req.body;
   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/i;
 
-  if (bodyData.email === null || bodyData.email === '') {
+  if (!bodyData.email || bodyData.email === '') {
     return res.status(400).send({
       message: 'O campo "email" é obrigatório',
     });
@@ -50,18 +50,18 @@ app.post('/login', (req, res) => {
     });
   }
 
-  if (bodyData.password === null || bodyData.password === '') {
+  if (!bodyData.password || bodyData.password === '') {
     console.log(bodyData.password);
-    return res.status(200).send({
+    return res.status(400).send({
       message: 'O campo "password" é obrigatório',
     });
   } if (String(bodyData.password).length < 6) {
-    return res.status(200).send({
+    return res.status(400).send({
       message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
   }
-  return res.status(200).send({
-    token: '7mqaVRXJSp886CGr',
+  return res.send({
+    token: tokenGenerate,
   });
 });
 
