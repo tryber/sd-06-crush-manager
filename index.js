@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const lerArquivo = require('./lerArquivo');
+/* const { validEmail, validToken} = require('./Regex/index'); */
 
 const app = express();
 const SUCCESS = 200;
@@ -23,13 +24,18 @@ app.get('/crush', async (req, res) => {
 });
 
 app.get('/crush/:id', async (req, res) => {
-  const paramId = parseInt(req.params.id);
+  const paramId = parseInt(req.params.id, 10);
 
   const data = await lerArquivo(meuArquivo);
   const dataConvertido = JSON.parse(data);
-  const dataId = dataConvertido.filter((usuario) => usuario.id === paramId);
+  const dataId = await dataConvertido.filter((usuario) => usuario.id === paramId)[0];
+  if (paramId > dataConvertido.length || paramId < 0) return res.status(404).send({ message: 'Crush não encontrado' });
+  /* if (dataId === undefined) return res.status(404).send({ message: 'Crush não encontrado' }); */
   return res.status(200).send(dataId);
-  /* if (!dataConvertido) return res.status(404).json({ message: 'Crush não encontrado' }); */
 });
+
+/* app.post('/login', (req, res) => {
+
+}); */
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
