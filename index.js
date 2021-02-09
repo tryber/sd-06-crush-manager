@@ -3,6 +3,8 @@ const fs = require('fs');
 
 const app = express();
 const SUCCESS = 200;
+const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
+const token = { token: '7mqaVRXJSp886CGr' };
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -24,6 +26,23 @@ app.get('/crush/:id', (req, res) => {
     return res.status(404).send({ message: 'Crush não encontrado' });
   }
   return res.status(SUCCESS).send(crush[0]);
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (email === '') {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  }
+  if (password === '') {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  res.status(SUCCESS).send(token);
 });
 
 app.listen(3000, () => { console.log('porta: 3000 ativa'); });
