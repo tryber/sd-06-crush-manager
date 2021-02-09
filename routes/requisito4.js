@@ -20,7 +20,7 @@ const loginControl = (request, response, next) => {
   } else if (password) {
     if (password.length < 6) {
       response.status(ERROR).json({
-        message: 'A "senha" deve ter pelo menos 6 caracteres',
+        message: 'O "password" ter pelo menos 6 caracteres',
       });
     }
   }
