@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const router = express.Router();
 
@@ -10,15 +10,15 @@ const badRequest = 400;
 const Unauthorized = 401;
 const notFound = 404;
 
-router.use((req, _res, next) => {
+router.use(async (req, _res, next) => {
   const crushPath = path.join('', 'crush.json');
-  const crushJson = fs.readFileSync(crushPath);
-  const crush = JSON.parse(crushJson);
+  const crushJson = await fs.readFile(crushPath);
+  const crush = await JSON.parse(crushJson);
   req.crushes = crush;
   next();
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const result = (id && id >= 0) && req.crushes.find((person) => person.id === Number(id));
 
@@ -110,16 +110,16 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   const crushIndex = req.crushes.findIndex((person) => person.id === Number(id));
 
-  if (crushIndex >= 0) {
+  if (crushIndex > -1) {
     try {
       const deleteCrush = req.crushes.filter((person) => person.id !== Number(id));
       const crushJson = await JSON.parse(deleteCrush);
       await fs.writeFile('crush.json', crushJson, 'utf-8');
-      res.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
     } catch (e) {
       throw new Error(e);
     }
   }
+  res.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
 });
 
 module.exports = router;
