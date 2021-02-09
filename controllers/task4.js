@@ -12,7 +12,7 @@ const getNumberOfCrushes = () =>
 
 const checkToken = (token) => {
   let msg = 'ok';
-  if (token === undefined) {
+  if (!token) {
     msg = 'Token não encontrado';
   } else if (token.length !== 16) {
     msg = 'Token inválido';
@@ -66,10 +66,10 @@ const postCrush = (req, res) => {
 
   if (msgName !== 'ok') {
     res.status(400).send({ message: msgName });
-  } else if (msgAge !== 'ok') {
-    res.status(400).send({ message: msgAge });
   } else if (msgToken !== 'ok') {
     res.status(401).send({ message: msgToken });
+  } else if (msgAge !== 'ok') {
+    res.status(400).send({ message: msgAge });
   } else if (msgDate !== 'ok') {
     res.status(400).send({ message: msgDate });
   } else {
