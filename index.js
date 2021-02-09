@@ -110,4 +110,12 @@ app.put('/crush/:id', (req, res) => {
   res.status(200).send(crush);
 });
 
+app.delete('/crush/:id', (req, res) => {
+  let { id } = req.params;
+  id = parseInt(id, 10);
+  const crushes = getCrushes();
+  crushes.filter((e) => e.id === id);
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(port, () => console.log(`Aplicação rodando na porta ${port}!`));
