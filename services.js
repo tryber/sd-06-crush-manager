@@ -1,5 +1,3 @@
-const fs = require('fs').promises;
-
 const crypto = require('crypto');
 
 const tokenGenerator = () => crypto.randomBytes(8).toString('hex');
