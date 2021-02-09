@@ -18,7 +18,7 @@ const validateToken = async (req, res) => {
   }
 };
 
-const validateCrush = async (request, response, next) => {
+const validateCrush = async (request, response) => {
   const data = await readFile();
   console.log(data);
 
