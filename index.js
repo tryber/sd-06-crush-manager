@@ -36,12 +36,12 @@ app.get('/crush/:id', async (req, res) => {
   return res.status(SUCCESS).send(filteredCrush);
 });
 
-const emailTest = () => {
+const emailTest = (email) => {
   const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
   return regex.test(email);
 };
 
-const passwordTest = () => {
+const passwordTest = (passWord) => {
   const toString = password.toString();
   return (toString.length >= 6) || false;
 };
