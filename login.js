@@ -1,7 +1,13 @@
+const crypto = require('crypto');
+
 const validateEmail = (e, reg = /\S+@\S+\.\S+/) => reg.test(e);
 
+// https://stackoverflow.com/questions/8855687/secure-random-token-in-node-js
+const token = crypto.randomBytes(8).toString('hex');
+
 const getToken = (req, res) => {
-  const { email, password } = req.headers;
+  const { email, password } = req.body;
+  console.log(req.body);
 
   if (!email) {
     res.status(400).send({ message: 'O campo "email" é obrigatório' });
@@ -21,7 +27,7 @@ const getToken = (req, res) => {
     return;
   }
 
-  res.send({ token: '7mqaVRXJSp886CGr' });
+  res.send({ token });
 };
 
 module.exports = { getToken };
