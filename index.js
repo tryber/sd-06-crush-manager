@@ -48,42 +48,43 @@ app.get('/crush/:id', async (req, res) => {
 
 // Requisito 3
 
-const { emailValidation, passwordValidation } = require('./src/utils/validator');
+// const { emailValidation, passwordValidation } = require('./src/utils/validator');
 
-app.use(express.json());
+// const token = crypto.randomBytes(8).toString('hex');
 
-app.use((req, res, next) => {
-  const { email, password } = req.body;
-  // console.log(email, password);
-  if (emailValidation(email)) {
-    if (!email || email === '') {
-      res.status(400).json({
-        message: 'O campo "email" é obrigatório',
-      });
-    } else {
-      res.status(400).json({
-        message: 'O "email" deve ter o formato "email@email.com"',
-      });
-    }
-  }
-  if (passwordValidation(password)) {
-    if (!password || password === '') {
-      res.status(400).json({
-        message: 'O campo "password" é obrigatório',
-      });
-    } else {
-      res.status(400).json({
-        message: 'A "senha" deve ter pelo menos 6 caracteres',
-      });
-    }
-  }
-  next();
-});
+// app.use(express.json());
 
-app.post('/login', async (_req, res) => {
-  const token = await crypto.randomBytes(8).toString('hex');
-  return res.json(token);
-});
+// app.use((req, res, next) => {
+//   const { email, password } = req.body;
+//   // console.log(email, password);
+//   if (emailValidation(email)) {
+//     if (!email || email === '') {
+//       res.status(400).json({
+//         message: 'O campo "email" é obrigatório',
+//       });
+//     } else {
+//       res.status(400).json({
+//         message: 'O "email" deve ter o formato "email@email.com"',
+//       });
+//     }
+//   }
+//   if (passwordValidation(password)) {
+//     if (!password || password === '') {
+//       res.status(400).json({
+//         message: 'O campo "password" é obrigatório',
+//       });
+//     } else {
+//       res.status(400).json({
+//         message: 'A "senha" deve ter pelo menos 6 caracteres',
+//       });
+//     }
+//   }
+//   next();
+// });
+
+// app.post('/login', (_req, res) => {
+//   res.json(token);
+// });
 
 // _______________________________________________________
 
