@@ -70,7 +70,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const token = crypto.randomBytes(8).toString('hex');
-app.post('/login', (req, res) => res.json(token));
+app.post('/login', (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.json(token);
+});
 
 app.listen(3000, () => console.log('running'));
