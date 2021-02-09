@@ -3,7 +3,8 @@ const fs = require('fs');
 const readFile = (path) => new Promise((resolve, reject) => {
   fs.readFile(path, 'utf-8', (err, data) => {
     if (err) return reject(new Error(`${err.message}`));
-    resolve(data);
+    const crush = JSON.parse(data);
+    resolve(crush);
   });
 });
 
