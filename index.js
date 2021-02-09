@@ -10,6 +10,8 @@ const SUCCESS = 200;
 const FAILURE = 404;
 const BADREQUEST = 400;
 
+app.use(express.json());
+
 app.listen(3000, () => {
   console.log('Ouvindo a porta 3000');
 });
@@ -21,7 +23,7 @@ app.get('/', (_req, res) => {
 
 app.get('/crush', async (_req, res) => {
   const file = await fs.readFile(fileName, 'utf-8');
-  return res.status(SUCCESS).send(JSON.parse(file));
+  return res.status(SUCCESS).json(JSON.parse(file));
 });
 
 app.get('/crush/:id', async (req, res) => {
@@ -31,9 +33,9 @@ app.get('/crush/:id', async (req, res) => {
   const filteredCrush = parsedJson.find((crush) => crush.id === +id);
 
   if (!filteredCrush) {
-    return res.status(FAILURE).send({ message: 'Crush não encontrado' });
+    return res.status(FAILURE).json({ message: 'Crush não encontrado' });
   }
-  return res.status(SUCCESS).send(filteredCrush);
+  return res.status(SUCCESS).json(filteredCrush);
 });
 
 const emailTest = (email) => {
@@ -48,20 +50,18 @@ const passwordTest = (passWord) => {
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const testEmail = emailTest(email);
-  const testPassword = passwordTest(password);
 
   if (!email || !email.length) {
-    return res.status(BADREQUEST).send({ message: 'O campo "email" é obrigatório' });
+    return res.status(BADREQUEST).json({ message: 'O campo "email" é obrigatório' });
   }
-  if (!testEmail) {
-    return res.status(BADREQUEST).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (!emailTest(email)) {
+    return res.status(BADREQUEST).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   if (!password) {
-    return res.status(BADREQUEST).send({ message: 'O campo "password" é obrigatório' });
+    return res.status(BADREQUEST).json({ message: 'O campo "password" é obrigatório' });
   }
-  if (!testPassword) {
-    return res.status(BADREQUEST).send({ message: 'O "password" ter pelo menos 6 caracteres' });
+  if (!passwordTest(password)) {
+    return res.status(BADREQUEST).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
 
   const token = crypto.randomBytes(8).toString('hex');
