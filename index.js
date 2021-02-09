@@ -14,6 +14,19 @@ const authentication = { token: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
+const checkAuthentication = (request, response, next) => {
+  const { authorization } = request.headers;
+
+  if (!authorization) {
+    return response.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  }
+  if (authorization !== authentication.token) {
+    return response.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+
+  next();
+};
+
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
@@ -21,8 +34,18 @@ app.get('/', (_request, response) => {
 const getAllCrushes = () => JSON.parse(fs.readFileSync('./crush.json', 'utf8'));
 const writeFile = async (content) => fs.writeFileSync('./crush.json', content);
 
-app.get('/crush', (request, response) => {
+app.get('/crush', (_request, response) => {
   response.status(SUCCESS).send(getAllCrushes());
+});
+
+app.get('/crush/search', checkAuthentication, (request, response) => {
+  const searchText = request.query.q;
+  const crushes = getAllCrushes();
+  if (!searchText) response.status(SUCCESS).json(crushes);
+  console.log('query', searchText);
+  console.log('test');
+  const crushFound = crushes.filter((crush) => crush.name.includes(searchText));
+  response.status(SUCCESS).json(crushFound);
 });
 
 app.get('/crush/:id', (request, response) => {
@@ -54,19 +77,6 @@ app.post('/login', (request, response) => {
 
   response.status(SUCCESS).json(authentication);
 });
-
-const checkAuthentication = (request, response, next) => {
-  const { authorization } = request.headers;
-
-  if (!authorization) {
-    return response.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
-  }
-  if (authorization !== authentication.token) {
-    return response.status(UNAUTHORIZED).json({ message: 'Token inválido' });
-  }
-
-  next();
-};
 
 app.use(checkAuthentication);
 
@@ -119,7 +129,6 @@ app.put('/crush/:id', async (request, response) => {
   crushes[id] = crushNewInfo;
   await writeFile(JSON.stringify(crushes));
 
-  console.log('test', crushes);
   response.status(SUCCESS).json(crushNewInfo);
 });
 
@@ -131,7 +140,5 @@ app.delete('/crush/:id', async (request, response) => {
 
   response.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
 });
-
-// app.get('/crush/search?q=searchTerm', searchCrushByTerm);
 
 app.listen(port, console.log('Servidor funcionando'));
