@@ -1,9 +1,9 @@
-const { addANewCrush } = require('./addANewCrush');
+const { writeCrushList } = require('./writeCrushList');
 const { readFile } = require('./readFile');
 const { updateCrush } = require('./updateCrush');
 
 module.exports = {
-  addANewCrush,
+  writeCrushList,
   readFile,
   updateCrush,
 };
