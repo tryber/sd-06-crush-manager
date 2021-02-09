@@ -66,17 +66,11 @@ const validateCrush = async (request, response) => {
     return response.status(FAIL).json({ message });
   }
 
-  // const data = await readFile();
-  // console.log(data);
-  // const data = JSON.parse(await readFile());
-  // const data = request;
-  // console.log(data);
   if (!data) return response.status(INTERNAL_ERROR).send({ message: 'Não foi possível ler o arquivo!' });
   const id = data.length + 1;
 
   data.push({ name, age, id, date });
   response.status(SUCCESS).json(data);
-  // next();
 };
 
 module.exports = validateCrush;
