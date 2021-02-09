@@ -16,25 +16,26 @@ routes.get('/crush', async (req, res) => {
   res.status(200).json(JSON.parse(file));
 });
 
-const validatingEmail = (err, req, res, next) => {
+const validatingEmail = (req, res, next) => {
   const { email } = req.body;
-  const emailValidation = email && email !== '' ? validateEmail(email) : '';
-  if (emailValidation === '' || emailValidation === undefined) res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  if (emailValidation === false) res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  req.emailValidation = email && email !== '' ? validateEmail(email) : '';
+  if (req.emailValidation === '' || req.emailValidation === undefined) res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  if (req.emailValidation === false) res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   next();
 };
 
 const validatingPassword = (req, res, next) => {
   const { password } = req.body;
-  const passwordValidation = password && password !== '' ? validatePassword(password) : '';
-  if (passwordValidation === '' || passwordValidation === undefined) res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  if (passwordValidation === false) res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  req.passwordValidation = password && password !== '' ? validatePassword(password) : '';
+  if (req.passwordValidation === '' || req.passwordValidation === undefined) res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  if (req.passwordValidation === false) res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   next();
 };
 
 routes.post('/login', validatingEmail, validatingPassword, (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
-  res.status(200).send({ token });
+  const { emailValidation, passwordValidation } = req;
+  if (emailValidation && passwordValidation) res.status(200).send({ token });
 });
 
 module.exports = routes;
