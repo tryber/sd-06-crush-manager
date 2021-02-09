@@ -1,5 +1,5 @@
 const express = require('express');
-const { readMyFile } = require('./utils/middlewares');
+const { readMyFile } = require('./src/utils/middlewares');
 
 const app = express();
 const SUCCESS = 200;
