@@ -19,18 +19,18 @@ describe('5 - Crie o endpoint PUT /crush/:id', () => {
   });
 
 
-  afterEach(() => {
-    const crushSeed = fs.readFileSync(
-      path.join(__dirname, 'seed.json'),
-      'utf8',
-    );
+  // afterEach(() => {
+  //   const crushSeed = fs.readFileSync(
+  //     path.join(__dirname, 'seed.json'),
+  //     'utf8',
+  //   );
 
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'crush.json'),
-      crushSeed,
-      'utf8',
-    );
-  });
+  //   fs.writeFileSync(
+  //     path.join(__dirname, '..', 'crush.json'),
+  //     crushSeed,
+  //     'utf8',
+  //   );
+  // });
 
   it('Será validado que é possível editar um crush com sucesso', async () => {
     let resultCrush;

@@ -19,18 +19,18 @@ describe('7 - Crie o endpoint GET /crush/search?q=searchTerm', () => {
     );
   });
 
-  afterEach(() => {
-    const crushSeed = fs.readFileSync(
-      path.join(__dirname, 'seed.json'),
-      'utf8',
-    );
+  // afterEach(() => {
+  //   const crushSeed = fs.readFileSync(
+  //     path.join(__dirname, 'seed.json'),
+  //     'utf8',
+  //   );
 
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'crush.json'),
-      crushSeed,
-      'utf8',
-    );
-  });
+  //   fs.writeFileSync(
+  //     path.join(__dirname, '..', 'crush.json'),
+  //     crushSeed,
+  //     'utf8',
+  //   );
+  // });
   
   it('Será validado que é possível fazer uma busca por termo com sucesso', async () => {
     await frisby

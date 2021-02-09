@@ -19,18 +19,18 @@ describe('6 - Crie o endpoint DELETE /crush/:id', () => {
   });
 
 
-  afterEach(() => {
-    const crushSeed = fs.readFileSync(
-      path.join(__dirname, 'seed.json'),
-      'utf8',
-    );
+  // afterEach(() => {
+  //   const crushSeed = fs.readFileSync(
+  //     path.join(__dirname, 'seed.json'),
+  //     'utf8',
+  //   );
 
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'crush.json'),
-      crushSeed,
-      'utf8',
-    );
-  });
+  //   fs.writeFileSync(
+  //     path.join(__dirname, '..', 'crush.json'),
+  //     crushSeed,
+  //     'utf8',
+  //   );
+  // });
 
   it('Será validado que é possível deletar um crush com sucesso', async () => {
     let resultCrush;
