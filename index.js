@@ -5,6 +5,7 @@ const findOneCrushById = require('./findOneCrushById');
 const login = require('./login');
 const verifyToken = require('./verifyToken');
 const addCrush = require('./addCrush');
+const deleteCrush = require('./deleteCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -25,5 +26,7 @@ app.post('/login', login);
 app.use(verifyToken);
 
 app.post('/crush', addCrush);
+
+app.delete('/crush/:id', deleteCrush);
 
 app.listen(3000, () => console.log('Rodando na porta 3000'));
