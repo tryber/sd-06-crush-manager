@@ -17,4 +17,12 @@ app.get('/crush', async (req, res) => {
   res.status(SUCCESS).send(result);
 });
 
+app.get('/crush/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await readFile();
+  const filteredID = result.find((crush) => crush.id === parseInt(id, 10));
+  if (filteredID === undefined) return res.status(404).json({ message: 'Crush não encontrado' });
+  res.status(200).send(filteredID);
+});
+
 app.listen(port, () => console.log(`Server ouvindo na porta ${port}`));
