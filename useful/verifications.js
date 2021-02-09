@@ -3,4 +3,9 @@ const checkEmail = (email) => {
   return !regex.test(email);
 };
 
-module.exports = { checkEmail };
+const characterCount = (stringOrNumber) => {
+  const string = stringOrNumber.toString();
+  return string.length;
+};
+
+module.exports = { checkEmail, characterCount };
