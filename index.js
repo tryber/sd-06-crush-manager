@@ -7,7 +7,7 @@ const SUCCESS = 200;
 const PORT = 3000;
 const { verifyCrushes } = require('./middlewares/verifyCrushes');
 const { getByIdCrush } = require('./middlewares/getByIdCrush');
-const { login } = require('./middlewares/login');
+const login = require('./middlewares/login');
 
 app.use(bodyParser.json());
 
