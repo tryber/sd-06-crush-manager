@@ -1,7 +1,9 @@
 const readFile = require('./readFile.js');
 
 const validateCrushId = async (request, response, _next) => {
-  const { id } = request.params;
+  // const { id } = request.params;
+  const id = +request.params.id;
+  console.log(typeof id, id);
   const { name, age, date } = request.body;
   let message = '';
   const FAIL = 400;
