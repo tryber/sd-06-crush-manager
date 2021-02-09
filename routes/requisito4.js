@@ -31,9 +31,13 @@ const addCrush = async (request, response, _next) => {
       if (!dateFormat.test(dateInput)) response.status(ERROR400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
     }
   }
+
   const file = await readFile(fileName);
   const fileToUpdate = JSON.parse(file);
-  fileToUpdate.push(crushToAdd);
+  const id = fileToUpdate.length + 1;
+  const dataToInsert = { id, ...crushToAdd };
+
+  fileToUpdate.push(dataToInsert);
 
   await writeFile(fileName, JSON.stringify(fileToUpdate, 0, 2));
 
