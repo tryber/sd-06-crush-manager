@@ -28,25 +28,22 @@ app.post('/login',
     if (senha === '') return res.status(400).json({ message: 'O campo "password" é obrigatório' });
     if (senha.length < 6) return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
     res.status(200).json({ token });
-  },
-);
+  });
 
 app.get('/crush',
   async (_req, res) => {
     const file = await utils.readFile();
     res.status(200).json(JSON.parse(file));
-  },
-);
+  });
 
 app.get('/crush/:id',
   async (req, res) => {
     const { id } = req.params;
     const file = await utils.readFile();
-    if (id > 4) res.status(400).json({message: "Crush não encontrado"});
-    const response = JSON.parse(file).find((people) => people.id === Number(id))
+    if (id > 4) res.status(400).json({ message: 'Crush não encontrado' });
+    const response = JSON.parse(file).find((people) => people.id === Number(id));
     res.status(200).json(response);
-  },
-);
+  });
 
 app.use(middlewares.error);
 
