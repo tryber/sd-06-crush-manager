@@ -21,6 +21,7 @@ app.get('/crush', async (_request, response) => {
   try {
     response.status(200).send(crushes);
   } catch (error) {
+    console.log(error);
     response.status(200).json([]);
   }
 });
