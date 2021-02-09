@@ -55,7 +55,8 @@ async function handleCrushValidation(request, response, next) {
 }
 
 function modifyFile(newCrushArray) {
-  const updatedFile = fs.writeFile(crushData, newCrushArray, (err, data) => {
+  const convertedArray = JSON.stringify(newCrushArray);
+  const updatedFile = fs.writeFile(crushData, convertedArray, (err, data) => {
     if (err) {
       console.error(`Não foi possível ler o arquivo ${crushData}\n Erro: ${err}`);
       process.exit(1);
