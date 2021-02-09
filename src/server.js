@@ -11,4 +11,4 @@ app.use(appRoutes);
 
 app.use(handleErrors);
 
-app.listen(3333, () => console.log('Server Started'));
+app.listen(3000, () => console.log('Server Started'));
