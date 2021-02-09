@@ -74,7 +74,6 @@ const validateCrush = async (request, response) => {
   if (!data) return response.status(INTERNAL_ERROR).send({ message: 'Não foi possível ler o arquivo!' });
   const id = data.length + 1;
 
-  // console.log(typeof data);
   data.push({ name, age, id, date });
   response.status(SUCCESS).json(data);
   // next();
