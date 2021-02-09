@@ -40,7 +40,7 @@ app.get('/crush/:id', async (request, response) => {
     .then((data) => data)
     .catch((error) => console.log(`Could not read file ${fileName}\n Error: ${error}`));
   const retrievedCrush = crushes.find((crush) => crush.id === id);
-  if (!retrievedCrush) response.status(200).json({ message: 'Crush não encontrado' });
+  if (!retrievedCrush) response.status(404).json({ message: 'Crush não encontrado' });
   response.status(SUCCESS).send(retrievedCrush);
 });
 
