@@ -23,6 +23,7 @@ module.exports = {
       date,
     };
     const newList = previousListJson.concat(newCrush);
+
     await fs.writeFile('./crush.json', JSON.stringify(newList));
     return res.status(CREATED).json(newCrush);
   },

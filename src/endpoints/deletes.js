@@ -8,6 +8,7 @@ module.exports = {
     const previousList = await fs.readFile('./crush.json', 'utf-8');
     const previousListJson = JSON.parse(previousList);
     const newList = previousListJson.filter((crush) => crush.id !== id);
+
     await fs.writeFile('./crush.json', JSON.stringify(newList));
     return res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
   },

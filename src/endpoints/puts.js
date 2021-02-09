@@ -20,6 +20,7 @@ module.exports = {
       }
       return crush;
     });
+
     await fs.writeFile('./crush.json', JSON.stringify(newList));
     res.status(SUCCESS).json(editedCrush);
   },

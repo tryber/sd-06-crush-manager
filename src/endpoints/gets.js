@@ -9,6 +9,7 @@ const minimumLength = 1;
 module.exports = {
   async getCrushes(_req, res) {
     const data = await fs.readFile('./crush.json', 'utf-8');
+
     if (data) {
       return res.status(SUCCESS).send(JSON.parse(data));
     }
@@ -32,6 +33,7 @@ module.exports = {
     const previousListJson = JSON.parse(previousList);
     const crushFound = previousListJson
       .find((crush) => crush.name === searchTerm);
+
     if (!crushFound || crushFound === '') {
       return res.status(SUCCESS).json(previousListJson);
     }

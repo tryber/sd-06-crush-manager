@@ -5,6 +5,7 @@ module.exports = {
     const emailValidationRegex = /\S+@\S+\.\S+/;
     const { email, password } = req.body;
     const validatedEmail = emailValidationRegex.test(email);
+
     if (!email) {
       return res.status(BAD_REQUEST)
         .json({ message: 'O campo "email" é obrigatório' });
