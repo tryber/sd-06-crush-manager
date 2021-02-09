@@ -1,7 +1,7 @@
-export const validateEmail = (email) => {
+export const validateEmail = (_email) => {
 
 };
 
-export const validatePassword = (password0) => {
+export const validatePassword = (_password) => {
 
 };
