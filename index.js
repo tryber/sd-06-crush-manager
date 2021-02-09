@@ -5,6 +5,7 @@ const data = require('./crush.json');
 const app = express();
 
 const SUCCESS = 200;
+const port = 3000;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -13,8 +14,11 @@ app.get('/', (_request, response) => {
 
 // Requisito 1
 app.get('/crush', (_req, res) => {
-  if (data < 1) return ([]);
-  res.status(SUCCESS).send(data);
+  if (data.length < 1) {
+    res.status(SUCCESS).send([]);
+  } else {
+    res.status(SUCCESS).send(data);
+  }
 });
 
-app.listen(3000, () => console.log('port working...'));
+app.listen(port, () => console.log('working...'));
