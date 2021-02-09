@@ -5,7 +5,7 @@ const getCrushById = async (req, res) => {
   const { id } = req.params;
   const selectedCrush = JSON.parse(response).find((crush) => crush.id === parseInt(id, 10));
   if (!selectedCrush) {
-    throw new Error('crush not found');
+    return res.status(404).json({ message: 'Crush não encontrado' });
   }
   res.send(selectedCrush);
 };

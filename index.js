@@ -18,4 +18,4 @@ app.get('/crush', getAllCrush);
 
 app.get('/crush/:id', getCrushById);
 
-app.listen('3000');
+app.listen(3000);
