@@ -22,4 +22,4 @@ app.get('/crush', async (_req, res) => {
     .catch((error) => console.log(error));
 });
 
-app.listen(port, () => console.log('Example app listening on port port!'));
+app.listen(port, () => console.log(`Listening on port ${port}`));
