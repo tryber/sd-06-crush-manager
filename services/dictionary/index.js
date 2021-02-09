@@ -16,5 +16,6 @@ module.exports = {
     noPassword: objectify('O campo "password" é obrigatório'),
     noToken: objectify('Token não encontrado', 401),
     unexpected: objectify('Unexpected error'),
+    noFile: objectify('Arquivo de leitura não encontrado', 404),
   },
 };
