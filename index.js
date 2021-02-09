@@ -6,10 +6,12 @@ const bodyParser = require('body-parser');
 const SUCCESS = 200;
 const PORT = 3000;
 const { verifyCrushes } = require('./middlewares/verifyCrushes');
+const { getByIdCrush } = require('./middlewares/getByIdCrush');
 
 app.use(bodyParser.json());
 
 app.get('/crush', verifyCrushes);
+app.get('/crush/:id', getByIdCrush);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
