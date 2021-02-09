@@ -1,4 +1,3 @@
-// const { response } = require('express');
 const { readFile, writeFile } = require('./manageFiles');
 
 const read = async (request, response) => {
@@ -57,7 +56,7 @@ const validatePassword = (request, response, next) => {
 const updateCrushes = async (request, response) => {
   const newCrush = request.body;
   const { fileName } = request.params;
-  const myFile = await readFile('crush');
+  const myFile = await readFile(fileName);
   newCrush.id = myFile.length + 1;
   const newFile = [...myFile, newCrush];
 
@@ -105,16 +104,28 @@ const validateDate = (request, response, next) => {
 
   if (date) {
     const { datedAt, rate } = date;
-    if (!datedAt || !rate) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if ((!datedAt || !rate) && rate !== 0) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   } else {
     return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
 
-  if (date.rate > 5 || date.rate < 1 || date.rate === 0) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (date.rate > 5 || date.rate < 1) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
   if (!validDate.test(date.datedAt)) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
   next();
+};
+
+const updateCrushById = async (request, response) => {
+  const updatedCrush = request.body;
+  const { fileName, id } = request.params;
+  const myFile = await readFile(fileName);
+  const crushNotFound = myFile.filter((crush) => crush.id !== parseInt(id, 10));
+
+  updatedCrush.id = parseInt(id, 10);
+  const newFile = [...crushNotFound, updatedCrush];
+  await writeFile(fileName, JSON.stringify(newFile));
+  return response.status(200).json(updatedCrush);
 };
 
 module.exports = {
@@ -129,4 +140,5 @@ module.exports = {
   validateName,
   validateAge,
   validateDate,
+  updateCrushById,
 };
