@@ -11,7 +11,7 @@ app.get('/', (_request, response) => {
 
 // requisito 1
 
-const { readFile, writeFile } = require('./src/utils/manageFile');
+const { readFile } = require('./src/utils/manageFile');
 
 app.get('/crush', async (_req, res) => {
   const crushes = await readFile('crush');
@@ -78,17 +78,18 @@ app.post('/login', validation);
 
 const { dataValidate } = require('./src/utils/validate');
 
+const { writeFile } = require('./src/utils/manageFile');
+
 app.post('/crush', async (req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
+  const token = req.headers.authorization;
+  const { name, age, date } = req.body;
+  console.log(req.body);
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
   if (token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
-  const { name, age, date } = req.body;
-  console.log(date);
-
   if (!name) {
     return res.status(400).json({
       message: 'O campo "name" é obrigatório',
@@ -99,13 +100,12 @@ app.post('/crush', async (req, res) => {
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
-
   if (!age) {
     return res.status(400).json({
       message: 'O campo "age" é obrigatório',
     });
   }
-  if (age <= 18) {
+  if (age < 18) {
     return res.status(400).json({
       message: 'O crush deve ser maior de idade',
     });
@@ -115,15 +115,29 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  console.log(date.datedAt);
+  if (!date.datedAt) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
   if (dataValidate(date.datedAt)) {
     return res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
-  if (!Number.isInteger(date.rate) || date.rate > 5 || date.rate < 1) {
+  if (!date.rate) {
     return res.status(400).json({
-      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!Number.isInteger(date.rate)) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (date.rate > 5 && date.rate < 1) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
   const crushes = await readFile('crush');
