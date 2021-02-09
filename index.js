@@ -121,9 +121,14 @@ app.post('/crush', auth, async (request, response) => {
     return response.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
-  await writeFile();
   const allCrushes = await readFile('crush.json');
-  const newCrush = allCrushes.pop();
+  const newCrush = {
+    id: allCrushes.length + 1,
+    name,
+    age,
+    date,
+  };
+  await writeFile(newCrush);
 
   return response.status(201).send(newCrush);
 });
