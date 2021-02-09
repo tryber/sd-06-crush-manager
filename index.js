@@ -3,11 +3,14 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { createToken, validateLogin } = require('./functions');
+const { createToken, validateLogin, validateToken,
+  validateCrush, getNextId } = require('./functions');
 
 const app = express();
 const SUCCESS = 200;
 const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
+const fileName = path.join(__dirname, 'crush.json');
 
 app.use(bodyParser.json());
 
@@ -16,11 +19,17 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-// Ler arquivo com os dados
+// Ler dos dados do arquivo
 const getData = async () => {
-  const fileName = path.join(__dirname, 'crush.json');
   const data = await readFile(fileName);
   return JSON.parse(data);
+};
+
+// Salvar os dados no arquivo
+const setData = async (crushes, newCrush) => {
+  const newArrayCrushes = [...crushes, newCrush];
+  const newArrayCrushesFormated = JSON.stringify(newArrayCrushes, null, '\t');
+  await writeFile(fileName, newArrayCrushesFormated, 'utf-8');
 };
 
 // endpoint GET /crush - Requirement 01
@@ -54,11 +63,25 @@ app.post('/login', (req, res) => {
 });
 
 // endpoint POST /crush - Requirement 04
-app.post('/crush', (req, res) => {
+app.post('/crush', async (req, res) => {
+  const { token } = req.headers;
   const { name, age, date } = req.body;
 
-  const { token } = req.headers;
-  res.status(201).json({ token, name, age, date });
+  const validToken = validateToken(token);
+  if (validToken !== 'OK') {
+    return res.status(401).json({ message: validToken });
+  }
+  const validCrush = validateCrush(name, age, date);
+  if (validCrush !== 'OK') {
+    return res.status(401).json({ message: validCrush });
+  }
+
+  const crushes = await getData();
+  const id = getNextId(crushes);
+  const newCrush = { name, age, id, date };
+  setData(crushes, newCrush);
+
+  res.status(201).json(newCrush);
 });
 
 app.listen(3000);
