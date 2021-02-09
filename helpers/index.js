@@ -1,10 +1,7 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const getCrushes = async () => {
-  const arrayCrushes = await fs.readFileSync('./crush.json', 'utf-8', (err) => {
-    if (err) throw new Error(err);
-    console.log('File read');
-  });
+  const arrayCrushes = await fs.readFile('./crush.json');
   return JSON.parse(arrayCrushes);
 };
 
