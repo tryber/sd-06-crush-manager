@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const { getCrushes } = require('../helpers');
 
 const updateArrayCrushes = async (crush, id) => {
