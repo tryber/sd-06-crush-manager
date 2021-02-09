@@ -13,14 +13,19 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', async (req, res) => {
+  // se eu fizer o JSON.parse aqui tem problema porque tem assincronicidade - zambs
   const lendoArquivo = await lerArquivo(meuArquivo);
-  res.status(SUCCESS).send(JSON.parse(lendoArquivo));
+  /* if (lendoArquivo.lenght === 0) return res.status(200).send([]); */
+  const arquivoConvertido = JSON.parse(lendoArquivo);
+  /* console.log(typeof lendoArquivo); */ // string
+  return res.status(200).send(arquivoConvertido);
+  /* console.log(typeof JSON.parse(lendoArquivo)); */ // JavaScriptObjectNotation tranforma
 });
 
-app.use((err, _req, res, _next) => {
+/* app.use((err, _req, res, _next) => {
   if (err) {
     return res.status(SUCCESS).json([]);
   }
-});
+}); */
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
