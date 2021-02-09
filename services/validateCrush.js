@@ -1,4 +1,5 @@
 const readFile = require('./readFile.js');
+const writeFile = require('./writeFile.js');
 
 const validateCrush = async (request, response, _next) => {
   const { name, age, date } = request.body;
@@ -48,12 +49,11 @@ const validateCrush = async (request, response, _next) => {
   if (!data) return response.status(INTERNAL_ERROR).send({ message: 'Não foi possível ler o arquivo!' });
   const id = data.length + 1;
 
-  // data.push({ name, age, id, date });
   const newCrush = { name, age, id, date };
   data.push(newCrush);
-  // console.log(data);
-  // next();
-  return response.status(SUCCESS).json(newCrush);
+  writeFile(data);
+
+  return response.status(SUCCESS).send(newCrush);
 };
 
 module.exports = validateCrush;

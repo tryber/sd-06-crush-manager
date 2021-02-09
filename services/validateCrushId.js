@@ -1,9 +1,9 @@
 const readFile = require('./readFile.js');
+const writeFile = require('./writeFile.js');
 
 const validateCrushId = async (request, response, _next) => {
   // const { id } = request.params;
   const id = +request.params.id;
-  console.log(typeof id, id);
   const { name, age, date } = request.body;
   let message = '';
   const FAIL = 400;
@@ -53,6 +53,10 @@ const validateCrushId = async (request, response, _next) => {
   const index = data.findIndex((crush) => crush.id === id);
 
   const newCrush = { id, name, age, date };
+
+  data[index] = newCrush;
+  writeFile(data);
+
   // data.push(newCrush);
 
   // next();
