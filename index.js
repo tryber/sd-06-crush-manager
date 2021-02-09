@@ -110,4 +110,11 @@ app.put('/crush/:id', (request, response) => {
   response.status(200).send(crush);
 });
 
+// Requisito 6
+app.delete('/crush/:id', (request, response) => {
+  const { id } = request.params;
+  readerFile().filter((element) => element.id !== id);
+  response.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(PORT, () => console.log(`Em execução ${PORT}`));
