@@ -108,6 +108,29 @@ router.route('/:id')
       res.statusCode = 500;
       next(error);
     }
+  })
+  .delete(validateToken, async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const crushData = await readFile();
+
+      const foundCrushIndex = crushData.findIndex((crush) => crush.id === Number(id));
+
+      if (foundCrushIndex < 0) {
+        res.statusCode = 404;
+        return next('Crush não encontrado');
+      }
+
+      const updatedCrushData = crushData.filter((crush) => crush.id !== Number(id));
+
+      await writeFile(JSON.stringify(updatedCrushData));
+
+      return res.status(200).json({ message: 'Crush deletado com sucesso' });
+    } catch (error) {
+      res.statusCode = 500;
+      next(error);
+    }
   });
 
 module.exports = router;
