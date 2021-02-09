@@ -15,12 +15,12 @@ module.exports = {
     const previousList = await fs.readFile('./crush.json', 'utf-8');
     const previousListJson = JSON.parse(previousList);
     const newId = previousListJson.length + 1;
-    const newCrush = [{
+    const newCrush = {
       name,
       age,
       id: newId,
       date,
-    }];
+    };
     const newList = previousListJson.concat(newCrush);
     await fs.writeFile('./crush.json', JSON.stringify(newList));
     res.status(CREATED).json(newCrush);

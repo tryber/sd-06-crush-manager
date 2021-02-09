@@ -27,10 +27,9 @@ module.exports = {
 
   alterCrushValidator(req, res, next) {
     const dateValidationRegex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-    const rateValidationRegex = /[1-5]/;
+    const rateOptions = [1, 2, 3, 4, 5];
     const { name, age, date } = req.body;
-    const validatedDate = dateValidationRegex.test(date.datedAt);
-    const validateRate = rateValidationRegex.test(date.rate);
+
     if (!name) {
       return res.status(BAD_REQUEST)
         .json({ message: 'O campo "name" é obrigatório' });
@@ -49,21 +48,24 @@ module.exports = {
         .json({ message: 'O crush deve ser maior de idade' });
     }
 
-    if (!date || date.dateAt === '' || date.rate === '') {
+    if (!date || !date.datedAt || !date.rate) {
       return res.status(BAD_REQUEST)
         .json({
           message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
         });
     }
+    if (date) {
+      const validatedDate = dateValidationRegex.test(date.datedAt);
+      const validateRate = rateOptions.includes(date.rate);
+      if (!validatedDate) {
+        return res.status(BAD_REQUEST)
+          .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+      }
 
-    if (!validatedDate) {
-      return res.status(BAD_REQUEST)
-        .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-    }
-
-    if (!validateRate) {
-      return res.status(BAD_REQUEST)
-        .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      if (!validateRate) {
+        return res.status(BAD_REQUEST)
+          .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      }
     }
     return next();
   },
