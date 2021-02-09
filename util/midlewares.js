@@ -3,7 +3,7 @@ const { readFile } = require('./manageFiles');
 const read = async (request, response) => {
   const { fileName } = request.params;
   const myFile = await readFile(fileName);
-  response.status(200).json(JSON.parse(myFile));
+  response.status(200).json(myFile);
 };
 
 const parser = (request, _response, next) => {
@@ -18,13 +18,12 @@ const parser = (request, _response, next) => {
 const getById = async (request, response) => {
   try {
     const { fileName, id } = request.params;
-    const crushes = await readFile(fileName);
-    const myFile = JSON.parse(crushes);
+    const myFile = await readFile(fileName);
     const crushFound = myFile.find((crush) => crush.id === parseInt(id, 10));
-    if (!crushFound) return response.status(404).json({ message: 'Crush não encontrado' });
+    if (!crushFound) throw new Error('Crush não encontrado');
     return response.status(200).json(crushFound);
   } catch (err) {
-    return response.status(404).json({ message: 'Crush não encontrado' });
+    return response.status(404).json({ message: err.message });
   }
 };
 

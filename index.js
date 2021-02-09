@@ -5,7 +5,7 @@ const { read, parser, getById } = require('./util/midlewares');
 
 const app = express();
 const SUCCESS = 200;
-const port = 3001;
+const port = 3000;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
