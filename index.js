@@ -69,10 +69,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.post('/login', (_req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
-  return res.json(token);
-}); app.post('/login', (req, res) => {
+app.post('/login', (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   return res.json(token);
 });
