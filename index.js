@@ -22,10 +22,8 @@ app.post('/login', login);
 app.get('/crush', getAllCrushes);
 app.get('/crush/:id', getCrushById);
 
-app.use(checkToken);
+app.post('/crush', checkToken, validateCrush, addNewCrush);
 
-app.post('/crush', validateCrush, addNewCrush);
-
-app.put('/crush/:id', validateCrush, updateCrush);
+app.put('/crush/:id', checkToken, validateCrush, updateCrush);
 
 app.listen(3000);
