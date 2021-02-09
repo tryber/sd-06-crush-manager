@@ -69,9 +69,8 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.post('/login', (req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
-  return res.json(token);
-});
+
+const token = crypto.randomBytes(8).toString('hex');
+app.post('/login', (req, res) => res.json(token));
 
 app.listen(3000, () => console.log('running'));
