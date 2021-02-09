@@ -76,7 +76,6 @@ const tokenValidation = (req, res, next) => {
 app.post('/crush', tokenValidation, async (req, res) => {
   const file = await fs.readFile(fileName);
   const crushes = JSON.parse(file);
-  console.log(crushes);
   const { name, age, date } = req.body;
 
   const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
@@ -94,18 +93,17 @@ app.post('/crush', tokenValidation, async (req, res) => {
   const newCrush = {
     name,
     age,
-    id: file.length + 1,
+    id: crushes.length + 1,
     date: {
       datedAt: date.datedAt,
       rate: date.rate,
     },
   };
-  // const addArray = crushes.push(newCrush);
-  // console.log(newCrush);
-  // const jsonCrush = JSON.stringify(newCrush);
 
-  const addCrush = fs.writeFile('crush.json', newCrush);
-  return res.status(201).json(addCrush);
+  crushes.push(newCrush);
+  const jsonCrush = JSON.stringify(crushes);
+  await fs.writeFile('crush.json', jsonCrush);
+  return res.status(201).json(newCrush);
 });
 
 app.listen(3000, () => console.log('listening port 3000'));
