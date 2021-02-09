@@ -18,7 +18,7 @@ module.exports = {
 
   async getCrushById(req, res) {
     const crushId = +req.params.id;
-    const data = await fs.readFile('./crush.json', 'utf8');
+    const data = await fs.readFile('./crush.json', 'utf-8');
     const selectedCrush = JSON.parse(data).filter((crush) => crush.id === crushId);
     if (selectedCrush.length >= minimumLength) {
       res.status(SUCCESS).send(selectedCrush[firstIndex]);
