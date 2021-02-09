@@ -14,7 +14,7 @@ const SUCCESS = 200;
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
-// teste
+
 app.use(bodyParser.json());
 
 app.post('/login', login);
@@ -23,6 +23,6 @@ app.get('/crush/:id', getCrushById);
 
 app.use(checkToken);
 
-app.post('/crush', validateCrush);
+app.post('/crush', validateCrush, addNewCrush);
 
 app.listen(3000);
