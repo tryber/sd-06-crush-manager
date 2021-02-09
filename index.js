@@ -50,41 +50,35 @@ app.get('/crush/:id', async (req, res) => {
 
 const { emailValidation, passwordValidation } = require('./src/utils/validator');
 
-const token = crypto.randomBytes(8).toString('hex');
-
-app.use(express.json());
-
-app.use(async (req, res, next) => {
+const validateLogin = (req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
   const { email, password } = req.body;
-  // console.log(email, password);
   if (emailValidation(email)) {
     if (!email || email === '') {
-      await res.status(400).json({
+      res.status(400).json({
         message: 'O campo "email" é obrigatório',
       });
     } else {
-      await res.status(400).json({
+      res.status(400).json({
         message: 'O "email" deve ter o formato "email@email.com"',
       });
     }
   }
   if (passwordValidation(password)) {
     if (!password || password === '') {
-      await res.status(400).json({
+      res.status(400).json({
         message: 'O campo "password" é obrigatório',
       });
     } else {
-      await res.status(400).json({
+      res.status(400).json({
         message: 'A "senha" deve ter pelo menos 6 caracteres',
       });
     }
   }
-  next();
-});
+  return res.status(200).json(token);
+};
 
-app.post('/login', async (_req, res) => {
-  await res.json(token);
-});
+app.post('/login', validateLogin);
 
 // _______________________________________________________
 
