@@ -19,10 +19,9 @@ app.get('/crush', async (_request, response) => {
   const readData = await readFile('crush.json');
   if (readData) {
     const dataJson = JSON.parse(readData);
-    response.status(200).send(dataJson);
-  } else {
-    response.status(200).send(JSON.parse([]));
+    return response.status(200).send(dataJson);
   }
+  return response.status(200).send(JSON.parse([]));
 });
 
 app.get('/crush/:id', async (request, response) => {
@@ -31,9 +30,9 @@ app.get('/crush/:id', async (request, response) => {
   const dataJson = await JSON.parse(readData);
   const dataFiltered = dataJson.filter((item) => item.id === +id);
   if (dataFiltered.length === 0) {
-    response.status(404).send({ message: 'Crush não encontrado' });
+    return response.status(404).send({ message: 'Crush não encontrado' });
   }
-  response.status(200).send(dataFiltered);
+  return response.status(200).send(dataFiltered);
 });
 
 app.post('/login', (request, response) => {
@@ -43,7 +42,7 @@ app.post('/login', (request, response) => {
   if (!password) return response.status(400).send({ message: 'O campo "password" é obrigatório' });
   if (password.length < 6) return response.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   const token = '7mqaVRXJSp886CGr';
-  response.send({ token });
+  return response.send({ token });
 });
 
 app.post('/crush', async (request, response) => {
@@ -66,7 +65,7 @@ app.post('/crush', async (request, response) => {
   const newCrush = { id: dataJson.length + 1, ...request.body };
   dataJson.push(newCrush);
   await writeFile('crush.json', JSON.stringify(dataJson));
-  response.status(201).send(newCrush);
+  return response.status(201).send(newCrush);
 });
 
 app.put('/crush/:id', async (request, response) => {
@@ -92,7 +91,7 @@ app.put('/crush/:id', async (request, response) => {
   const itemModified = { id, ...request.body };
   newData.push(itemModified);
   await writeFile('crush.json', JSON.stringify(newData));
-  response.status(200).send(itemModified);
+  return response.status(200).send(itemModified);
 });
 
 app.delete('/crush/:id', async (request, response) => {
@@ -105,7 +104,7 @@ app.delete('/crush/:id', async (request, response) => {
   const dataJson = await JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== +id);
   await writeFile('crush.json', JSON.stringify(newData));
-  response.status(200).send({ message: 'Crush deletado com sucesso' });
+  return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
 app.listen(3000);
