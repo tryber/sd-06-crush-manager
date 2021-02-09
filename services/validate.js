@@ -9,31 +9,29 @@ const validateInfo = async (request, response) => {
   const isValid = validator.test(String(email).toLowerCase());
   const six = 6;
 
-  let message = 'oi';
-  let status = 200;
+  let message = '';
+  const FAIL = 400;
+  const SUCCESS = 200;
 
   if (!email) {
     message = 'O campo "email" é obrigatório';
-    status = 400;
+    return response.status(FAIL).json({ message });
   }
-  if (email && !isValid) {
-    message = 'O "email" deve ter o formato "email@email.com"';
-    status = 400;
-  }
-
   if (!password) {
     message = 'O campo "password" é obrigatório';
-    status = 400;
+    return response.status(FAIL).json({ message });
   }
-  if (password.length < six) {
-    message = 'A "senha" deve ter pelo menos 6 caracteres';
-    status = 400;
+  if (!isValid) {
+    message = 'O "email" deve ter o formato "email@email.com"';
+    return response.status(FAIL).json({ message });
   }
 
-  if (status === 200) {
-    return response.status(status).send({ token });
+  if (password.length < six) {
+    message = 'A "senha" deve ter pelo menos 6 caracteres';
+    return response.status(FAIL).json({ message });
   }
-  return response.status(status).send({ message });
+
+  return response.status(SUCCESS).json({ token });
 };
 
 module.exports = validateInfo;

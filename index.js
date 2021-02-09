@@ -17,6 +17,6 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', getData);
 app.get('/crush/:id', getDataById);
-app.get('/login', validateInfo);
+app.post('/login', validateInfo);
 
 app.listen(port, () => console.log(`Aplicação executando na porta: ${port}!`));
