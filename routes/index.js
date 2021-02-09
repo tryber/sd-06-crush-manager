@@ -4,6 +4,7 @@ const router = express();
 const fs = require('fs');
 
 const handleLogin = require('./helpers/handleLogin');
+const handleCreateCrush = require('./helpers/handleCreateCrush');
 
 router.get('/crush', (_req, res) => {
   const file = fs.readFileSync('./crush.json', 'utf8');
@@ -26,6 +27,10 @@ router.get('/crush/:id', (req, res) => {
 
 router.post('/login', async (req, res) => {
   await handleLogin(req, res);
+});
+
+router.post('/crush', async (req, res) => {
+  await handleCreateCrush(req, res);
 });
 
 module.exports = router;
