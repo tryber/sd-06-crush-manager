@@ -5,12 +5,13 @@ const app = express();
 const SUCCESS = 200;
 const NOTFOUND = 400;
 const PORT = 3000;
-const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i;
+const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const notFoundCrush = { message: 'Crush não encontrado' };
 const requiredEmail = { message: 'O campo "email" é obrigatório' };
 const emailInvalid = { message: 'O "email" deve ter o formato "email@email.com"' };
 const requiredPassword = { message: 'O campo "password" é obrigatório' };
 const invalidPassword = { message: 'A "senha" deve ter pelo menos 6 caracteres' };
+const token = { token: '7mqaVRXJSp886CGr' };
 
 // quero que todas as requisições devolvam um json
 app.use(express.json()); // aqui já incorporou as funções do body-parse
@@ -36,13 +37,13 @@ app.get('/crush/:id', async (request, response) => {
 });
 
 // Requisito 3
-app.post('/login', async (request, response) => {
+app.post('/login', (request, response) => {
   const { email, password } = request.body;
   if (!email || email === '') return response.status(NOTFOUND).send(requiredEmail);
-  if (!regexEmail.test) return response.status(NOTFOUND).send(emailInvalid);
+  if (!regexEmail.test(email)) return response.status(NOTFOUND).send(emailInvalid);
   if (!password || password === '') return response.status(NOTFOUND).send(requiredPassword);
   if (password.length < 6) return response.status(NOTFOUND).send(invalidPassword);
-  response.status(SUCCESS).send({ token: '7mqaVRXJSp886CGr' });
+  response.status(SUCCESS).send(token);
 });
 
 app.listen(PORT, () => console.log(`Em execução ${PORT}`));
