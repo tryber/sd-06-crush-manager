@@ -13,7 +13,7 @@ const deleteCrush = async (req, res) => {
     if (err) throw new Error(err);
     console.log('File deleted');
   });
-  res.status(200).send({ message: 'Crush deletado com sucesso' });
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
 };
 
 module.exports = { deleteCrush };

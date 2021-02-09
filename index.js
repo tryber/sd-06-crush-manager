@@ -8,6 +8,7 @@ const { createCrush } = require('./controller/newCrush');
 const { checkToken } = require('./services');
 const { editCrushes } = require('./controller/editCrushes');
 const { deleteCrush } = require('./controller/deleteCrush');
+const { searchCrush } = require('./controller/searchCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -20,11 +21,12 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 
 app.post('/login', login);
-app.get('/crush', getAllCrushes);
-app.get('/crush/:id', getCrushById);
 
 app.use(checkToken);
 
+app.get('/crush', getAllCrushes);
+app.get('/crush/search', searchCrush);
+app.get('/crush/:id', getCrushById);
 app.post('/crush', validateCrush, createCrush);
 app.put('/crush/:id', validateCrush, editCrushes);
 app.delete('/crush/:id', deleteCrush);
