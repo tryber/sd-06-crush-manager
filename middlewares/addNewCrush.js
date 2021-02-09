@@ -3,7 +3,7 @@ const { getCrushes } = require('../helpers');
 
 const addCrushToJson = async (crush, arrayCrush) => {
   const newArray = [...arrayCrush, crush];
-  await fs.writeFile('../crush.json', JSON.stringify(newArray));
+  await fs.writeFile('./crush.json', JSON.stringify(newArray));
 };
 
 const addNewCrush = async (req, res) => {
