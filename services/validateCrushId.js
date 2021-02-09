@@ -52,7 +52,7 @@ const validateCrushId = async (request, response, next) => {
 
   const newCrush = { id, name, age, date };
   data.push(newCrush);
-  // console.log(data);
+
   next();
   response.status(SUCCESS).send(data[index] = newCrush);
 };
