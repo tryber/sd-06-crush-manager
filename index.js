@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 
 app.post('/login', (_req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
-  res.status(200).json(token);
+  res.status(200).json({ token });
 });
 
 app.listen(3000, () => console.log('running'));
