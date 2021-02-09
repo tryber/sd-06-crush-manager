@@ -33,7 +33,7 @@ router.route('/')
       return res.json({ token });
     } catch (error) {
       res.statusCode = 500;
-      next(error);
+      return next(error);
     }
   });
 

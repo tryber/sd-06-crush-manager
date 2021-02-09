@@ -23,8 +23,27 @@ const parsePayload = ({ name, age, date }) => {
   return 'ok';
 };
 
+router.route('/search')
+  .get(validateToken, async (req, res, next) => {
+    try {
+      const { q } = req.query;
+      const crushData = await readFile();
+      let filteredCrushes = crushData;
+
+      if (!q) filteredCrushes = crushData;
+      else {
+        filteredCrushes = crushData.filter((crush) => crush.name.includes(q));
+      }
+
+      return res.json(filteredCrushes);
+    } catch (error) {
+      res.statusCode = 500;
+      return next(error);
+    }
+  });
+
 router.route('/')
-  .get(async (req, res, next) => {
+  .get(async (_req, res, next) => {
     try {
       const crushData = await readFile();
 
@@ -33,7 +52,7 @@ router.route('/')
       return res.json(crushData);
     } catch (error) {
       res.statusCode = 500;
-      next(error);
+      return next(error);
     }
   })
   .post(validateToken, async (req, res, next) => {
@@ -56,7 +75,7 @@ router.route('/')
       return res.status(201).json(newCrush);
     } catch (error) {
       res.statusCode = 500;
-      next(error);
+      return next(error);
     }
   });
 
@@ -75,7 +94,7 @@ router.route('/:id')
       return res.json(foundCrush);
     } catch (error) {
       res.statusCode = 500;
-      next(error);
+      return next(error);
     }
   })
   .put(validateToken, async (req, res, next) => {
@@ -106,7 +125,7 @@ router.route('/:id')
       return res.status(200).json(updatedCrush);
     } catch (error) {
       res.statusCode = 500;
-      next(error);
+      return next(error);
     }
   })
   .delete(validateToken, async (req, res, next) => {
@@ -129,7 +148,7 @@ router.route('/:id')
       return res.status(200).json({ message: 'Crush deletado com sucesso' });
     } catch (error) {
       res.statusCode = 500;
-      next(error);
+      return next(error);
     }
   });
 

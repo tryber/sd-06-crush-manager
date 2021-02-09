@@ -16,8 +16,8 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-app.use('/crush', crush);
 app.use('/login', login);
+app.use('/crush', crush);
 
 app.use((err, req, res, _next) => {
   console.log(`${req.method} ${req.url} ${res.statusCode}, error: ${err}`);
