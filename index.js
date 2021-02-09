@@ -22,6 +22,6 @@ app.get('/crush/:id', getCrushById);
 app.post('/login', loginValidator, handleLogin);
 app.post('/crush', tokenAuthenticator, addCrushValidator, addCrush);
 
-app.put('/crush/:id', editCrush);
+app.put('/crush/:id', tokenAuthenticator, addCrushValidator, editCrush);
 
 app.listen(PORT, () => console.log('Voando na Nimbus 3000'));
