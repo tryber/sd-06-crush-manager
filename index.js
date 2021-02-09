@@ -1,16 +1,12 @@
 const express = require('express');
-const data = require('./crush.json');
+
+const getData = require('./services/getData');
 
 const app = express();
 const SUCCESS = 200;
 const port = 3000;
 
 app.use((express.json()));
-
-const getData = (_request, response) => {
-  if (data.length) return response.status(SUCCESS).send(data);
-  return response.status(SUCCESS).send([]);
-};
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
