@@ -25,8 +25,8 @@ app.get('/crush/:id', async (req, res) => {
   if (result.length > 0) {
     return res.status(200).send(result[0]);
   }
-  const crushnotfound = { menssage: 'Crush não encontrado' };
-  return res.status(404).send(crushnotfound);
+  // const crushnotfound = { menssage: 'Crush não encontrado' };
+  return res.status(404).json({ message: 'Crush não encontrado' });
 });
 // end requeriment 2
 
