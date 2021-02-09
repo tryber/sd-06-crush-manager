@@ -1,6 +1,6 @@
 const express = require('express');
-const crushes = require('./crush.json');
 const fs = require('fs');
+const crushes = require('./crush.json');
 
 const app = express();
 const SUCCESS = 200;
