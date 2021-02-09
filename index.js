@@ -22,11 +22,11 @@ app.get('/crush/:id', (req, res) => {
   const file = fs.readFileSync('./crush.json', 'utf8');
   const dataFiles = JSON.parse(file);
   const { id } = req.params;
-  const crush = dataFiles.filter((elemt) => elemt.id === parseInt(id, 10));
-  if (crush.length !== 1) {
+  const crushes = dataFiles.filter((crush) => crush.id === parseInt(id, 10));
+  if (crushes.length !== 1) {
     return res.status(404).send({ message: 'Crush não encontrado' });
   }
-  return res.status(SUCCESS).send(crush[0]);
+  return res.status(SUCCESS).send(crushes[0]);
 });
 
 app.use(bodyParser.json());
@@ -58,6 +58,7 @@ const tokenAutorization = (req, res, next) => {
   }
   next();
 };
+
 app.use(tokenAutorization);
 
 const crushValidation = (name, age, date) => {
@@ -73,7 +74,7 @@ const crushValidation = (name, age, date) => {
   if (age < 18) {
     message = 'O crush deve ser maior de idade';
   }
-  if (!date || !date.datedAt || !date.rate) {
+  if (!date || !date.datedAt || (date.rate === undefined)) {
     message = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
   } else if (!dateRegex.test(date.datedAt)) {
     message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
@@ -100,7 +101,18 @@ app.post('/crush', (req, res) => {
   res.status(201).json(newCrush);
 });
 app.put('/crush/:id', (req, res) => {
-
+  const { name, age, date } = req.body;
+  const invalidCrush = crushValidation(name, age, date);
+  if (invalidCrush) {
+    return res.status(400).json({ message: invalidCrush });
+  }
+  const { id } = req.params;
+  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(cruchesFile);
+  const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
+  const editCrush = { name, age, id: parseInt(id, 10), date };
+  crushes.splice(crushId, 1, editCrush);
+  res.status(SUCCESS).json(editCrush);
 });
 
 app.listen(3000, () => { console.log('porta: 3000 ativa'); });
