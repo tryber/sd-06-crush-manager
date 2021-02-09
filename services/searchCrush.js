@@ -8,6 +8,7 @@ const searchCrush = async (request, response) => {
   if (!request.query.q || request.query.q === '') return response.status(SUCCESS).send(data);
   const queryTerm = request.query.q;
   const query = data.filter((crush) => crush.name.includes(queryTerm));
+  console.log(query);
   response.status(SUCCESS).send(query);
 };
 
