@@ -96,4 +96,16 @@ app.post('/crush', (request, response) => {
   response.status(201).send(crush);
 });
 
+// Requisito 5
+app.put('/crush/:id', (request, response) => {
+  const { name, age, date } = request.body;
+  const { id } = request.params;
+  const message = validationInfo(name, age, date);
+  if (message !== '') return response.status(400).json({ message });
+  const crushes = readerFile();
+  let crush = crushes.filter((element) => element.id === id);
+  crush = ({ age, date, id, name });
+  response.status(201).send(crush);
+});
+
 app.listen(PORT, () => console.log(`Em execução ${PORT}`));
