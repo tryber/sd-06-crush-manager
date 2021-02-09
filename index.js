@@ -1,5 +1,5 @@
 const express = require('express');
-const { readerFile } = require('./utils/managerFiles');
+const fs = require('fs');
 
 const app = express();
 const SUCCESS = 200;
@@ -13,25 +13,30 @@ const requiredPassword = { message: 'O campo "password" é obrigatório' };
 const invalidPassword = { message: 'A "senha" deve ter pelo menos 6 caracteres' };
 const token = { token: '7mqaVRXJSp886CGr' };
 
-// quero que todas as requisições devolvam um json
-app.use(express.json()); // aqui já incorporou as funções do body-parse
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
+function readerFile() {
+  // path.resolve traz resolução de caminhos
+  return JSON.parse(fs.readFileSync('./crush.json', 'utf8'));
+}
+
+// quero que todas as requisições devolvam um json
+app.use(express.json()); // aqui já incorporou as funções do body-parse
+
 // Requisito 1
-app.get('/crush', async (_request, response) => {
-  const crushes = await readerFile();
+app.get('/crush', (_request, response) => {
+  const crushes = readerFile();
   response.status(SUCCESS).send(crushes);
 });
 
 // Requisito 2
-app.get('/crush/:id', async (request, response) => {
+app.get('/crush/:id', (request, response) => {
   const { id } = request.params;
-  const crushes = await readerFile();
-  const crush = JSON.parse(crushes).find((element) => element.id === parseInt(id, 10));
+  const crushes = readerFile();
+  const crush = crushes.find((element) => element.id === parseInt(id, 10));
   if (!crush) return response.status(NOTFOUND).send(notFoundCrush);
   response.status(SUCCESS).send(crush);
 });
