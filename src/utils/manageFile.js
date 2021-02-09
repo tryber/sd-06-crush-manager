@@ -10,8 +10,6 @@ const writeFile = async (pathName, content) => {
   await fs.writeFile(path(__dirname, `${pathName}.json`), content, 'utf-8');
 };
 
-readFile('crush');
-
 module.exports = {
   readFile,
   writeFile,
