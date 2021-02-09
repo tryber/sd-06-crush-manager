@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllCrushes, getCrushById, generateLoginToken, authToken, validateCrush, createANewCrush, editCrush, deleteCrush } = require('./middlewares');
+const { getAllCrushes, getCrushById, generateLoginToken, authToken, validateCrush, createANewCrush, editCrush, deleteCrush, lookForCrush } = require('./middlewares');
 
 const app = express();
 
@@ -14,6 +14,9 @@ app.get('/', (_request, response) => {
 
 // Requisito 1
 app.get('/crush', getAllCrushes);
+
+// Requisito 7
+app.get('/crush/search', authToken, lookForCrush);
 
 // Requisito 2
 app.get('/crush/:id', getCrushById);

@@ -6,6 +6,7 @@ const { validateCrush } = require('./validateCrush');
 const { createANewCrush } = require('./createNewCrush');
 const { editCrush } = require('./editCrush');
 const { deleteCrush } = require('./deleteCrush');
+const { lookForCrush } = require('./lookForCrush');
 
 module.exports = {
   getAllCrushes,
@@ -16,4 +17,5 @@ module.exports = {
   createANewCrush,
   editCrush,
   deleteCrush,
+  lookForCrush,
 };
