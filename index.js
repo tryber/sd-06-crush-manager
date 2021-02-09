@@ -1,13 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { getData, getDataById } = require('./services/getCrush');
-const validateCrush = require('./services/validateCrush');
-const validateCrushId = require('./services/validateCrushId');
-const validateInfo = require('./services/validateUser');
-const validateToken = require('./services/validateToken');
-const deleteCrush = require('./services/deleteCrush');
-const searchCrush = require('./services/searchCrush');
+const { getData, getDataById, validateCrush, validateCrushId, validateInfo,
+  validateToken, deleteCrush, searchCrush } = require('./services');
 
 const app = express();
 app.use(bodyParser.json());
@@ -20,8 +15,8 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush/search', validateToken, searchCrush);
 app.get('/crush', getData);
+app.get('/crush/search', validateToken, searchCrush);
 app.get('/crush/:id', getDataById);
 app.post('/login', validateInfo);
 app.post('/crush', validateToken, validateCrush);
