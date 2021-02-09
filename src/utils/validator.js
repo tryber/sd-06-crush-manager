@@ -8,7 +8,13 @@ const passwordValidation = (password) => {
   return !regex.test(password);
 };
 
+const dataValidation = (data) => {
+  const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+  return !regex.test(data);
+};
+
 module.exports = {
   emailValidation,
   passwordValidation,
+  dataValidation,
 };
