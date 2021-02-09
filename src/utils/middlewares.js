@@ -4,9 +4,9 @@ const readMyFile = async (req, res) => {
   const { fileName } = req.params;
   const myCrushes = await readFile(fileName);
   if (myCrushes.length > 0) {
-    res.status(200).send((myCrushes));
+    res.status(200).json((myCrushes));
   } else {
-    res.status(200).send([]);
+    res.status(200).json([]);
   }
 };
 
