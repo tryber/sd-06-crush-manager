@@ -54,7 +54,6 @@ const validateLogin = (email, password) => {
 };
 
 const validateCrush = (name, age, date) => {
-  const { datedAt, rate } = date;
   if (!name || name === '') {
     return 'O campo "name" é obrigatório';
   }
@@ -67,13 +66,13 @@ const validateCrush = (name, age, date) => {
   if (age < 18) {
     return 'O crush deve ser maior de idade';
   }
-  if (!date || !datedAt || !rate || datedAt.toString() === '' || rate.toString() === '') {
+  if (!date || !date.datedAt || !date.rate || date.datedAt.toString() === '' || date.rate.toString() === '') {
     return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
   }
-  if (!checkDate(datedAt)) {
+  if (!checkDate(date.datedAt)) {
     return 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
   }
-  if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
+  if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) {
     return 'O campo "rate" deve ser um inteiro de 1 à 5';
   }
   return 'OK';
