@@ -56,6 +56,7 @@ app.post('/login', (req, res) => {
   });
 
   const result = schema.validate({ email: req.body.email, password: req.body.password });
+
   if (result.error) {
     return res.status(400).send(result.error.details[0].message);
   }
