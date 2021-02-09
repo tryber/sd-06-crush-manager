@@ -12,8 +12,9 @@ const PORT = 3000;
 app.use(middlewares.logger);
 
 const tokenValidator = (req, res, next) => {
-  if (!req.headers.token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (req.headers.token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   next();
 };
 
@@ -22,26 +23,14 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.post('/login',
-  async (req, res) => {
-    const token = await utils.token();
-    const { email, senha } = req.body;
-    const validator = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    const isValid = validator.test(String(email).toLowerCase());
-    if (email === '') return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-    if (!isValid) return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-    if (senha === '') return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-    if (toString(senha).length < 6) return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
-    res.status(200).json({ token });
-  });
-
+// req 1
 app.get('/crush',
   async (_req, res) => {
     console.log('a');
     const file = await utils.readFile();
     res.status(200).json(JSON.parse(file));
   });
-
+// req 7
 app.get('/crush/search', tokenValidator,
   async (req, res) => {
     const { name } = req.query;
@@ -49,16 +38,28 @@ app.get('/crush/search', tokenValidator,
     const response = file.filter((people) => people.name.includes(name));
     res.json(response);
   });
-
+// req 2
 app.get('/crush/:id', tokenValidator,
   async (req, res) => {
     const { id } = req.params;
     const file = await utils.readFile();
-    if (id > 4) res.status(400).json({ message: 'Crush não encontrado' });
+    if (id > 4) res.status(404).json({ message: 'Crush não encontrado' });
     const response = JSON.parse(file).find((people) => people.id === Number(id));
     res.status(200).json(response);
   });
-
+// req 3
+app.post('/login',
+  async (req, res) => {
+    const token = await utils.token();
+    const { email, senha } = req.body;
+    const validator = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    const isValid = validator.test(String(email).toLowerCase());
+    if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+    if (!isValid) return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    if (senha === '') return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+    if (toString(senha).length < 6) return res.status(400).json({ message: 'O "password" ter pelo menos 6 caracteres' });
+    res.status(200).json({ token });
+  });
 app.post('/crush', tokenValidator,
   async (req, res) => {
     const { name, age, dateNow, rate } = req.body;
