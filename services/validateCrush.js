@@ -60,7 +60,7 @@ const validateCrush = async (request, response) => {
   }
 
   if (!date || date === '' || !date.datedAt || date.rate === undefined) {
-    message = 'O campo "date" é obrigatório e datedAt e rate não podem ser vazios';
+    message = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
     return response.status(FAIL).json({ message });
   }
 
