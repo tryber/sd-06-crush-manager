@@ -78,7 +78,7 @@ app.post('/crush', async (req, res) => {
 
   const file = await fs.readFile(fileName, 'utf-8');
   const parsedJson = JSON.parse(file);
-  const newCrush = [ ...parsedJson, { id: parsedJson.length + 1, ...req.body } ];
+  const newCrush = [...parsedJson, { id: parsedJson.length + 1, ...req.body }];
 
   if (!authorization) {
     return res.status(ERROR).json({ message: 'Token não encontrado' });
