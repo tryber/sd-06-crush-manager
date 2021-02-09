@@ -1,6 +1,6 @@
 const readFile = require('./readFile.js');
 
-const validateDate = (myDate) => {
+const validateDate = async (myDate) => {
   const regex = /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
   return regex.test(String(myDate).toLocaleLowerCase());
 };
@@ -27,8 +27,6 @@ const validateCrush = async (request, response) => {
   const SUCCESS = 201;
   const INTERNAL_ERROR = 500;
 
-  //
-  // validateToken(request, response);
   const TOKEN_STATUS = 401;
 
   const { authorization } = request.headers;
