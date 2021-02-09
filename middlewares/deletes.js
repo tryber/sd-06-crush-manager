@@ -7,7 +7,7 @@ module.exports = {
     const crushToDel = file.find((crush) => crush.id === crushId);
     if (!crushToDel) return next({ message: 'Crush não encontrado', statusCode: 404 });
     const newFile = file.filter((item) => item !== crushToDel);
-    res.status(200).json('Crush deletado com sucesso');
+    res.status(200).json({ message: 'Crush deletado com sucesso' });
     return writingFile(newFile);
   },
 };
