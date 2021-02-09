@@ -7,8 +7,8 @@ module.exports = {
     const { params: { id }, body: bodyCrush } = req;
     if (!id) return next({ message: 'Crush não encontrado', statusCode: 404 });
 
-    if (!bodyCrush.name && bodyCrush.name === '') return next({ statusCode: 400, message: 'O campo "name" é obrigatório' });
-    if (!bodyCrush.age && bodyCrush.age === '') return next({ statusCode: 400, message: 'O campo "age" é obrigatório' });
+    if (!bodyCrush.name || bodyCrush.name === '') return next({ statusCode: 400, message: 'O campo "name" é obrigatório' });
+    if (!bodyCrush.age || bodyCrush.age === '') return next({ statusCode: 400, message: 'O campo "age" é obrigatório' });
     if (!bodyCrush.date && !bodyCrush.date.datedAt && !bodyCrush.date.rate && bodyCrush.date.rate !== 0) return next({ statusCode: 400, message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
     const trueName = validateName(bodyCrush.name);
