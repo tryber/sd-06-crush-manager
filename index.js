@@ -87,45 +87,45 @@ const { writeFile } = require('./src/utils/manageFile');
 app.post('/crush', async (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
+    await res.status(401).json({ message: 'Token não encontrado' });
   }
   if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
+    await res.status(401).json({ message: 'Token inválido' });
   }
   const { name, age, date } = req.body;
   if (!name) {
-    return res.status(400).json({
+    await res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
   }
   if (name.length < 3) {
-    return res.status(400).json({
+    await res.status(400).json({
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
   if (!age) {
-    return res.status(400).json({
+    await res.status(400).json({
       message: 'O campo "age" é obrigatório',
     });
   }
-  if (age <= 18) {
-    return res.status(400).json({
+  if (age < 18) {
+    await res.status(400).json({
       message: 'O crush deve ser maior de idade',
     });
   }
   if (!date) {
-    return res.status(400).json({
+    await res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
   if (dataValidation(date.datedAt)) {
-    return res.status(400).json({
+    await res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
-  if (!Number.isInteger(date.rate) && date.rate > 5 && date.rate < 1) {
-    return res.status(400).json({
-      message: 'O crush deve ser maior de idade',
+  if (!Number.isInteger(date.rate) || (date.rate > 5 && date.rate < 1)) {
+    await res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
   const crushes = await readFile('crush');
