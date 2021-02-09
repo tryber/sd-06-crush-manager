@@ -10,6 +10,7 @@ const getAllCrushes = async (_req, res) => {
 
   const allCrushes = await readFilePromise(file);
 
+  res.status(200);
   return res.send(JSON.parse(allCrushes));
 };
 
