@@ -77,7 +77,11 @@ const crushValidation = (name, age, date) => {
     message = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
   } else if (!dateRegex.test(date.datedAt)) {
     message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
-  } else if (date.rate !== 1 && date.rate !== 2 && date.rate !== 3 && date.rate !== 4 && date.rate !== 5) {
+  } else if (date.rate !== 1
+    && date.rate !== 2
+    && date.rate !== 3
+    && date.rate !== 4
+    && date.rate !== 5) {
     message = 'O campo "rate" deve ser um inteiro de 1 à 5';
   }
   return message;
@@ -94,6 +98,9 @@ app.post('/crush', (req, res) => {
   const newCrush = { name, age, id: crushes.length + 1, date };
   crushes.push(newCrush);
   res.status(201).json(newCrush);
+});
+app.put('/crush/:id', (req, res) => {
+
 });
 
 app.listen(3000, () => { console.log('porta: 3000 ativa'); });
