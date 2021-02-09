@@ -25,14 +25,31 @@ function readFile(fileName) {
   });
 }
 
-app.get('/crush', (_req, res) => {
-  const data = readFile(dataCrush);
+const data = readFile(dataCrush);
 
+app.get('/crush', (_req, res) => {
   if (data.length === 0) return res.status(200).json([]);
 
   data
     .then((content) => {
       res.status(200).json(JSON.parse(content));
+    })
+    .catch((err) => {
+      res.status(500).json({ Error: err.message });
+    });
+});
+
+// Challenge 2
+
+app.get('/crush/:id', (req, res) => {
+  const { id } = req.params;
+
+  data
+    .then((content) => {
+      const arrayData = JSON.parse(content);
+      const crushId = arrayData.find((obj) => obj.id === parseInt(id, 10));
+      if (!crushId) return res.status(404).json({ message: 'Crush não encontrado' });
+      res.status(200).json(crushId);
     })
     .catch((err) => {
       res.status(500).json({ Error: err.message });
