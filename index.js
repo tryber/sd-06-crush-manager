@@ -55,9 +55,10 @@ app.post('/login', (request, response) => {
 
 // Requisito 4
 const released = (request, response, next) => {
-  const { release } = request.headers;
-  if (!release) return response.status(401).json({ message: 'Token não encontrado' });
-  if (release !== token.token) return response.status(401).json({ message: 'Token inválido' });
+  // authorization esta no test
+  const { authorization } = request.headers;
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+  if (authorization !== token.token) return response.status(401).json({ message: 'Token inválido' });
   next();
 };
 
