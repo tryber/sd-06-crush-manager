@@ -80,4 +80,21 @@ router.put('/crush/:id', (req, res) => {
   res.status(200).send(editedCrush);
 });
 
+router.delete('/crush/:id', (req, res) => {
+  const data = fs.readFileSync('./crush.json', 'utf8');
+  const crushList = JSON.parse(data);
+  const { id } = req.params;
+  const crushIndex = crushList.findIndex((e) => e.id === parseInt(id, 10));
+
+  if (crushIndex === -1) return res.status(404).send({ message: 'Crush não encontrado' });
+
+  const newList = crushList.slice(crushList[crushIndex], 1);
+
+  const file = JSON.stringify(newList);
+
+  asyncWrite(file);
+
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
+});
+
 module.exports = router;
