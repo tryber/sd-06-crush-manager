@@ -23,7 +23,6 @@ app.get('/crush', async (_req, res) => {
 });
 
 app.get('/crush/search', async (req, res) => {
-  console.log('entrou')
   const file = await fs.readFile(fileName, 'utf-8');
   const fileJson = JSON.parse(file);
   const { searchTerm } = req.query;
@@ -179,7 +178,5 @@ app.delete('/crush/:id', async (req, res) => {
   await fs.writeFile(fileName, JSON.stringify(fileJson));
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
-
-
 
 app.listen(3000, () => console.log('listening on port 3000'));
