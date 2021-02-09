@@ -7,6 +7,7 @@ const validateCrushId = require('./services/validateCrushId');
 const validateInfo = require('./services/validateUser');
 const validateToken = require('./services/validateToken');
 const deleteCrush = require('./services/deleteCrush');
+const searchCrush = require('./services/searchCrush');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,6 +20,7 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
+app.get('/crush/search', validateToken, searchCrush);
 app.get('/crush', getData);
 app.get('/crush/:id', getDataById);
 app.post('/login', validateInfo);
