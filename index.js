@@ -90,33 +90,33 @@ app.post('/crush', async (req, res) => {
     });
   }
   if (!req.body.name || req.body.name === '') {
-    return res.status(400).json({
+    res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
   }
   if (req.body.name.length < 3) {
-    return res.status(400).json({
+    res.status(400).json({
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
   if (!req.body.age || req.body.age === '') {
-    return res.status(400).json({
+    res.status(400).json({
       message: 'O campo "age" é obrigatório',
     });
   }
   if (req.body.age < 18) {
-    return res.status(400).json({
+    res.status(400).json({
       message: 'O crush deve ser maior de idade',
     });
   }
 
   if (!regexDate.test(req.body.date.datedAt)) {
-    return res.status(400).json({
+    res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
   if (req.body.date.rate < 1 || req.body.date.rate > 5) {
-    return res.status(400).json({
+    res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
