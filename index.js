@@ -182,6 +182,30 @@ app.put('/crush/:id', async (req, res) => {
   return res.status(200).json(crushes[parseInt(req.params.id - 1, 10)]);
 });
 
+// CRUSH/:ID DELETE
+app.delete('/crush/:id', async (req, res) => {
+  const crushes = JSON.parse(await fs.readFile('./crush.json', 'utf-8'));
+
+  const myCrush = crushes.find((c) => c.id === parseInt(req.params.id, 10));
+  if (!myCrush) return res.status(404).send('Esse id não existe!');
+
+  // Token
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (req.headers.authorization.length < 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+
+  const index = crushes.indexOf(myCrush);
+  crushes.splice(index, 1);
+
+  await fs.writeFile('./crush.json', JSON.stringify(crushes));
+
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
+  
+});
+
 app.post('/login', async (req, res) => {
   const myToken = gen(16);
 
