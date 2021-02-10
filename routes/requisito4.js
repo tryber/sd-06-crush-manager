@@ -24,7 +24,7 @@ const addCrush = async (request, response, _next) => {
 
     if (!date) return response.status(ERROR400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     if (date) {
-      if (date.rate === "null") return response.status(ERROR400).json({message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      if (date.rate === '') return response.status(ERROR400).json({message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
       if (!date.datedAt || !date.rate) return response.status(ERROR400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
       if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) return response.status(ERROR400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
       const dateInput = date.datedAt;
