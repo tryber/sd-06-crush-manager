@@ -9,7 +9,8 @@ const newCrush = (req, res) => {
   validateInfo(name, age, date, res);
 
   const allInfo = [...crushs];
-  const id = crushs.length + 1;
+  // const id = crushs.length + 1;
+  const id = 5;
   const newCrushInfo = {
     id,
     ...crushInfo,

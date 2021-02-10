@@ -5,6 +5,7 @@ const { getToken } = require('./login');
 const { newCrush } = require('./postCrush');
 const { validateToken } = require('./validateToken');
 const { changeCrush } = require('./putCrush');
+const { deleteCrushId } = require('./deleteCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -21,5 +22,6 @@ app.get('/crush/:id', getCrushById);
 app.post('/login', getToken);
 app.post('/crush', validateToken, newCrush);
 app.put('/crush/:id', validateToken, changeCrush);
+app.delete('/crush/:id', validateToken, deleteCrushId);
 
 app.listen(3000);
