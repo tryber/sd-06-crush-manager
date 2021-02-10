@@ -48,13 +48,13 @@ app.post('/login', async (request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
   const { email, password } = request.body;
 
-  if (email === '' || !email) response.status(400).json({ message: 'O campo "email" é obrigatório' });
+  if (email === '' || !email) return response.status(400).json({ message: 'O campo "email" é obrigatório' });
 
-  if (password === '' || !password) response.status(400).json({ message: 'O campo "password" é obrigatório' });
+  if (password === '' || !password) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
 
-  if (emailValid(email)) response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (emailValid(email)) return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
 
-  if (passwordValid(email)) response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  if (passwordValid(email)) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 
   return response.status(200).json({ token });
 });
