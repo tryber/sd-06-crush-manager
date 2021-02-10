@@ -1,6 +1,6 @@
 const express = require('express');
 const { readFile } = require('./utils/managerFiles');
-const { generateToken }  = require('./utils/generateToken');
+const { generateToken } = require('./utils/generateToken');
 const { isEmail } = require('./utils/validations/isEmail');
 const { isPassword } = require('./utils/validations/isPassword');
 
@@ -38,17 +38,17 @@ app.get('/crush/:id', async (req, res) => {
 // end requeriment 2
 // requeriment 3 / Crie o endpoint POST /login
 app.post('/login', (req, res) => {
-  const { email, password} = req.body;
+  const { email, password } = req.body;
 
   const resultToken = generateToken(email);
   const resultEmail = isEmail(email);
   const resultPassword = isPassword(password);
 
-  if (resultEmail[0] != 200) res.status(resultEmail[0]).send(resultEmail[1]);
-  if (resultPassword[0] != 200) res.status(resultPassword[0]).send(resultPassword[1]);
+  if (resultEmail[0] !== 200) res.status(resultEmail[0]).send(resultEmail[1]);
+  if (resultPassword[0] !== 200) res.status(resultPassword[0]).send(resultPassword[1]);
 
   res.json({ token: resultToken });
-})
+});
 // end requeriment 3
 
 app.listen(PORT, () => console.log('funcional na porta 3000'));
