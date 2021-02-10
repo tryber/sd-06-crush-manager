@@ -1,12 +1,16 @@
 const express = require('express');
 const path = require('path');
-const lerArquivo = require('./lerArquivo');
-/* const { validEmail, validToken} = require('./Regex/index'); */
+const bodyParse = require('body-parser');
+const lerArquivo = require('./services/lerArquivo');
+const { validEmail, validToken, validPass } = require('./Regex');
+const { genToken } = require('./services/tokenGenerator');
 
 const app = express();
 const SUCCESS = 200;
 const PORT = 3000;
 const meuArquivo = path.resolve(__dirname, 'crush.json');
+
+app.use(bodyParse.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -34,8 +38,17 @@ app.get('/crush/:id', async (req, res) => {
   return res.status(200).send(dataId);
 });
 
-/* app.post('/login', (req, res) => {
+app.post('/login', (req, res) => {
+  const authEmail = validEmail(req.body.email);
+  const authPass = validPass(req.body.password);
 
-}); */
+  if (req.body.email === undefined) return res.status(400).send({ message: 'O campo "email" é obrigatório' });
+  if (authEmail === false) return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (req.body.password === undefined) return res.status(400).send({ message: 'O campo "password" é obrigatório' });
+  if (authPass === false) return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  const token = genToken();
+  req.headers.authorization = token;
+  return res.send({ token });
+});
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));

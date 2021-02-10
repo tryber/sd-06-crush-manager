@@ -1,6 +1,6 @@
 const validToken = (token) => {
   const validRegex = /^.{16}/;
-  if (token === validRegex) return true;
+  return validRegex.test(token);
 };
 
 module.exports = validToken;

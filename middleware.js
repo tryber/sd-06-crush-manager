@@ -1,6 +1,5 @@
-const errMiddle = (err, req, res, next) => {
-  if (err) res.status(200).json([]);
-  next();
+const middleWare = (req, res, next) => {
+  
 };
 
 module.exports = errMiddle;
