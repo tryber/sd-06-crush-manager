@@ -113,4 +113,21 @@ app.put('/crush/:id', async (req, res) => {
   res.status(SUCCESS).json(editedCrush);
 });
 
+// endpoint DELETE /crush/:id - Requirement 06
+app.delete('/crush/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { authorization } = req.headers;
+
+  const validToken = validateToken(authorization);
+  if (validToken !== 'OK') {
+    return res.status(UNAUTHORIZED).json({ message: validToken });
+  }
+
+  const crushes = await getData();
+  const crushesDelete = crushes.filter((crush) => crush.id !== id);
+  setData(crushesDelete);
+
+  res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(3000, () => console.log('Crush Magager Started: Port 3000'));
