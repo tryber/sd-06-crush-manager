@@ -4,6 +4,9 @@ const { generateToken } = require('./utils/generateToken');
 const { isEmail } = require('./utils/validations/isEmail');
 const { isPassword } = require('./utils/validations/isPassword');
 const { isToken } = require('./utils/validations/middlewareValidations/isToken');
+const { isName } = require('./utils/validations/middlewareValidations/isName');
+const { isAge } = require('./utils/validations/middlewareValidations/isAge.js');
+const { isDate } = require('./utils/validations/middlewareValidations/isDate.js');
 
 const app = express();
 // preciso da linha 6 para o express ler variaveis do tipo json
@@ -55,11 +58,18 @@ app.post('/login', (req, res) => {
 });
 // end requeriment 3
 // requeriment 4 / Crie o endpoint POST /crush
-app.post('/crush', isToken, (req, res, next) => {
-  // const newCrush = req.body;
+app.post('/crush', isToken, isName, isAge, isDate, (req, res, next) => {
+  const crush = {
+    "id": 1,
+    "name": "Keanu Reeves",
+    "age": 56,
+    "date": {
+      "datedAt": "22/10/2019",
+      "rate": 5
+    }
+  }
 
-
-  return res.status(SUCCESS).json({ message: 'token validado' });
+  return res.status(SUCCESS).json( crush );
 });
 // end requeriment 4
 
