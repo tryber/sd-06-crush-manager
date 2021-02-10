@@ -45,18 +45,20 @@ app.post('/login', (req, res) => {
   const resultPassword = isPassword(password);
 
   if (resultEmail[0] !== 200) return res.status(resultEmail[0]).json({ message: resultEmail[1] });
-  if (resultPassword[0] !== 200) return res.status(resultPassword[0]).json({ message: resultPassword[1] });
+  if (resultPassword[0] !== 200) return res.status(resultPassword[0]).json({ 
+    message: resultPassword[1] 
+  });
 
   return res.status(SUCCESS).json({ token: resultToken });
 });
 // end requeriment 3
 // requeriment 4 / Crie o endpoint POST /crush
-app.post('/crush', isToken, (req, res) => {
-  const newCrush = req.body;
+app.post('/crush', isToken, (req, res, next) => {
+  // const newCrush = req.body;
 
-  isToken(req, res);
+  isToken(req, res, next);
 
-  return res.status(SUCCESS).json({ message: "token validado" });
+  return res.status(SUCCESS).json({ message: 'token validado' });
 });
 // end requeriment 4
 
