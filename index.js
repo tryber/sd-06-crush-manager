@@ -144,7 +144,7 @@ app.post('/crush', async (req, res) => {
     });
   }
   const crushes = await readFile('crush');
-  const newCrush = JSON.parse(crushes);
+  const newCrush = await JSON.parse(crushes);
   const id = newCrush.length + 1;
   const element = { name, age, id, date };
   await newCrush.push(element);
