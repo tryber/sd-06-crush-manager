@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParse = require('body-parser');
 const lerArquivo = require('./services/lerArquivo');
-const escreverArquivo = require('./services/escreverArquivo');
-const { validEmail, validPass } = require('./Regex');
+const { validEmail, validPass, validToken } = require('./Regex');
 const { genToken } = require('./services/tokenGenerator');
+const { validDate } = require('./newCrush/date');
 
 const app = express();
 const SUCCESS = 200;
@@ -54,11 +54,44 @@ app.post('/login', (req, res) => {
 
 app.post('/crush', async (req, res) => {
   const novoCrush = req.body;
-  /* novoCrush.push({ id: }) */
-  const escrevendoArquivo = await escreverArquivo(meuArquivo, novoCrush);
-  const arquivoConvertido = JSON.parse(escrevendoArquivo);
-  console.log(arquivoConvertido);
-  res.send(req.body);
+  const token = req.headers.authorization;
+  /* console.log(typeof novoCrush); //objeto */
+
+  const data = await lerArquivo(meuArquivo);
+  const dataConvertido = JSON.parse(data);
+
+  /* const novoCrushJson = await escreverArquivo(meuArquivo, novoCrushConvertido, 'utf-8');
+  console.log(novoCrushJson); */
+
+  const totalCrushes = dataConvertido.concat(
+    { name: novoCrush.name,
+      age: novoCrush.age,
+      id: dataConvertido.length + 1,
+      date: novoCrush.date,
+    },
+  );
+
+  const name = novoCrush.name;
+  const age = novoCrush.age;
+  const realDate = validDate(novoCrush.date.datedAt);
+  const rate = novoCrush.date.rate;
+
+  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
+  if (validToken(token) === false) return res.status(401).send({ message: 'Token inválido' });
+
+  if (!name === true) return res.status(400).send({ message: 'O campo name é obrigatório' }); // nao ta funfando
+  if (name.length < 3) return res.status(400).send({ message: 'O name deve ter pelo menos 3 caracteres' });
+
+  if (!age === true) return res.status(400).send({ message: 'O campo age é obrigatório' });
+  if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+
+  if (realDate !== true) return res.status(400).send({ message: 'O campo date é obrigatório e datedAt e rate não podem ser vazios' });
+  if (realDate === false) return res.status(400).send({ message: 'O campo datedAt deve ter o formato dd/mm/aaaa' }); //verificar erro
+
+  if (!rate === true) return res.status(400).send({ message: 'O campo date é obrigatório e datedAt e rate não podem ser vazios' });
+  if (rate === String || rate < 1 || rate > 5) return res.status(400).send({ message: 'O campo rate deve ser um inteiro de 1 à 5' }); //verificar erro
+
+  if (token) return res.status(201).send({ totalCrushes });
 });
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));

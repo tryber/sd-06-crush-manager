@@ -1,5 +1,5 @@
 const validToken = (token) => {
-  const validRegex = /^.{16}/;
+  const validRegex = /^.{16}$/;
   return validRegex.test(token);
 };
 
