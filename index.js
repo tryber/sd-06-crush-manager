@@ -16,7 +16,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', async (_request, response) => {
-  const readData = await readFile('crush.json');
+  const readData = await readFile('./crush.json', 'utf-8');
   if (readData) {
     const dataJson = JSON.parse(readData);
     return response.status(200).send(dataJson);
@@ -26,7 +26,7 @@ app.get('/crush', async (_request, response) => {
 
 app.get('/crush/:id', async (request, response) => {
   const id = parseInt(request.params.id, 10);
-  const readData = await readFile('crush.json');
+  const readData = await readFile('./crush.json', 'utf-8');
   const dataJson = await JSON.parse(readData);
   const dataFiltered = dataJson.filter((item) => item.id === id);
   if (dataFiltered.length === 0) {
