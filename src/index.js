@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 app.listen(3000, () => console.log('running'));
 const { readFile } = require('./utils/manageFiles');
-const { emailValid, passwordValid, dateValid } = require('./utils/validations');
+const { emailValid, passwordValid } = require('./utils/validations');
 
 // ------- Requisito 1 --------
 
