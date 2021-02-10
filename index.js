@@ -96,6 +96,23 @@ app.post('/crush', async (req, res) => {
   return res.status(201).json(req.body);
 });
 
+app.get('/crush/search', async (req, res) => {
+  const crushes = JSON.parse(await fs.readFile('./crush.json'));
+
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (req.headers.authorization.length < 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+
+  // console.log(req.query.q);
+  const search = crushes
+    .filter((crush) => crush.name.toLowerCase().includes(req.query.q.toLowerCase()));
+
+  return res.status(200).send(search);
+});
+
 // CRUSH/:ID GET
 app.get('/crush/:id', async (req, res) => {
   const crushes = JSON.parse(await fs.readFile('./crush.json'));
