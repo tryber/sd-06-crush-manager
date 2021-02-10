@@ -28,13 +28,12 @@ module.exports = {
   },
 
   async getBySearchTerm(req, res) {
-    const { searchTerm } = req.query.q;
+    const searchTerm = req.query.q;
     const previousList = await fs.readFile('./crush.json', 'utf-8');
     const previousListJson = JSON.parse(previousList);
     const crushFound = previousListJson
-      .find((crush) => crush.name === searchTerm);
-
-    if (!crushFound || crushFound === '') {
+      .filter((crush) => crush.name.includes(searchTerm));
+    if (!searchTerm || searchTerm === '') {
       return res.status(SUCCESS).json(previousListJson);
     }
     return res.status(SUCCESS).json(crushFound);
