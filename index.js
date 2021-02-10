@@ -18,7 +18,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', async (__request, response) => {
-  response.status(SUCCESS).send(await lerArquivo('/crush.json'));
+  const data = await lerArquivo('/crush.json');
+  response.status(SUCCESS).send(data);
 });
 
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
