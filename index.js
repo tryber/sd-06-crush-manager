@@ -1,10 +1,7 @@
 const express = require('express');
 const fs = require('fs').promises;
 const { gen } = require('n-digit-token');
-const JoiBase = require('joi');
-const JoiDate = require('@hapi/joi-date');
-
-const Joi = JoiBase.extend(JoiDate);
+const Joi = require('joi');
 // const fileCrush = require('./crush.json');
 
 const app = express();
