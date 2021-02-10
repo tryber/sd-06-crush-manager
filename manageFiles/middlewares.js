@@ -25,14 +25,14 @@ const getCrushByID = async (req, res, next) => {
   }
 };
 
-const generateToken = (_req, res, next) => {
+const generateToken = async (_req, res, next) => {
   const token = crypto.randomBytes(8).toString('hex');
   // console.log(token);
   res.status(200).json({ token });
   next();
 };
 
-const validateEmail = (req, _res, next) => {
+const validateEmail = async (req, _res, next) => {
   const { email } = req.body;
   const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
 
@@ -45,7 +45,7 @@ const validateEmail = (req, _res, next) => {
   next();
 };
 
-const validatePassword = (req, _res, next) => {
+const validatePassword = async (req, _res, next) => {
   const { password } = req.body;
   const SIX = 6;
   if (!password) {
@@ -57,7 +57,7 @@ const validatePassword = (req, _res, next) => {
   next();
 };
 
-const validateToken = (req, _res, next) => {
+const validateToken = async (req, _res, next) => {
   const { authorization } = req.headers;
   const SIXTEEN = 16;
 
@@ -67,10 +67,9 @@ const validateToken = (req, _res, next) => {
   if (authorization.length !== SIXTEEN) {
     next({ message: 'Token inválido', statusCode: 401 });
   }
-  next();
 };
 
-const validateName = (req, _res, next) => {
+const validateName = async (req, _res, next) => {
   const addCrush = req.body;
   const { name } = addCrush;
   const THREE = 3;
@@ -84,7 +83,7 @@ const validateName = (req, _res, next) => {
   next();
 };
 
-const validateAge = (req, _res, next) => {
+const validateAge = async (req, _res, next) => {
   const addCrush = req.body;
   const { age } = addCrush;
   const EIGHTEEN = 18;
@@ -98,7 +97,7 @@ const validateAge = (req, _res, next) => {
   next();
 };
 
-const validateDate = (req, _res, next) => {
+const validateDate = async (req, _res, next) => {
   const addCrush = req.body;
   const { date } = addCrush;
   const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
@@ -126,11 +125,13 @@ const addNewCrush = async (req, res) => {
 
   // console.log(newCrushesList);
 
-  await writeFile(fileName, JSON.stringify(newCrushesList));
+  writeFile(fileName, JSON.stringify(newCrushesList));
   res.status(201).json(newCrushesList);
 };
 
 const error = ((err, _req, res, _next) => {
+  console.error(err.message);
+
   res.status(err.statusCode || 500).json({ message: err.message });
 });
 

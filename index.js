@@ -32,4 +32,4 @@ app.post('/:fileName', validateToken, validateName, validateAge, validateDate, a
 
 app.use(error);
 
-app.listen(port, () => console.log('Running Project Crush Manager!'));
+app.listen(port, () => console.log(`Running Project Crush Manager on ${port}!`));
