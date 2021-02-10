@@ -6,12 +6,21 @@ const fs = require('fs');
 const handleLogin = require('./helpers/handleLogin');
 const handleCreateCrush = require('./helpers/handleCreateCrush');
 const handleEditCrush = require('./helpers/handleEditCrush');
+const handleAuthorization = require('../middlewares/authorization/handleAuthorization');
+const getAllData = require('../middlewares/dataAcess/getAllData');
+const handleValidateCrushData = require('../middlewares/validations/handleValidateCrushData');
+const handleValidateID = require('../middlewares/validations/handleValidateID');
 const handleDeleteCrush = require('./helpers/handleDeleteCrush');
+const handleSearchCrush = require('./helpers/handleSearchCrush');
 
 router.get('/crush', (_req, res) => {
   const file = fs.readFileSync('./crush.json', 'utf8');
   res.json(JSON.parse(file));
 });
+
+router.get(
+  /\/crush\/search/, handleAuthorization, getAllData, handleSearchCrush,
+);
 
 router.get('/crush/:id', (req, res) => {
   fs.readFile('./crush.json', 'utf8', (_err, jsonData) => {
@@ -31,16 +40,14 @@ router.post('/login', async (req, res) => {
   await handleLogin(req, res);
 });
 
-router.post('/crush', async (req, res) => {
-  await handleCreateCrush(req, res);
-});
+router.use(handleAuthorization, getAllData);
 
-router.put('/crush/:id', async (req, res) => {
-  await handleEditCrush(req, res);
-});
+router.post('/crush', handleValidateCrushData, handleCreateCrush);
 
-router.delete('/crush/:id', async (req, res) => {
-  await handleDeleteCrush(req, res);
-});
+router.use(handleValidateID);
+
+router.put('/crush/:id', handleValidateCrushData, handleEditCrush);
+
+router.delete('/crush/:id', handleDeleteCrush);
 
 module.exports = router;

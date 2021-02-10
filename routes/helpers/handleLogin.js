@@ -7,7 +7,7 @@ const handleValidationError = (err, res) => {
 
 const handleValidationSucessfull = (res) => {
   const token = generator.generate(16);
-  res.status(200).send({
+  res.status(200).json({
     token,
   });
 };
