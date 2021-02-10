@@ -70,7 +70,6 @@ app.post('/login', (req, res) => {
 // }
 
 app.post('/crush', async (req, res) => {
-  const bodyData = req.body;
   const { token } = req.headers;
   const regexToken = /^[a-zA-Z0-9]*$/i;
   const regexDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
