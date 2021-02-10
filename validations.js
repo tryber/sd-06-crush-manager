@@ -48,20 +48,20 @@ const checkAgeOlder = (age) => {
   return true;
 };
 
-const formatDate = (datedAt) => {
+const formatDate = (date) => {
   const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
-  return dateRegex.test(datedAt);
+  return dateRegex.test(date.datedAt);
 };
 
-const checkRate = (rate) => {
-  if (!Number.isInteger(rate) || rate < 1 || rate > 5 || !rate || rate === '') {
+const checkRate = (date) => {
+  if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5 || !date.rate || date.rate === '') {
     return false;
   }
   return true;
 };
 
-const checkDateRate = (datedAt, rate) => {
-  if (!datedAt || datedAt === '' || !rate || rate === '') {
+const checkDateRate = (date) => {
+  if (!date || !date.datedAt || date.datedAt === '' || !date.rate || date.rate === '') {
     return false;
   }
   return true;

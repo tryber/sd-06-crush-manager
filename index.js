@@ -107,13 +107,13 @@ app.post('/crush', async (req, res) => {
   if (!checkAgeOlder(age)) {
     return res.status(BAD_REQUEST).json({ message: 'O crush deve ser maior de idade' });
   }
-  if (!checkDateRate(date.datedAt, date.rate)) {
+  if (!checkDateRate(date)) {
     return res.status(BAD_REQUEST).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
-  if (!formatDate(date.datedAt)) {
+  if (!formatDate(date)) {
     return res.status(BAD_REQUEST).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (!checkRate(date.rate)) {
+  if (!checkRate(date)) {
     return res.status(BAD_REQUEST).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
