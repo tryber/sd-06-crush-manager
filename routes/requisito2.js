@@ -10,9 +10,9 @@ const crushById = async (request, response, _next) => {
   const crushJson = JSON.parse(crushList);
 
   const crushFound = crushJson.find((crush) => crush.id === id);
-  if (!crushFound) response.status(NOTFOUND).json({ message: 'Crush não encontrado' });
+  if (!crushFound) return response.status(NOTFOUND).json({ message: 'Crush não encontrado' });
 
-  response.status(SUCCESS).send(crushFound);
+  return response.status(SUCCESS).send(crushFound);
 };
 
 module.exports = crushById;

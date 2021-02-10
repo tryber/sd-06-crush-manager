@@ -6,7 +6,7 @@ const file = 'crush.json';
 const getCrushes = async (_request, response, _next) => {
   const crushList = await readFile(file);
 
-  response.status(SUCCESS).send(JSON.parse(crushList));
+  return response.status(SUCCESS).send(JSON.parse(crushList));
 };
 
 module.exports = getCrushes;

@@ -8,18 +8,24 @@ const loginControl = (request, response, _next) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!email) {
-    response.status(ERROR).json({ message: 'O campo "email" é obrigatório' });
-  } else if (!emailRegex.test(email) && email.length > 1) {
-    response.status(ERROR).json({
+    return response.status(ERROR).json({ message: 'O campo "email" é obrigatório' });
+  }
+
+  if (!emailRegex.test(email) && email.length > 1) {
+    return response.status(ERROR).json({
       message: 'O "email" deve ter o formato "email@email.com"',
     });
-  } else if (!password) {
-    response.status(ERROR).json({
+  }
+
+  if (!password) {
+    return response.status(ERROR).json({
       message: 'O campo "password" é obrigatório',
     });
-  } else if (password) {
+  }
+
+  if (password) {
     if (password.length < 6) {
-      response.status(ERROR).json({
+      return response.status(ERROR).json({
         message: 'A "senha" deve ter pelo menos 6 caracteres',
       });
     }
@@ -28,7 +34,7 @@ const loginControl = (request, response, _next) => {
   const token = crypto.randomBytes(8).toString('hex');
   const generatedToken = { token };
 
-  response.status(SUCCESS).json(generatedToken);
+  return response.status(SUCCESS).json(generatedToken);
 };
 
 module.exports = loginControl;
