@@ -164,4 +164,23 @@ app.put('/crush/:id', async (req, res) => {
   res.status(SUCCESS).json(editCrush);
 });
 
+// Desafio 06 - endpoint DELETE /crush/:id
+app.delete('/crush/:id', async (req, res) => {
+  const data = await getData();
+  const { id } = req.params;
+  const crushId = parseInt(id, 10);
+  const index = data.findIndex((person) => person.id === crushId);
+  const { authorization } = req.headers;
+  data.splice(index, 1);
+  const dataJSON = JSON.stringify(data, null, '\t');
+  if (!authorization || authorization === '') {
+    return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  }
+  if (!verifyToken(authorization)) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+  await writeFile('./crush.json', dataJSON);
+  res.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(3000);
