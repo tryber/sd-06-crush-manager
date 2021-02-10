@@ -65,7 +65,7 @@ const verifyCrush = (request, response, next) => {
 const verifyToken = ((request, response, next) => {
   const { authorization } = request.headers;
   if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
-  if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
+  if (authorization !== '7mqaVRXJSp886CGr') return response.status(401).send({ message: 'Token inválido' });
   next();
 });
 
