@@ -111,44 +111,45 @@ app.post('/crush', async (req, res) => {
       message: 'O crush deve ser maior de idade',
     });
   }
-  if (!date) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (!date.datedAt) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
+  // if (!date) {
+  //   return res.status(400).json({
+  //     message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+  //   });
+  // }
+  // if (!date.datedAt) {
+  //   return res.status(400).json({
+  //     message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+  //   });
+  // }
   if (dataValidate(date.datedAt)) {
     return res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
 
-  if (!date.rate) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (!Number.isInteger(date.rate)) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (date.rate > 5 || date.rate < 1) {
+  // if (!date.rate) {
+  //   return res.status(400).json({
+  //     message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+  //   });
+  // }
+  // if (!Number.isInteger(date.rate)) {
+  //   return res.status(400).json({
+  //     message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+  //   });
+  // }
+  if (!date.rate || !Number.isInteger(date.rate)
+  || date.rate > 5 || date.rate < 1 || !date || !date.datedAt) {
     return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
   const crushes = await readFile('crush');
-  const newCrush = await JSON.parse(crushes);
+  const newCrush = JSON.parse(crushes);
   const id = newCrush.length + 1;
   const element = { name, age, id, date };
-  await newCrush.push(element);
-  await writeFile('crush', JSON.stringify(newCrush));
-  await res.status(201).send(element);
+  newCrush.push(element);
+  writeFile('crush', JSON.stringify(newCrush));
+  res.status(201).send(element);
 });
 
 app.listen(3000, () => console.log('running'));
