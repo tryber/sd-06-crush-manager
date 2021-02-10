@@ -56,7 +56,7 @@ app.post('/crush', checkAuthentication, checkBody, async (request, response) => 
   return response.status(CREATED).json(newCrush);
 });
 
-app.put('/crush/:id', checkAuthentication, checkBody, editCrush, () => {});
-app.delete('/crush/:id', checkAuthentication, deleteCrush, () => {});
+app.put('/crush/:id', checkAuthentication, checkBody, editCrush);
+app.delete('/crush/:id', checkAuthentication, deleteCrush);
 
 app.listen(3000, () => { console.log('Server listening...'); });
