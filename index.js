@@ -81,6 +81,7 @@ const { dataValidate } = require('./src/utils/validate');
 const { writeFile } = require('./src/utils/manageFile');
 
 app.post('/crush', async (req, res) => {
+  // const token = crypto.randomBytes(8).toString('hex');
   const token = req.headers.authorization;
   const { name, age, date } = req.body;
   console.log(req.body);
@@ -125,6 +126,7 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
+
   if (!date.rate) {
     return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
@@ -135,7 +137,7 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  if (date.rate > 5 && date.rate < 1) {
+  if (date.rate > 5 || date.rate < 1) {
     return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
