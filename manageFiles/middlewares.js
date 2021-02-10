@@ -67,7 +67,7 @@ const validateToken = async (req, _res, next) => {
   if (authorization.length !== SIXTEEN) {
     next({ message: 'Token inválido', statusCode: 401 });
   }
-  console.log(authorization);
+  // console.log(authorization);
 
   next();
 };
@@ -123,9 +123,9 @@ const addNewCrush = async (req, res) => {
   newCrush.id = myCrushes.length + 1;
   const newCrushesList = [...myCrushes, newCrush];
 
-  writeFile(fileName, JSON.stringify(newCrushesList));
-  // console.log(newCrushesList);
-  res.status(201).json(newCrushesList);
+  await writeFile(fileName, JSON.stringify(newCrushesList));
+  // console.log(fileName);
+  return res.status(201).json(newCrush);
 };
 
 const error = ((err, _req, res, _next) => {

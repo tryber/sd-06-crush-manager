@@ -16,7 +16,7 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   console.log({
     data: new Date(),
     method: req.method,
