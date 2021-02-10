@@ -45,11 +45,15 @@ app.post('/login', (request, response) => {
   return response.send({ token });
 });
 
-app.post('/crush', async (request, response) => {
+app.use((request, response, next) => {
   const { authorization } = request.headers;
-  const { name, age, date } = request.body;
   if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
   if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
+  next();
+});
+
+app.post('/crush', async (request, response) => {
+  const { name, age, date } = request.body;
   if (!name || name === '') return response.status(400).send({ message: 'O campo "name" é obrigatório' });
   if (name.length < 3) return response.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
 
@@ -69,11 +73,8 @@ app.post('/crush', async (request, response) => {
 });
 
 app.put('/crush/:id', async (request, response) => {
-  const { authorization } = request.headers;
   const { name, age, date } = request.body;
   const id = parseInt(request.params.id, 10);
-  if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
-  if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
 
   if (!name || name === '') return response.status(400).send({ message: 'O campo "name" é obrigatório' });
   if (name.length < 3) return response.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
@@ -95,10 +96,7 @@ app.put('/crush/:id', async (request, response) => {
 });
 
 app.delete('/crush/:id', async (request, response) => {
-  const { authorization } = request.headers;
   const id = parseInt(request.params.id, 10);
-  if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
-  if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
 
   const readData = await fs.readFile('./crush.send');
   const dataJson = await JSON.parse(readData);
