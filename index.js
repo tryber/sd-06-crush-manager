@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParse = require('body-parser');
 const lerArquivo = require('./services/lerArquivo');
+const escreverArquivo = require('./services/escreverArquivo');
 const { validEmail, validPass } = require('./Regex');
 const { genToken } = require('./services/tokenGenerator');
 
@@ -49,6 +50,15 @@ app.post('/login', (req, res) => {
   const token = genToken();
   req.headers.authorization = token;
   return res.send({ token });
+});
+
+app.post('/crush', async (req, res) => {
+  const novoCrush = req.body;
+  /* novoCrush.push({ id: }) */
+  const escrevendoArquivo = await escreverArquivo(meuArquivo, novoCrush);
+  const arquivoConvertido = JSON.parse(escrevendoArquivo);
+  console.log(arquivoConvertido);
+  res.send(req.body);
 });
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));

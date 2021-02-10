@@ -7,12 +7,4 @@ const lerArquivo = (caminho) => new Promise((resolve, reject) => {
   });
 });
 
-/* const main = async () => {
-  const testando = await lerArquivo
-  ('/home/labelle/Documentos/trybe/Back-End/Bloco_26/sd-06-crush-manager/crush.json');
-  console.log(testando);
-};
-
-main(); */
-
 module.exports = lerArquivo;
