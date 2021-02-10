@@ -124,4 +124,48 @@ app.post('/crush', async (req, res) => {
   res.status(CREATED).json(newCrush);
 });
 
+// Desafio 05 - endpoint PUT /crush/:id
+app.put('/crush/:id', async (req, res) => {
+  const { authorization } = req.headers;
+  const { name, age, date } = req.body;
+  if (!authorization || authorization === '') {
+    return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  }
+  if (!verifyToken(authorization)) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+  if (!checkCrushName(name)) {
+    return res.status(BAD_REQUEST).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (!checkCrushNameLength(name)) {
+    return res.status(BAD_REQUEST).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  if (!checkAgeCrush(age)) {
+    return res.status(BAD_REQUEST).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (!checkAgeOlder(age)) {
+    return res.status(BAD_REQUEST).json({ message: 'O crush deve ser maior de idade' });
+  }
+  if (!checkDateRate(date)) {
+    return res.status(BAD_REQUEST).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
+  if (!formatDate(date)) {
+    return res.status(BAD_REQUEST).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (!checkRate(date)) {
+    return res.status(BAD_REQUEST).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  // const crushes = await getData();
+  // const id = getNextId(crushes);
+  // res.status(SUCCESS).json(crushSelected);
+
+  const id = parseInt(req.params.id, 10);
+  const crushes = await getData();
+  const foundIndex = crushes.findIndex((crush) => crush.id === id);
+  const editCrush = { name, age, id, date };
+  crushes[foundIndex] = editCrush;
+  res.status(SUCCESS).json(editCrush);
+});
+
 app.listen(3000);
