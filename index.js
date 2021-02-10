@@ -31,10 +31,10 @@ app.get('/crush', async (_req, res) => {
 app.post('/crush', async (req, res) => {
   const crushes = JSON.parse(await fs.readFile('./crush.json', 'utf-8'));
 
-  if (!req.headers.mytoken) {
-    res.send({ message: 'Token não encontrado' });
-  } else if (req.headers.mytoken.length < 16) {
-    res.send({ message: 'Token inválido' });
+  if (!req.headers.authorization) {
+    res.status(401).send({ message: 'Token não encontrado' });
+  } else if (req.headers.authorization.length < 16) {
+    res.status(401).send({ message: 'Token inválido' });
   }
   console.log(req.headers.mytoken);
 
@@ -88,7 +88,7 @@ app.post('/crush', async (req, res) => {
   });
 
   if (result.error) {
-    return res.status(400).send(result.error.details[0].message);
+    return res.status(400).send(result.error.details[0]);
   }
   // --
 
