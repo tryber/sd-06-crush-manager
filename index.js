@@ -25,9 +25,14 @@ app.get('/crush',
 // req 7
 app.get('/crush/search',
   async (req, res) => {
-    const { name } = req.query;
+    // validação token
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+    if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+    const query = req.query.q;
     const file = JSON.parse(await utils.readFile());
-    const response = file.filter((people) => people.name.includes(name));
+    if (!query) return res.status(200).json(file);
+    const response = file.filter((people) => people.name.includes(query));
     res.json(response);
   });
 // req 2
