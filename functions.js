@@ -67,10 +67,10 @@ function validateAge(age) {
   return true;
 }
 
-function validateDate(date, datedAt, rate) {
-  if (!checkIfExists(date) || !checkIfExists(datedAt) || !checkIfExists(rate)) return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
-  if (!checkDate(datedAt)) return 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
-  if (rate < 1 || rate > 5 || !Number.isInteger(rate)) return 'O campo "rate" deve ser um inteiro de 1 à 5';
+function validateDate(date) {
+  if (!checkIfExists(date) || !checkIfExists(date.datedAt) || !checkIfExists(date.rate)) return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
+  if (!checkDate(date.datedAt)) return 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
+  if (date.rate < 1 || date.rate > 5 || !Number.isInteger(date.rate)) return 'O campo "rate" deve ser um inteiro de 1 à 5';
 
   return true;
 }

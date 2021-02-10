@@ -12,12 +12,12 @@ const app = express();
 const SUCCESS = 200;
 const port = 3000;
 
-app.use(bodyParser.json());
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.use(bodyParser.json());
 
 const getData = async () => {
   const data = await readFile('./crush.json');
@@ -53,14 +53,13 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/crush', async (req, res) => {
-  const { token } = req.headers;
+  const { authorization } = req.headers;
   const { name, age, date } = req.body;
-  const { datedAt, rate } = date;
 
-  if (validateToken(token) !== true) return res.status(401).send({ message: `${validateToken(token)}` });
+  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
   if (validateName(name) !== true) return res.status(400).send({ message: `${validateName(name)}` });
   if (validateAge(age) !== true) return res.status(400).send({ message: `${validateAge(age)}` });
-  if (validateDate(date, datedAt, rate) !== true) res.status(400).send({ message: `${validateDate(date, datedAt, rate)}` });
+  if (validateDate(date) !== true) return res.status(400).send({ message: `${validateDate(date)}` });
 
   const data = await getData();
   const nextId = getNextId(data);
@@ -70,9 +69,7 @@ app.post('/crush', async (req, res) => {
 
   await writeFile('./crush.json', textJSON);
 
-  const newCrushJSON = JSON.stringify(newCrush, null, '\t');
-
-  res.status(201).send(newCrushJSON);
+  res.status(201).json(newCrush);
 });
 
 app.listen(port);
