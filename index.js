@@ -25,7 +25,7 @@ app.get('/crush', async (_request, response) => {
 });
 
 app.get('/crush/:id', async (request, response) => {
-  const { id } = request.params;
+  const { id } = parseInt(request.params, 10);
   const readData = await readFile('crush.json');
   const dataJson = await JSON.parse(readData);
   const dataFiltered = dataJson.filter((item) => item.id === +id);
@@ -71,7 +71,7 @@ app.post('/crush', async (request, response) => {
 app.put('/crush/:id', async (request, response) => {
   const { authorization } = request.headers;
   const { name, age, date } = request.body;
-  const { id } = request.params;
+  const { id } = parseInt(request.params, 10);
   if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
   if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
 
@@ -96,7 +96,7 @@ app.put('/crush/:id', async (request, response) => {
 
 app.delete('/crush/:id', async (request, response) => {
   const { authorization } = request.headers;
-  const { id } = request.params;
+  const { id } = parseInt(request.params, 10);
   if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
   if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
 
