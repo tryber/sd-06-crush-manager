@@ -149,7 +149,7 @@ app.post('/crush', async (req, res) => {
   const element = { name, age, id, date };
   await newCrush.push(element);
   await writeFile('crush', JSON.stringify(newCrush));
-  return res.status(201).send(element);
+  await res.status(201).send(element);
 });
 
 app.listen(3000, () => console.log('running'));
