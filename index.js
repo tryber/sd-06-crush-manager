@@ -62,14 +62,14 @@ const verifyCrush = (request, response, next) => {
   next();
 };
 
-app.use((request, response, next) => {
+const verifyToken = ((request, response, next) => {
   const { authorization } = request.headers;
   if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
   if (!((/^(\d|\w){16}$/gm).test(authorization))) return response.status(401).send({ message: 'Token inválido' });
   next();
 });
 
-app.post('/crush', verifyCrush, async (request, response) => {
+app.post('/crush', verifyCrush, verifyToken, async (request, response) => {
   const readData = await readFile('crush.json');
   const dataJson = await JSON.parse(readData);
   const newCrush = { id: dataJson.length + 1, ...request.body };
@@ -78,7 +78,7 @@ app.post('/crush', verifyCrush, async (request, response) => {
   return response.status(201).send(newCrush);
 });
 
-app.put('/crush/:id', verifyCrush, async (request, response) => {
+app.put('/crush/:id', verifyCrush, verifyToken, async (request, response) => {
   const id = parseInt(request.params.id, 10);
   const readData = await readFile('crush.json');
   const dataJson = await JSON.parse(readData);
@@ -89,7 +89,7 @@ app.put('/crush/:id', verifyCrush, async (request, response) => {
   return response.status(200).send(itemModified);
 });
 
-app.delete('/crush/:id', async (request, response) => {
+app.delete('/crush/:id', verifyToken, async (request, response) => {
   const id = parseInt(request.params.id, 10);
 
   const readData = await fs.readFile('./crush.send');
