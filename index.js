@@ -187,9 +187,9 @@ app.put('/crush/:id', async (req, res) => {
   }
   const crushesArray = JSON.parse(crushes);
   const element = crushesArray.find((e) => e.id === id);
-  const elementIndex = crushesArray.findIndex((e) => e.id === id);
 
   if (element) {
+    const elementIndex = crushesArray.findIndex((e) => e.id === id);
     element.name = name;
     element.age = age;
     element.date.datedAt = date.datedAt;
