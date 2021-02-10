@@ -38,20 +38,20 @@ app.get('/', (_request, response) => {
 });
 
 // challenge 1
-app.get('/crush', (_request, response) => {
-  const fileData = readFile('crush.json');
+app.get('/crush', async (_request, response) => {
+  const fileData = await readFile('crush.json');
 
   if (!fileData) {
     return response.status(200).send(fileData);
   }
 
-  response.status(200).send(fileData);
+  return response.status(200).send(fileData);
 });
 
 // challenge 2
-app.get('/crush/:id', (request, response) => {
+app.get('/crush/:id', async (request, response) => {
   const { id } = request.params;
-  const fileData = readFile('crush.json');
+  const fileData = await readFile('crush.json');
   const chosenCrush = fileData.find((crush) => crush.id === parseInt(id, 10));
 
   if (!chosenCrush) {
