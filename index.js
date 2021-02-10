@@ -1,33 +1,40 @@
 const express = require('express');
 const fs = require('fs');
 // const util = require('util');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 const app = express();
 const SUCCESS = 200;
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
-// const readFile = util.promisify(fs.readFile);
-// const writeFile = util.promisify(fs.writeFile);
+app.use(express.json());
+
+const verifyToken = ((request, response, next) => {
+  const { authorization } = request.headers;
+  if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
+  if (authorization !== '7mqaVRXJSp886CGr') return response.status(401).send({ message: 'Token inválido' });
+  next();
+});
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
 app.get('/crush', (_request, response) => {
-  const readData = fs.readFileSync('crush.json');
+  const readData = fs.readFileSync('/.crush.json', 'utf-8');
   if (readData) {
     const dataJson = JSON.parse(readData);
     return response.status(200).send(dataJson);
   }
-  return response.status(200).send(JSON.parse([]));
+  return response.status(200).json([]);
 });
 
-app.get('/crush/:id', async (request, response) => {
+app.get('/crush/:id', (request, response) => {
   const id = parseInt(request.params.id, 10);
   const readData = fs.readFileSync('crush.json');
-  const dataJson = await JSON.parse(readData);
+  const dataJson = JSON.parse(readData);
   const dataFiltered = dataJson.filter((item) => item.id === id);
   if (dataFiltered.length === 0) {
     return response.status(404).send({ message: 'Crush não encontrado' });
@@ -37,12 +44,13 @@ app.get('/crush/:id', async (request, response) => {
 
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
+  const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
   if (!email) return response.status(400).send({ message: 'O campo "email" é obrigatório' });
-  if (!((/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i).test(email))) return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (!(emailRegex.test(email))) return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
   if (!password) return response.status(400).send({ message: 'O campo "password" é obrigatório' });
   if (password.length < 6) return response.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   const token = '7mqaVRXJSp886CGr';
-  return response.send({ token });
+  return response.status(200).send({ token });
 });
 
 const verifyCrush = (request, response, next) => {
@@ -62,13 +70,6 @@ const verifyCrush = (request, response, next) => {
   next();
 };
 
-const verifyToken = ((request, response, next) => {
-  const { authorization } = request.headers;
-  if (!authorization) return response.status(401).send({ message: 'Token não encontrado' });
-  if (authorization !== '7mqaVRXJSp886CGr') return response.status(401).send({ message: 'Token inválido' });
-  next();
-});
-
 app.post('/crush', verifyCrush, verifyToken, async (request, response) => {
   const readData = fs.readFileSync('crush.json');
   const dataJson = await JSON.parse(readData);
@@ -81,21 +82,21 @@ app.post('/crush', verifyCrush, verifyToken, async (request, response) => {
 app.put('/crush/:id', verifyCrush, verifyToken, async (request, response) => {
   const id = parseInt(request.params.id, 10);
   const readData = fs.readFileSync('crush.json');
-  const dataJson = await JSON.parse(readData);
+  const dataJson = JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== id);
   const itemModified = { id, ...request.body };
   newData.push(itemModified);
-  await fs.writeFile('crush.json', JSON.stringify(newData));
+  fs.writeFileSync('crush.json', JSON.stringify(newData));
   return response.status(200).send(itemModified);
 });
 
-app.delete('/crush/:id', verifyToken, async (request, response) => {
+app.delete('/crush/:id', verifyToken, (request, response) => {
   const id = parseInt(request.params.id, 10);
 
   const readData = fs.readFileSync('crush.send');
-  const dataJson = await JSON.parse(readData);
+  const dataJson = JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== +id);
-  await fs.writeFile('crush.json', JSON.stringify(newData));
+  fs.writeFileSync('crush.json', JSON.stringify(newData));
   return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
