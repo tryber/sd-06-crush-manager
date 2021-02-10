@@ -2,11 +2,11 @@
   "name": "sd-0x-crush-manager",
   "version": "1.0.0",
   "description": "",
-  "main": ".src/index.js",
+  "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand || cp tests/seed.json crush.json",
+    "test": "jest --runInBand",
     "debug": "nodemon -w --exec node index.js",
-    "start": "node ./src/index.js",
+    "start": "node index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "keywords": [],

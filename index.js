@@ -12,8 +12,8 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 app.listen(3000, () => console.log('running'));
-const { readFile } = require('./utils/manageFiles');
-const { emailValid, passwordValid } = require('./utils/validations');
+const { readFile } = require('./src/utils/manageFiles');
+const { emailValid, passwordValid } = require('./src/utils/validations');
 
 // ------- Requisito 1 --------
 
