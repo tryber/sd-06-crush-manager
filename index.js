@@ -7,48 +7,14 @@ const SUCCESS = 200;
 const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
 const token = { token: '7mqaVRXJSp886CGr' };
 const dateRegex = /(\d{2})[/](\d{2})[/](\d{4})/;
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', (_req, res) => {
-  const file = fs.readFileSync('./crush.json', 'utf8');
-  res.json(JSON.parse(file));
-});
-
-app.get('/crush/:id', (req, res) => {
-  const file = fs.readFileSync('./crush.json', 'utf8');
-  const dataFiles = JSON.parse(file);
-  const { id } = req.params;
-  const crushes = dataFiles.filter((crush) => crush.id === parseInt(id, 10));
-  if (crushes.length !== 1) {
-    return res.status(404).send({ message: 'Crush não encontrado' });
-  }
-  return res.status(SUCCESS).send(crushes[0]);
-});
-
-app.use(bodyParser.json());
-
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || email === '') {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  }
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-  if (!password || password === '') {
-    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  }
-  if (password.length < 6) {
-    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-  }
-  res.status(SUCCESS).json(token);
-});
-
-const tokenAutorization = (req, res, next) => {
+function tokenAutorization(req, res, next) {
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
@@ -57,11 +23,11 @@ const tokenAutorization = (req, res, next) => {
     return res.status(401).json({ message: 'Token inválido' });
   }
   next();
-};
+}
 
 app.use(tokenAutorization);
 
-const crushValidation = (name, age, date) => {
+function crushValidation(name, age, date) {
   let message = '';
   if (!name) {
     message = 'O campo "name" é obrigatório';
@@ -86,7 +52,50 @@ const crushValidation = (name, age, date) => {
     message = 'O campo "rate" deve ser um inteiro de 1 à 5';
   }
   return message;
-};
+}
+
+app.get('/crush/search', (req, res) => {
+  const { q } = req.query;
+  const regex = new RegExp(q);
+  // data: dd/mm/aaaa regex(\d{1,2}/\d{2}/(\d{2}|(\d{4}))); \d ->digito; numero
+  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(cruchesFile);
+  const matchCrush = crushes.filter((crush) => regex.test(crush.name));
+  res.status(SUCCESS).json(matchCrush);
+});
+
+app.get('/crush/:id', (req, res) => {
+  const file = fs.readFileSync('./crush.json', 'utf8');
+  const dataFiles = JSON.parse(file);
+  const { id } = req.params;
+  const crushes = dataFiles.filter((crush) => crush.id === parseInt(id, 10));
+  if (crushes.length !== 1) {
+    return res.status(404).send({ message: 'Crush não encontrado' });
+  }
+  return res.status(SUCCESS).send(crushes[0]);
+});
+
+app.get('/crush', (_req, res) => {
+  const file = fs.readFileSync('./crush.json', 'utf8');
+  res.json(JSON.parse(file));
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || email === '') {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (!password || password === '') {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  }
+  res.status(SUCCESS).json(token);
+});
 
 app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
@@ -100,6 +109,7 @@ app.post('/crush', (req, res) => {
   crushes.push(newCrush);
   res.status(201).json(newCrush);
 });
+
 app.put('/crush/:id', (req, res) => {
   const { name, age, date } = req.body;
   const invalidCrush = crushValidation(name, age, date);
