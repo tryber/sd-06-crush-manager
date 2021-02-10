@@ -43,7 +43,7 @@ const checkBody = async (request, response, next) => {
     return response.status(BAD_REQUEST).json(errorMessages.invalidDateField);
   }
 
-  next();
+  return next();
 };
 
 module.exports = { checkBody };
