@@ -47,7 +47,7 @@ app.post('/login', (req, res) => {
   if (resultEmail[0] !== 200) res.status(resultEmail[0]).json({ message : resultEmail[1] });
   if (resultPassword[0] !== 200) res.status(resultPassword[0]).json({ message : resultPassword[1] });
 
-  res.status(SUCESS).json({ token: resultToken });
+  res.status(SUCCESS).json({ token: resultToken });
 });
 // end requeriment 3
 
