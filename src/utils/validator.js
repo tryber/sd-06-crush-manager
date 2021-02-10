@@ -9,7 +9,7 @@ const passwordValidation = (password) => {
 };
 
 const dataValidation = (data) => {
-  const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+  const regex = /^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
   return !regex.test(data);
 };
 

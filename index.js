@@ -85,47 +85,48 @@ const { dataValidation } = require('./src/utils/validator');
 const { writeFile } = require('./src/utils/manageFile');
 
 app.post('/crush', async (req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
+  const token = req.headers.authorization;
+  console.log(token);
+  const { name, age, date } = req.body;
   if (!token) {
-    await res.status(401).json({ message: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
   if (token.length !== 16) {
-    await res.status(401).json({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
-  const { name, age, date } = req.body;
   if (!name) {
-    await res.status(400).json({
+    return res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
   }
-  if (name.length < 3) {
-    await res.status(400).json({
+  if (name.length < 4) {
+    return res.status(400).json({
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
-  if (!age) {
-    await res.status(400).json({
+  if (!age || age === '') {
+    return res.status(400).json({
       message: 'O campo "age" é obrigatório',
     });
   }
   if (age < 18) {
-    await res.status(400).json({
+    return res.status(400).json({
       message: 'O crush deve ser maior de idade',
     });
   }
-  if (!date) {
-    await res.status(400).json({
+  if (date.rate > 5 || date.rate < 1) {
+    return res.status(400).json({
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+    });
+  }
+  if (!date || date === '' || !date.datedAt || date.rate === undefined) {
+    return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
   if (dataValidation(date.datedAt)) {
-    await res.status(400).json({
+    return res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
-    });
-  }
-  if (!Number.isInteger(date.rate) || (date.rate > 5 && date.rate < 1)) {
-    await res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
   const crushes = await readFile('crush');
