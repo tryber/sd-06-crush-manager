@@ -80,7 +80,7 @@ const { dataValidate } = require('./src/utils/validate');
 
 const { writeFile } = require('./src/utils/manageFile');
 
-app.post('/crush', async (req, res) => {
+app.post('/crush', (req, res) => {
   // const token = crypto.randomBytes(8).toString('hex');
   const token = req.headers.authorization;
   const { name, age, date } = req.body;
@@ -143,13 +143,13 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  const crushes = await readFile('crush');
-  const newCrush = await JSON.parse(crushes);
+  const crushes = readFile('crush');
+  const newCrush = JSON.parse(crushes);
   const id = newCrush.length + 1;
   const element = { name, age, id, date };
-  await newCrush.push(element);
-  await writeFile('crush', JSON.stringify(newCrush));
-  await res.status(201).send(element);
+  newCrush.push(element);
+  writeFile('crush', JSON.stringify(newCrush));
+  return res.status(201).send(element);
 });
 
 app.listen(3000, () => console.log('running'));
