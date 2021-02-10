@@ -59,16 +59,7 @@ app.post('/login', (req, res) => {
 // end requeriment 3
 // requeriment 4 / Crie o endpoint POST /crush
 app.post('/crush', isToken, isName, isAge, isDate, (req, res, next) => {
-  const crush = {
-    "id": 1,
-    "name": "Keanu Reeves",
-    "age": 56,
-    "date": {
-      "datedAt": "22/10/2019",
-      "rate": 5
-    }
-  }
-
+  const crush = req.body
   return res.status(SUCCESS).json( crush );
 });
 // end requeriment 4
