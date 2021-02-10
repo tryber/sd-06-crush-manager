@@ -105,4 +105,4 @@ app.delete('/crush/:id', async (request, response) => {
   return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
-app.listen(3001);
+app.listen(3000);
