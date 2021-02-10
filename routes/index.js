@@ -15,6 +15,8 @@ routes.get('/crush', controllers.getRequestedCrushes);
 
 routes.get('/crush/:id', controllers.getRequestedCrushes);
 
+routes.put('/crush/:id', middlewares.auth, middlewares.validateCrush, controllers.updateCrush);
+
 routes.use(middlewares.handleError);
 
 module.exports = routes;

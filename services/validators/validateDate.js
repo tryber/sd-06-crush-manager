@@ -9,6 +9,7 @@ const validateDatedAt = (date) => {
 };
 
 const validateRate = (rate) => {
+  if (rate === 0) throw new Error(error.invalidRate);
   if (!rate) throw new Error(error.noDate);
   const regex = /^[1-5]$/;
   const isValid = regex.test(rate);
