@@ -76,7 +76,7 @@ app.post('/crush', verifyToken, verifyCrush, async (request, response) => {
   const dataJson = await JSON.parse(readData);
   const newCrush = { id: dataJson.length + 1, ...request.body };
   dataJson.push(newCrush);
-  await fs.writeFile('crush.json', JSON.stringify(dataJson));
+  fs.writeFileSync('./crush.json', JSON.stringify(dataJson));
   return response.status(201).send(newCrush);
 });
 
@@ -87,7 +87,7 @@ app.put('/crush/:id', verifyToken, verifyCrush, async (request, response) => {
   const newData = dataJson.filter((item) => item.id !== id);
   const itemModified = { id, ...request.body };
   newData.push(itemModified);
-  fs.writeFileSync('crush.json', JSON.stringify(newData));
+  fs.writeFileSync('./crush.json', JSON.stringify(newData));
   return response.status(200).send(itemModified);
 });
 
@@ -97,7 +97,7 @@ app.delete('/crush/:id', verifyToken, (request, response) => {
   const readData = fs.readFileSync('crush.send');
   const dataJson = JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== id);
-  fs.writeFileSync('crush.json', JSON.stringify(newData));
+  fs.writeFileSync('./crush.json', JSON.stringify(newData));
   return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
