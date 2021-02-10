@@ -12,6 +12,7 @@ const CREATED = 201;
 const BAD_REQUEST = 400;
 const UNAUTHORIZED = 401;
 const NOT_FOUND = 404;
+
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const fileName = path.join(__dirname, 'crush.json');
@@ -30,10 +31,9 @@ const getData = async () => {
 };
 
 // Salvar os dados no arquivo
-const setData = async (crushes, newCrush) => {
-  const newArrayCrushes = [...crushes, newCrush];
-  const newArrayCrushesFormated = JSON.stringify(newArrayCrushes, null, '\t');
-  await writeFile(fileName, newArrayCrushesFormated, 'utf-8');
+const setData = async (crushes) => {
+  const arrayCrushesFormated = JSON.stringify(crushes, null, '\t');
+  await writeFile(fileName, arrayCrushesFormated, 'utf-8');
 };
 
 // endpoint GET /crush - Requirement 01
@@ -83,9 +83,34 @@ app.post('/crush', async (req, res) => {
   const crushes = await getData();
   const id = getNextId(crushes);
   const newCrush = { name, age, id, date };
-  setData(crushes, newCrush);
+  const newArrayCrushes = [...crushes, newCrush];
+  setData(newArrayCrushes);
 
   res.status(CREATED).json(newCrush);
+});
+
+// endpoint PUT /crush/:id - Requirement 05
+app.put('/crush/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { authorization } = req.headers;
+  const { name, age, date } = req.body;
+
+  const validToken = validateToken(authorization);
+  if (validToken !== 'OK') {
+    return res.status(UNAUTHORIZED).json({ message: validToken });
+  }
+  const validCrush = validateCrush(name, age, date);
+  if (validCrush !== 'OK') {
+    return res.status(BAD_REQUEST).json({ message: validCrush });
+  }
+
+  const crushes = await getData();
+  const foundIndex = crushes.findIndex((crush) => crush.id === id);
+  const editedCrush = { name, age, id, date };
+  crushes[foundIndex] = editedCrush;
+  setData(crushes);
+
+  res.status(SUCCESS).json(editedCrush);
 });
 
 app.listen(3000, () => console.log('Crush Magager Started: Port 3000'));
