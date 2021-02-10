@@ -7,7 +7,7 @@ const readMyFile = async (req, res) => {
   if (myCrushes.length > 0) {
     res.status(200).json((myCrushes));
   } else {
-    res.status(200).json([]);
+    return res.status(200).json([]);
   }
 };
 
@@ -125,10 +125,10 @@ const addNewCrush = async (req, res, _next) => {
   newCrush.id = myCrushes.length + 1;
   const newCrushesList = [...myCrushes, newCrush];
 
-  console.log(newCrushesList);
+  // console.log(newCrushesList);
 
   await writeFile(fileName, JSON.stringify(newCrushesList));
-  return res.status(201).json(newCrush);
+  res.status(201).json(newCrushesList);
 };
 
 const error = ((err, _req, res, _next) => {
