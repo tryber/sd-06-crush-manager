@@ -97,4 +97,22 @@ app.put('/crush/:id', async (req, res) => {
   res.status(200).json(editCrushWithID);
 });
 
+app.delete('/crush/:id', async (req, res) => {
+  const data = await getData();
+  const { id } = req.params;
+  const crushID = parseInt(id, 10);
+  const index = data.findIndex((person) => person.id === crushID);
+  const { authorization } = req.headers;
+
+  data.splice(index, 1);
+
+  const dataJSON = JSON.stringify(data, null, '\t');
+
+  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
+
+  await writeFile('./crush.json', dataJSON);
+
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(port);
