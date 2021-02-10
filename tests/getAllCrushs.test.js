@@ -19,6 +19,19 @@ describe('1 - Crie o endpoint GET /crush', () => {
     );
   });
 
+  // afterEach(() => {
+  //   const crushSeed = fs.readFileSync(
+  //     path.join(__dirname, 'seed.json'),
+  //     'utf8',
+  //   );
+
+  //   fs.writeFileSync(
+  //     path.join(__dirname, '..', 'crush.json'),
+  //     crushSeed,
+  //     'utf8',
+  //   );
+  // });
+
   it('Será validado que o endpoint retorna um array com todos os crushs cadastrados', async () => {
     await frisby
       .get(`${url}/crush`)
