@@ -3,7 +3,7 @@ const { readFile } = require('./utils/managerFiles');
 const { generateToken } = require('./utils/generateToken');
 const { isEmail } = require('./utils/validations/isEmail');
 const { isPassword } = require('./utils/validations/isPassword');
-const { isToken } = require('./utils/validations/isToken');
+const { isToken } = require('./utils/validations/middlewareValidations/isToken');
 
 const app = express();
 // preciso da linha 6 para o express ler variaveis do tipo json
@@ -44,9 +44,11 @@ app.post('/login', (req, res) => {
   const resultEmail = isEmail(email);
   const resultPassword = isPassword(password);
 
-  if (resultEmail[0] !== 200) return res.status(resultEmail[0]).json({ message: resultEmail[1] });
-  if (resultPassword[0] !== 200) return res.status(resultPassword[0]).json({ 
-    message: resultPassword[1] 
+  if (resultEmail[0] !== 200) { return res.status(resultEmail[0]).json({
+    message: resultEmail[1],
+  }) };
+  if (resultPassword[0] !== 200) return res.status(resultPassword[0]).json({
+    message: resultPassword[1],
   });
 
   return res.status(SUCCESS).json({ token: resultToken });
@@ -56,7 +58,6 @@ app.post('/login', (req, res) => {
 app.post('/crush', isToken, (req, res, next) => {
   // const newCrush = req.body;
 
-  isToken(req, res, next);
 
   return res.status(SUCCESS).json({ message: 'token validado' });
 });
