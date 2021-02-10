@@ -8,13 +8,13 @@
     "debug": "nodemon -w --exec node index.js",
     "start": "node index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
-    "dev": "nodemon index.js",
-    "restore": "cp tests/seed.json crush.json"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "crypto-js": "^4.0.0",
     "express": "^4.17.1",

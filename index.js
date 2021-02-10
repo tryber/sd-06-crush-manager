@@ -1,8 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
 const app = express();
 const SUCCESS = 200;
+
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -93,12 +96,12 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "name" é obrigatório',
     });
   }
-  if (name.length < 3) {
+  if (name.length < 4) {
     return res.status(400).json({
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
-  if (!age) {
+  if (!age || age === '') {
     return res.status(400).json({
       message: 'O campo "age" é obrigatório',
     });
@@ -108,14 +111,14 @@ app.post('/crush', async (req, res) => {
       message: 'O crush deve ser maior de idade',
     });
   }
-  if (!date) {
+  if (!date || date === '' || !date.datedAt || date.rate === undefined) {
     return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  if (!date.datedAt) {
+  if (date.rate > 5 || date.rate < 1) {
     return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
   if (dataValidate(date.datedAt)) {
@@ -124,23 +127,6 @@ app.post('/crush', async (req, res) => {
     });
   }
 
-  if (!date.rate) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (!Number.isInteger(date.rate)) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-
-  // if (!date.rate || !Number.isInteger(date.rate)
-  // || date.rate > 5 || date.rate < 1 || !date || !date.datedAt) {
-  //   return res.status(400).json({
-  //     message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-  //   });
-  // }
   const crushes = await readFile('crush');
   const newCrush = JSON.parse(crushes);
   const id = newCrush.length + 1;
@@ -152,74 +138,74 @@ app.post('/crush', async (req, res) => {
 
 // requisito 5
 
-app.put('/crush/:id', async (req, res) => {
-  const crushes = await readFile('crush');
-  const token = req.headers.authorization;
-  const { name, age, date } = req.body;
-  const id = parseInt(req.params.id, 10);
+// app.put('/crush/:id', async (req, res) => {
+//   const crushes = await readFile('crush');
+//   const token = req.headers.authorization;
+//   const { name, age, date } = req.body;
+//   const id = parseInt(req.params.id, 10);
 
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-  if (!name) {
-    return res.status(400).json({
-      message: 'O campo "name" é obrigatório',
-    });
-  }
-  if (name.length < 3) {
-    return res.status(400).json({
-      message: 'O "name" deve ter pelo menos 3 caracteres',
-    });
-  }
-  if (!age) {
-    return res.status(400).json({
-      message: 'O campo "age" é obrigatório',
-    });
-  }
-  if (age < 18) {
-    return res.status(400).json({
-      message: 'O crush deve ser maior de idade',
-    });
-  }
-  if (!date) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (!date.datedAt) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (dataValidate(date.datedAt)) {
-    return res.status(400).json({
-      message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
-    });
-  }
+//   if (!token) {
+//     return res.status(401).json({ message: 'Token não encontrado' });
+//   }
+//   if (token.length !== 16) {
+//     return res.status(401).json({ message: 'Token inválido' });
+//   }
+//   if (!name) {
+//     return res.status(400).json({
+//       message: 'O campo "name" é obrigatório',
+//     });
+//   }
+//   if (name.length < 3) {
+//     return res.status(400).json({
+//       message: 'O "name" deve ter pelo menos 3 caracteres',
+//     });
+//   }
+//   if (!age) {
+//     return res.status(400).json({
+//       message: 'O campo "age" é obrigatório',
+//     });
+//   }
+//   if (age < 18) {
+//     return res.status(400).json({
+//       message: 'O crush deve ser maior de idade',
+//     });
+//   }
+//   if (!date) {
+//     return res.status(400).json({
+//       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+//     });
+//   }
+//   if (!date.datedAt) {
+//     return res.status(400).json({
+//       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+//     });
+//   }
+//   if (dataValidate(date.datedAt)) {
+//     return res.status(400).json({
+//       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+//     });
+//   }
 
-  if (!date.rate) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  if (!Number.isInteger(date.rate)) {
-    return res.status(400).json({
-      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
-    });
-  }
-  const element = JSON.parse(crushes).find((e) => e.id === id);
-  console.log(element);
-  if (element) {
-    element.name = name;
-    element.age = age;
-    element.date.datedAt = date.datedAt;
-    element.date.rate = date.rate;
-    return res.status(200).json(element);
-  }
-  return res.status(404).send({ message: 'Crush não encontrado' });
-});
+//   if (!date.rate) {
+//     return res.status(400).json({
+//       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+//     });
+//   }
+//   if (!Number.isInteger(date.rate)) {
+//     return res.status(400).json({
+//       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+//     });
+//   }
+//   const element = JSON.parse(crushes).find((e) => e.id === id);
+//   console.log(element);
+//   if (element) {
+//     element.name = name;
+//     element.age = age;
+//     element.date.datedAt = date.datedAt;
+//     element.date.rate = date.rate;
+//     return res.status(200).json(element);
+//   }
+//   return res.status(404).send({ message: 'Crush não encontrado' });
+// });
 
 app.listen(3000, () => console.log('running'));
