@@ -89,7 +89,6 @@ app.post('/login', (req, res) => {
 app.post('/crush', async (req, res) => {
   const { authorization } = req.headers;
   const { name, age, date } = req.body;
-  console.log('Authorization: ', authorization);
   if (!authorization || authorization === '') {
     return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
   }
