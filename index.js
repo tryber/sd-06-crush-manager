@@ -36,8 +36,8 @@ app.get('/crush/:id', (request, response) => {
   const id = parseInt(request.params.id, 10);
   const readData = fs.readFileSync('crush.json');
   const dataJson = JSON.parse(readData);
-  const dataFiltered = dataJson.filter((item) => item.id === id);
-  if (dataFiltered.length === 0) {
+  const dataFiltered = dataJson.find((item) => item.id === id);
+  if (!dataFiltered) {
     return response.status(404).send({ message: 'Crush não encontrado' });
   }
   return response.status(200).send(dataFiltered);
