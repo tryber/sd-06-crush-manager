@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParse = require('body-parser');
 const lerArquivo = require('./services/lerArquivo');
-const { validEmail, validToken, validPass } = require('./Regex');
+const { validEmail, validPass } = require('./Regex');
 const { genToken } = require('./services/tokenGenerator');
 
 const app = express();
