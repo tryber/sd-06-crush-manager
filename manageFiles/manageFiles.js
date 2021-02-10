@@ -6,12 +6,12 @@ const readFile = async (fileName) => {
   return JSON.parse(file);
 };
 
-// const writeFile = async (fileName, _content) => {
-//   await fs.writeFile(path(__dirname, '..', `${fileName} + '.json'`), 'utf-8');
-//   return true;
-// };
+const writeFile = async (fileName, _content) => {
+  await fs.writeFile(path(__dirname, '..', `${fileName} + '.json'`), 'utf-8');
+  return true;
+};
 
 module.exports = {
   readFile,
-  // writeFile,
+  writeFile,
 };
