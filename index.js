@@ -23,5 +23,6 @@ app.post('/login', getToken);
 app.post('/crush', validateToken, newCrush);
 app.put('/crush/:id', validateToken, changeCrush);
 app.delete('/crush/:id', validateToken, deleteCrushId);
+app.delete('/crush/search?q=searchTerm', validateToken);
 
 app.listen(3000);

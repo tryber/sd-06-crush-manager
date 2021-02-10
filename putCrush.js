@@ -6,7 +6,8 @@ const changeCrush = (req, res) => {
   const crushID = req.params.id;
   const crushInfo = req.body;
   const { name, age, date } = req.body;
-  const id = crushs.length + 1;
+  // const id = crushs.length + 1;
+  const id = 5;
 
   validateInfo(name, age, date, res);
 
