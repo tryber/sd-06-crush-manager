@@ -203,28 +203,28 @@ app.put('/crush/:id', async (req, res) => {
 
 // reqiosito 6
 
-app.delete('/crush/:id', async (req, res) => {
-  const crushes = await readFile('crush');
-  const token = req.headers.authorization;
-  const id = parseInt(req.params.id, 10);
+// app.delete('/crush/:id', async (req, res) => {
+//   const crushes = await readFile('crush');
+//   const token = req.headers.authorization;
+//   const id = parseInt(req.params.id, 10);
 
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
+//   if (!token) {
+//     return res.status(401).json({ message: 'Token não encontrado' });
+//   }
+//   if (token.length !== 16) {
+//     return res.status(401).json({ message: 'Token inválido' });
+//   }
 
-  const crushesArray = JSON.parse(crushes);
-  const element = crushesArray.find((e) => e.id === id);
+//   const crushesArray = JSON.parse(crushes);
+//   const element = crushesArray.find((e) => e.id === id);
 
-  if (element) {
-    const elementIndex = crushesArray.findIndex((e) => e.id === id);
-    crushesArray.splice(elementIndex, 1);
-    writeFile('crush', JSON.stringify(crushesArray));
-    return res.status(200).json({ message: 'Crush deletado com sucesso' });
-  }
-  return res.status(404).send({ message: 'Crush não encontrado' });
-});
+//   if (element) {
+//     const elementIndex = crushesArray.findIndex((e) => e.id === id);
+//     crushesArray.splice(elementIndex, 1);
+//     writeFile('crush', JSON.stringify(crushesArray));
+//     return res.status(200).json({ message: 'Crush deletado com sucesso' });
+//   }
+//   return res.status(404).send({ message: 'Crush não encontrado' });
+// });
 
 app.listen(3000, () => console.log('running'));
