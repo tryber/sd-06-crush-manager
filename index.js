@@ -44,17 +44,31 @@ app.get('/crush/:id', async (request, response) => {
 
 // ------- Requisito 3 --------
 
-app.post('/login', async (request, response) => {
+const validateLogin = (request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
   const { email, password } = request.body;
 
-  if (email === '' || !email) return response.status(400).json({ message: 'O campo "email" é obrigatório' });
-
-  if (password === '' || !password) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
-
-  if (emailValid(email)) return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-
-  if (passwordValid(email)) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-
+  if (!email || email === '') {
+    return response.status(400).json({
+      message: 'O campo "email" é obrigatório',
+    });
+  }
+  if (!password || password === '') {
+    return response.status(400).json({
+      message: 'O campo "password" é obrigatório',
+    });
+  }
+  if (emailValid(email)) {
+    return response.status(400).json({
+      message: 'O "email" deve ter o formato "email@email.com"',
+    });
+  }
+  if (passwordValid(password)) {
+    return response.status(400).json({
+      message: 'A "senha" deve ter pelo menos 6 caracteres',
+    });
+  }
   return response.status(200).json({ token });
-});
+};
+
+app.post('/login', validateLogin);
