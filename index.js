@@ -8,15 +8,15 @@ const SUCCESS = 200;
 
 app.use(bodyParser.json());
 
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
+// const readFile = util.promisify(fs.readFile);
+// const writeFile = util.promisify(fs.writeFile);
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (_request, response) => {
-  const readData = await readFile('./crush.json', 'utf-8');
+app.get('/crush', (_request, response) => {
+  const readData = fs.readFileSync('crush.json');
   if (readData) {
     const dataJson = JSON.parse(readData);
     return response.status(200).send(dataJson);
@@ -26,7 +26,7 @@ app.get('/crush', async (_request, response) => {
 
 app.get('/crush/:id', async (request, response) => {
   const id = parseInt(request.params.id, 10);
-  const readData = await readFile('./crush.json', 'utf-8');
+  const readData = fs.readFileSync('crush.json');
   const dataJson = await JSON.parse(readData);
   const dataFiltered = dataJson.filter((item) => item.id === id);
   if (dataFiltered.length === 0) {
@@ -70,32 +70,32 @@ const verifyToken = ((request, response, next) => {
 });
 
 app.post('/crush', verifyCrush, verifyToken, async (request, response) => {
-  const readData = await readFile('crush.json');
+  const readData = fs.readFileSync('crush.json');
   const dataJson = await JSON.parse(readData);
   const newCrush = { id: dataJson.length + 1, ...request.body };
   dataJson.push(newCrush);
-  await writeFile('crush.json', JSON.stringify(dataJson));
+  await fs.writeFile('crush.json', JSON.stringify(dataJson));
   return response.status(201).send(newCrush);
 });
 
 app.put('/crush/:id', verifyCrush, verifyToken, async (request, response) => {
   const id = parseInt(request.params.id, 10);
-  const readData = await readFile('crush.json');
+  const readData = fs.readFileSync('crush.json');
   const dataJson = await JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== id);
   const itemModified = { id, ...request.body };
   newData.push(itemModified);
-  await writeFile('crush.json', JSON.stringify(newData));
+  await fs.writeFile('crush.json', JSON.stringify(newData));
   return response.status(200).send(itemModified);
 });
 
 app.delete('/crush/:id', verifyToken, async (request, response) => {
   const id = parseInt(request.params.id, 10);
 
-  const readData = await readFile('./crush.send');
+  const readData = fs.readFileSync('crush.send');
   const dataJson = await JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== +id);
-  await writeFile('crush.json', JSON.stringify(newData));
+  await fs.writeFile('crush.json', JSON.stringify(newData));
   return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
