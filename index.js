@@ -120,7 +120,7 @@ app.post('/crush', async (req, res) => {
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
-  return res.status(201).json(req.body);
+  res.status(201).json(req.body);
 });
 
 app.listen(door, () => console.log('ON --- PORT --- 3000!'));
