@@ -10,13 +10,6 @@ const deleteCrush = async (request, response) => {
   const crushFile = await readCrushFile();
   const crushParsed = JSON.parse(crushFile);
 
-  const newCrush = {
-    id: +id,
-    name,
-    age,
-    date,
-  };
-
   const crushFiltered = crushParsed.filter((crush) => crush.id !== +id);
   writeCrushInFile(crushFiltered);
 
