@@ -58,7 +58,7 @@ const validatePassword = (req, _res, next) => {
 };
 
 const validateToken = (req, _res, next) => {
-  const { authentication } = req.params;
+  const { authentication } = req.headers;
   const SIXTEEN = 16;
 
   if (!authentication) {
