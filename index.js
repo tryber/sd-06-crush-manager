@@ -38,7 +38,7 @@ app.get('/crush/:id', async (request, response) => {
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
   if (!email) return response.status(400).send({ message: 'O campo "email" é obrigatório' });
-  if (!email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i)) return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (!((/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i).test(email))) return response.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
   if (!password) return response.status(400).send({ message: 'O campo "password" é obrigatório' });
   if (password.length < 6) return response.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   const token = '7mqaVRXJSp886CGr';
