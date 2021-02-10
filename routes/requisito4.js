@@ -6,14 +6,13 @@ const ERROR400 = 400;
 const fileName = 'crush.json';
 
 const addCrush = async (request, response, _next) => {
-  const requestHeaders = request.headers;
-  const { token } = requestHeaders;
+  const { authorization } = request.headers;
   const crushToAdd = request.body;
   const dateFormat = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
 
-  if (!token) return response.status(ERROR401).json({ message: 'Token não encontrado' });
-  if (token) {
-    if (token.length < 16) return response.status(ERROR401).json({ message: 'Token inválido' });
+  if (!authorization) return response.status(ERROR401).json({ message: 'Token não encontrado' });
+  if (authorization) {
+    if (authorization.length < 16) return response.status(ERROR401).json({ message: 'Token inválido' });
   }
 
   if (crushToAdd) {
@@ -25,6 +24,7 @@ const addCrush = async (request, response, _next) => {
 
     if (!date) return response.status(ERROR400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     if (date) {
+      if (date.rate === "null") return response.status(ERROR400).json({message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
       if (!date.datedAt || !date.rate) return response.status(ERROR400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
       if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) return response.status(ERROR400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
       const dateInput = date.datedAt;
