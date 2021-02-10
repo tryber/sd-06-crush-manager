@@ -3,12 +3,19 @@ const bodyParser = require('body-parser');
 const middlleware = require('./middleware');
 const readCrush = require('./service/crush');
 const geradorToken = require('./service/token');
+const writeCrush = require('./service/writeCrush');
 
 const app = express();
 const PORT = 3000;
 const SUCCESS = 200;
 
 app.use(bodyParser.json());
+
+// req 3
+app.post('/login', middlleware.validaEmail, middlleware.validaSenha, async (_req, res) => {
+  const token = await geradorToken();
+  return res.status(200).json({ token });
+});
 
 // req 1
 app.get('/crush', async (_req, res) => {
@@ -27,11 +34,23 @@ app.get('/crush/:id', async (req, res) => {
   res.status(200).send(crushId);
 });
 
-// req 3
-app.post('/login', middlleware.validaEmail, middlleware.validaSenha, async (_req, res) => {
-  const token = await geradorToken();
-  return res.status(200).json({ token });
-});
+app.post(
+  '/crush',
+  middlleware.validaToken,
+  middlleware.validaNome,
+  middlleware.validaIdade,
+  middlleware.validaData,
+  async (req, res) => {
+    const { name, age, date } = req.body;
+    const todosCrushs = await readCrush();
+    const id = todosCrushs.length + 1;
+
+    const novoCrush = { id, name, age, date };
+    writeCrush([...todosCrushs, novoCrush]);
+
+    return res.status(201).json(novoCrush);
+  },
+);
 
 app.listen(PORT, () => {
   console.log(`Hashirama protegendo a vila oculta da porta ${PORT}`);
