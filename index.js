@@ -92,7 +92,7 @@ app.put('/crush/:id', verifyCrush, verifyToken, async (request, response) => {
 app.delete('/crush/:id', verifyToken, async (request, response) => {
   const id = parseInt(request.params.id, 10);
 
-  const readData = await fs.readFile('./crush.send');
+  const readData = await readFile('./crush.send');
   const dataJson = await JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== +id);
   await writeFile('crush.json', JSON.stringify(newData));
