@@ -109,18 +109,31 @@ app.post('/crush', async (req, res, _next) => {
       message: 'O crush deve ser maior de idade',
     });
   }
+  const { date } = req.body;
 
-  if (!regexDate.test(req.body.date.datedAt)) {
+  if (!date || date === '') {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!date.datedAt || date.datedAt === '' || date.rate === '' || !date.rate) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!regexDate.test(date.datedAt)) {
     return res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
+
   if (req.body.date.rate < 1 || req.body.date.rate > 5) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
-  return res.status(201).json(req.body);
+  const resultNewCrush = { ...req.body, id: 5 };
+  return res.status(201).json(resultNewCrush);
 });
 
-app.listen(door, () => console.log('ON --- PORT --- 3000!'));
+app.listen(door, () => console.log('ON --- PORT --- 300!'));
