@@ -19,4 +19,7 @@ module.exports = {
     unexpected: objectify('Unexpected error'),
     noFile: objectify('Arquivo de leitura não encontrado', 404),
   },
+  success: {
+    crushDeleted: 'Crush deletado com sucesso',
+  },
 };

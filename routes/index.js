@@ -17,6 +17,8 @@ routes.get('/crush/:id', controllers.getRequestedCrushes);
 
 routes.put('/crush/:id', middlewares.auth, middlewares.validateCrush, controllers.updateCrush);
 
+routes.delete('/crush/:id', middlewares.auth, controllers.deleteCrush);
+
 routes.use(middlewares.handleError);
 
 module.exports = routes;
