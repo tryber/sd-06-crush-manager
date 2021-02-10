@@ -54,15 +54,15 @@ function crushValidation(name, age, date) {
   return message;
 }
 
-app.get('/crush/search', (req, res) => {
-  const { q } = req.query;
-  const regex = new RegExp(q);
-  // data: dd/mm/aaaa regex(\d{1,2}/\d{2}/(\d{2}|(\d{4}))); \d ->digito; numero
-  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
-  const crushes = JSON.parse(cruchesFile);
-  const matchCrush = crushes.filter((crush) => regex.test(crush.name));
-  res.status(SUCCESS).json(matchCrush);
-});
+// app.get('/crush/search', (req, res) => {
+//   const { q } = req.query;
+//   const regex = new RegExp(q);
+//   // data: dd/mm/aaaa regex(\d{1,2}/\d{2}/(\d{2}|(\d{4}))); \d ->digito; numero
+//   const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
+//   const crushes = JSON.parse(cruchesFile);
+//   const matchCrush = crushes.filter((crush) => regex.test(crush.name));
+//   res.status(SUCCESS).json(matchCrush);
+// });
 
 app.get('/crush/:id', (req, res) => {
   const file = fs.readFileSync('./crush.json', 'utf8');
@@ -78,23 +78,6 @@ app.get('/crush/:id', (req, res) => {
 app.get('/crush', (_req, res) => {
   const file = fs.readFileSync('./crush.json', 'utf8');
   res.json(JSON.parse(file));
-});
-
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || email === '') {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  }
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-  if (!password || password === '') {
-    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  }
-  if (password.length < 6) {
-    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-  }
-  res.status(SUCCESS).json(token);
 });
 
 app.post('/crush', (req, res) => {
@@ -132,6 +115,23 @@ app.delete('/crush/:id', (req, res) => {
   const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
   crushes.splice(crushId, 1, crushes);
   res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || email === '') {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (!password || password === '') {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  }
+  res.status(SUCCESS).json(token);
 });
 
 app.listen(3000, () => { console.log('porta: 3000 ativa'); });
