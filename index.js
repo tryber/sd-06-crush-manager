@@ -203,7 +203,6 @@ app.delete('/crush/:id', async (req, res) => {
   await fs.writeFile('./crush.json', JSON.stringify(crushes));
 
   res.status(200).send({ message: 'Crush deletado com sucesso' });
-  
 });
 
 app.post('/login', async (req, res) => {
