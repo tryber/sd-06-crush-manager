@@ -6,7 +6,7 @@ const regexDateValidator = (date) => {
 const isDate = async (req, res, next) => {
   const { date = 0 } = req.body;
   const { datedAt = '', rate = '' } = date;
-  
+
   if ((!date || !datedAt || !rate || datedAt.length === 0 || rate.length === 0) && rate !== 0) {
     return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }

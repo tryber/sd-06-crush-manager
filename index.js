@@ -50,12 +50,12 @@ app.post('/login', (req, res) => {
   if (resultEmail[0] !== 200) {
     return res.status(resultEmail[0]).json({
       message: resultEmail[1],
-    }); 
+    });
   }
   if (resultPassword[0] !== 200) {
     return res.status(resultPassword[0]).json({
       message: resultPassword[1],
-    }); 
+    });
   }
 
   return res.status(SUCCESS).json({ token: resultToken });
