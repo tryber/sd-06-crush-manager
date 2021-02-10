@@ -61,7 +61,7 @@ const checkRate = (date) => {
 };
 
 const checkDateRate = (date) => {
-  if (!date || !date.datedAt || date.datedAt === '' || !date.rate || date.rate === '') {
+  if (!date || !date.datedAt || date.datedAt === '' || (!date.rate && date.rate !== 0) || date.rate === '') {
     return false;
   }
   return true;

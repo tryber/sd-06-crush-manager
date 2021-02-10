@@ -16,6 +16,7 @@ const {
   checkRate,
   checkDateRate,
   getNextId,
+  checkRateZero,
 } = require('./validations.js');
 
 const app = express();
