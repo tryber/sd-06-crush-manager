@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const SUCCESS = 200;
 const port = 3000;
-const token = crypto.randomBytes(16).toString('hex');
+const token = crypto.randomBytes(8).toString('hex');
 
 app.use(bodyParser.json());
 
@@ -50,12 +50,6 @@ app.post('/login', async (request, response) => {
   console.log(email, password);
   const validEmail = await checkEmail(email);
   const validPass = await checkPass(password);
-  // const msgs = {
-  //   noEmail: { message: 'O campo "email" é obrigatório' },
-  //   invalidEmail: { message: 'O "email" deve ter o formato "email@email.com"' },
-  //   noPassword: { message: 'O campo "password" é obrigatório' },
-  //   invalidPassword: { message: 'O "password" ter pelo menos 6 caracteres' },
-  // };
 
   if (validEmail && validPass) return response.status(SUCCESS).json(token);
 
