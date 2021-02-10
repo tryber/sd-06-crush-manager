@@ -8,4 +8,3 @@ const isAge = (req, res, next) => {
 module.exports = {
   isAge,
 };
-

@@ -49,18 +49,18 @@ app.post('/login', (req, res) => {
 
   if (resultEmail[0] !== 200) { return res.status(resultEmail[0]).json({
     message: resultEmail[1],
-  }) };
-  if (resultPassword[0] !== 200) return res.status(resultPassword[0]).json({
+  }); }
+  if (resultPassword[0] !== 200) { return res.status(resultPassword[0]).json({
     message: resultPassword[1],
-  });
+  }); }
 
   return res.status(SUCCESS).json({ token: resultToken });
 });
 // end requeriment 3
 // requeriment 4 / Crie o endpoint POST /crush
-app.post('/crush', isToken, isName, isAge, isDate, (req, res, next) => {
-  const crush = req.body
-  return res.status(SUCCESS).json( crush );
+app.post('/crush', isToken, isName, isAge, isDate, (req, res) => {
+  const crush = req.body;
+  return res.status(SUCCESS).json(crush);
 });
 // end requeriment 4
 
