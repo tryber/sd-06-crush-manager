@@ -68,7 +68,7 @@ app.post('/crush', async (request, response) => {
   if (!name) return response.status(400).json({ message: 'O campo "name" é obrigatório' });
   if (name.length <= 3) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
 
-  if (!age || age === '') return response.status(400).json({ essage: 'O campo "age" é obrigatório' });
+  if (!age || age === '') return response.status(400).json({ message: 'O campo "age" é obrigatório' });
   if (age < 18) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
 
   if (!date || date === '' || !date.datedAt || date.rate === undefined) {
