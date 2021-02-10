@@ -27,7 +27,6 @@ app.get('/crush', async (_req, res) => {
 app.get('/crush/:id', async (req, res) => {
   const crushes = await readFile('crush');
   const id = parseInt(req.params.id, 10);
-  console.log(crushes);
   const element = JSON.parse(crushes).find((e) => e.id === id);
 
   if (element) {
@@ -81,10 +80,8 @@ const { dataValidate } = require('./src/utils/validate');
 const { writeFile } = require('./src/utils/manageFile');
 
 app.post('/crush', async (req, res) => {
-  // const token = crypto.randomBytes(8).toString('hex');
   const token = req.headers.authorization;
   const { name, age, date } = req.body;
-  console.log(req.body);
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
@@ -151,6 +148,78 @@ app.post('/crush', async (req, res) => {
   newCrush.push(element);
   writeFile('crush', JSON.stringify(newCrush));
   return res.status(201).send(element);
+});
+
+// requisito 5
+
+app.put('/crush/:id', async (req, res) => {
+  const crushes = await readFile('crush');
+  const token = req.headers.authorization;
+  const { name, age, date } = req.body;
+  const id = parseInt(req.params.id, 10);
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  if (!name) {
+    return res.status(400).json({
+      message: 'O campo "name" é obrigatório',
+    });
+  }
+  if (name.length < 3) {
+    return res.status(400).json({
+      message: 'O "name" deve ter pelo menos 3 caracteres',
+    });
+  }
+  if (!age) {
+    return res.status(400).json({
+      message: 'O campo "age" é obrigatório',
+    });
+  }
+  if (age < 18) {
+    return res.status(400).json({
+      message: 'O crush deve ser maior de idade',
+    });
+  }
+  if (!date) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!date.datedAt) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (dataValidate(date.datedAt)) {
+    return res.status(400).json({
+      message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+    });
+  }
+
+  if (!date.rate) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!Number.isInteger(date.rate)) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  const element = JSON.parse(crushes).find((e) => e.id === id);
+  console.log(element);
+  if (element) {
+    element.name = name;
+    element.age = age;
+    element.date.datedAt = date.datedAt;
+    element.date.rate = date.rate;
+    return res.status(200).json(element);
+  }
+  return res.status(404).send({ message: 'Crush não encontrado' });
 });
 
 app.listen(3000, () => console.log('running'));
