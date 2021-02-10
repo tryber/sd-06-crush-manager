@@ -6,12 +6,14 @@ const regexEmailValidate = (email) => {
 const isEmail = (email) => {
   if (!email || email.length === 0) {
     const resultEmail = [400, 'O campo "email" é obrigatório'];
-    return resultEmail;
+    //return resultEmail;
   } else if (!regexEmailValidate(email)) {
     const resultEmail = [400, 'O "email" deve ter o formato "email@email.com"'];
-    return resultEmail;
+    //return resultEmail;
+  } else {
+    const resultEmail = [200, 'Email validado com sucesso'];
+    //return resultEmail;
   }
-  const resultEmail = [200, "Email validado com sucesso"];
   return resultEmail;
 };
 
