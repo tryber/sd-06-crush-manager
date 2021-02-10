@@ -47,4 +47,12 @@ app.post('/crush', validateCrush);
 
 // _______________________________________________________
 
+// Requisito 6
+
+const { deleteCrush } = require('./src/middleware');
+
+app.delete('/crush/:id', deleteCrush);
+
+// _______________________________________________________
+
 app.listen(3000, () => console.log('running'));
