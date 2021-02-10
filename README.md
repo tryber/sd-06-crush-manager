@@ -185,7 +185,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
 1. Com exceção do requisito 3, todos os outros requisitos deverão ser feitos utilizando o módulo `fs`.
 
-2. O arquivo `crush.json` será utilizado como base para fazer as requisições da API. As operações de leitura e escrita dos requisitos deve ser feito nesse arquivo usando os métodos da biblioteca `fs`.
+2. O arquivo `crush.json` será utilizado como base para fazer as requisições da API. As operações de leitura e escrita dos requisitos deve ser feito nesse arquivo usando os métodos da biblioteca `fs`. Esse arquivo deve ser mantido na raiz do projeto.
 
 3. Há um arquivo `index.js` no repositório. Não remova, nele, o seguinte trecho de código:
 
@@ -194,9 +194,14 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 ```
-
 Isso está configurado para o avaliador funcionar.
+<br> 
 
+4. Ao utilizar de testes locais com `npm run test`, o servidor deverá ser iniciado com `npm run debug` para evitar possíveis erros. 
+
+5. Caso os testes falhem seu arquivo `crush.json` não será restaurado, para isso utilize `npm run restore`. 
+
+6. Ao se deparar com o erro de que a porta já está em uso: `EADDRINUSE: address already in use 0.0.0.0:3000`, execute em seu terminal `killall node` isso finaliza todas as execuções do node. 
 
 ---
 
@@ -314,7 +319,7 @@ Isso está configurado para o avaliador funcionar.
 
     ```js
     {
-      "message": "O \"password\" ter pelo menos 6 caracteres"
+      "message": "A \"senha\" deve ter pelo menos 6 caracteres"
     }
     ```
 
