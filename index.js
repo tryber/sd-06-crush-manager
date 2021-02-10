@@ -1,10 +1,14 @@
 const express = require('express');
 const fs = require('fs').promises;
-const path = require('path').resolve;
-const pathJoin = require('path');
+const path = require('path');
 
 const app = express();
 const SUCCESS = 200;
+
+const lerArquivo = async (arquivo) => {
+  const conteudoArquivo = await fs.readFile(path.resolve(path.join(__dirname, arquivo)), 'utf-8');
+  return conteudoArquivo;
+};
 
 app.use(express.json());
 
@@ -13,13 +17,8 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-const lerArquivo = async (arquivo) => {
-  const conteudoArquivo = await fs.readFile(path(pathJoin.join(__dirname, arquivo)), 'utf-8');
-  return conteudoArquivo;
-};
-
 app.get('/crush', async (__request, response) => {
-  response.status(SUCCESS).send(await lerArquivo('/crush.json'));
+  response.send(await lerArquivo('/crush.json'));
 });
 
-app.listen(3001, () => console.log('ouvindo na porta 3001'));
+app.listen(3000, () => console.log('ouvindo na porta 3000'));
