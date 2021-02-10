@@ -14,7 +14,6 @@ app.use(bodyParser.json());
 app.listen(3000, () => console.log('running'));
 const { readFile, writeFile } = require('./src/utils/manageFiles');
 const { emailValid, passwordValid, dateValid } = require('./src/utils/validations');
-const { response } = require('express');
 
 // ------- Requisito 1 --------
 
@@ -59,7 +58,7 @@ app.post('/login', (request, response) => {
 
 // ------- Requisito 4 --------
 
-app.post('/crush', async (request, _resolve) => {
+app.post('/crush', async (request, response) => {
   const token = request.headers.authorization;
   const { name, age, date } = request.body;
 
