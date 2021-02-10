@@ -122,7 +122,7 @@ app.post('/crush', async (req, res) => {
     });
   }
 
-  res.status(201).json({ bodyData });
+  res.status(201).json(req.body);
 });
 
 app.listen(door, () => console.log('ON --- PORT --- 300d0!'));
