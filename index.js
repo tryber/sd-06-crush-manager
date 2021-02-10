@@ -24,7 +24,7 @@ const verifyToken = ((request, response, next) => {
 // não remova esse endpoint, e para o avaliador funcionar
 
 app.get('/crush', (_request, response) => {
-  const readData = fs.readFileSync('/.crush.json', 'utf-8');
+  const readData = fs.readFileSync('crush.json', 'utf-8');
   if (readData) {
     const dataJson = JSON.parse(readData);
     return response.status(200).send(dataJson);
@@ -87,17 +87,17 @@ app.put('/crush/:id', verifyToken, verifyCrush, async (request, response) => {
   const newData = dataJson.filter((item) => item.id !== id);
   const itemModified = { id, ...request.body };
   newData.push(itemModified);
-  fs.writeFileSync('./crush.json', JSON.stringify(newData));
+  fs.writeFileSync('crush.json', JSON.stringify(newData));
   return response.status(200).send(itemModified);
 });
 
 app.delete('/crush/:id', verifyToken, (request, response) => {
   const id = parseInt(request.params.id, 10);
 
-  const readData = fs.readFileSync('crush.send');
+  const readData = fs.readFileSync('crush.json');
   const dataJson = JSON.parse(readData);
   const newData = dataJson.filter((item) => item.id !== id);
-  fs.writeFileSync('./crush.json', JSON.stringify(newData));
+  fs.writeFileSync('crush.json', JSON.stringify(newData));
   return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
