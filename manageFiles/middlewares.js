@@ -7,7 +7,7 @@ const readMyFile = async (req, res) => {
   if (myCrushes.length > 0) {
     res.status(200).json((myCrushes));
   } else {
-    return res.status(200).json([]);
+    res.status(200).json([]);
   }
 };
 
@@ -58,13 +58,13 @@ const validatePassword = (req, _res, next) => {
 };
 
 const validateToken = (req, _res, next) => {
-  const { authentication } = req.headers;
+  const { authorization } = req.headers;
   const SIXTEEN = 16;
 
-  if (!authentication) {
+  if (!authorization) {
     next({ message: 'Token não encontrado', statusCode: 401 });
   }
-  if (authentication.length < SIXTEEN) {
+  if (authorization.length < SIXTEEN) {
     next({ message: 'Token inválido', statusCode: 401 });
   }
   next();
