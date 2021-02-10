@@ -23,10 +23,16 @@ const newCrush = (req, res) => {
   if (!validateDate(date.datedAt)) return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
   const allInfo = [...crushs];
-  allInfo.push(crushInfo);
+  const id = crushs.length + 1;
+  console.log(id);
+  const newCrushInfo = {
+    id,
+    ...crushInfo,
+  };
+  allInfo.push(newCrushInfo);
 
   fs.writeFile('./crush.json', JSON.stringify(allInfo));
-  res.status(201).send(crushInfo);
+  res.status(201).send(newCrushInfo);
 };
 
 module.exports = { newCrush };
