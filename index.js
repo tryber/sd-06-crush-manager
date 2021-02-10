@@ -1,13 +1,11 @@
 const express = require('express');
-// const { FrisbySpec } = require('frisby');
-// const fs = require('fs');
+
 const crushRouter = require('./rotes/crushRotes');
 
 const loginRouter = require('./rotes/loginRote');
 
-const verifyToken = require('./functions/verifyToken');
-
 const app = express();
+
 const SUCCESS = 200;
 
 app.use(express.json());
@@ -19,19 +17,11 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', crushRouter);
 
+app.get('/crush/search?', crushRouter);
+
 app.get('/crush/:id', crushRouter);
 
 app.post('/login', loginRouter);
-
-app.use((req, res, next) => {
-  const { authorization } = req.headers;
-
-  const checkToken = verifyToken(authorization);
-
-  if (checkToken !== true) return res.status(401).send({ message: checkToken });
-
-  next();
-});
 
 app.post('/crush', crushRouter);
 

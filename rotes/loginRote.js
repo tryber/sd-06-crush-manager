@@ -17,7 +17,9 @@ router.post('/login', (req, res) => {
 
   const token = createToken();
 
-  res.status(200).send({ token });
+  res.body = { token };
+
+  res.status(200).send(res.body);
 });
 
 module.exports = router;

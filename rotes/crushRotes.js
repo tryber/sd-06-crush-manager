@@ -8,6 +8,8 @@ const verifyCrush = require('../functions/verifyCrush');
 
 const asyncWrite = require('../functions/asyncWrite');
 
+const tokenPass = require('../middlewares/tokenPass');
+
 const SUCCESS = 200;
 
 router.get('/crush', (_req, res) => {
@@ -17,6 +19,20 @@ router.get('/crush', (_req, res) => {
   if (crushList && crushList.length > 0) return res.status(SUCCESS).send(crushList);
 
   if (!crushList || crushList.length === 0) return res.status(SUCCESS).send([]);
+});
+
+router.get('/crush/search', tokenPass, (req, res) => {
+  const data = fs.readFileSync('./crush.json', 'utf8');
+  const crushList = JSON.parse(data);
+  const searchTerm = req.query.q;
+
+  if (!searchTerm) return res.status(200).send(crushList);
+
+  const responseList = crushList.filter((crush) => crush.name.includes(searchTerm));
+
+  if (searchTerm.length === 0) return res.status(200).send([]);
+
+  res.status(200).send(responseList);
 });
 
 router.get('/crush/:id', (req, res) => {
@@ -31,7 +47,7 @@ router.get('/crush/:id', (req, res) => {
   res.status(SUCCESS).send(crushList[crushIndex]);
 });
 
-router.post('/crush', (req, res) => {
+router.post('/crush', tokenPass, (req, res) => {
   const data = fs.readFileSync('./crush.json', 'utf8');
   const crushList = JSON.parse(data);
   const { name, age, date } = req.body;
@@ -55,7 +71,7 @@ router.post('/crush', (req, res) => {
   res.status(201).send(newCrush);
 });
 
-router.put('/crush/:id', (req, res) => {
+router.put('/crush/:id', tokenPass, (req, res) => {
   const data = fs.readFileSync('./crush.json', 'utf8');
   const crushList = JSON.parse(data);
   const { id } = req.params;
@@ -80,7 +96,7 @@ router.put('/crush/:id', (req, res) => {
   res.status(200).send(editedCrush);
 });
 
-router.delete('/crush/:id', (req, res) => {
+router.delete('/crush/:id', tokenPass, (req, res) => {
   const data = fs.readFileSync('./crush.json', 'utf8');
   const crushList = JSON.parse(data);
   const { id } = req.params;
