@@ -1,21 +1,20 @@
 const fs = require('fs');
-const { schema } = require('../../schemas/index');
 const handleAuthorization = require('../../authorization/handleAuthorization');
-const validateDate = require('../../validations/validateDate');
 
-const handleValidationSucessfull = ({ body }, res) => {
+const handleValidationSucessfull = async ({ parsedId }, res) => {
   const jsonData = fs.readFileSync('./crush.json', 'utf8');
   const readData = JSON.parse(jsonData);
-  const id = readData.length + 1;
-  res.status(201).json({ id, ...body });
-  readData.push({ id, ...body });
-  console.log(readData);
+  readData.splice(parsedId, 1);
   fs.writeFileSync('./crush.json', JSON.stringify(readData), 'utf8');
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
 };
 
-async function handleCreateCrush(req, res) {
-  // try {
+const handleDeleteCrush = async (req, res) => {
+  const { id } = req.params;
   const { name, age, date } = req.body;
+  const parsedId = parseInt(id, 10);
+  const data = { parsedId, name, age, date };
+
   const { authorization } = req.headers;
   try {
     const auth = handleAuthorization(authorization);
@@ -26,13 +25,9 @@ async function handleCreateCrush(req, res) {
   }
 
   try {
-    const validatedDate = validateDate(req.body.date);
-    if (!validatedDate.valid) throw new Error(validatedDate.message);
-    await schema.validate({ name, age, date });
-    handleValidationSucessfull(req, res);
+    handleValidationSucessfull(data, res);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-}
-
-module.exports = handleCreateCrush;
+};
+module.exports = handleDeleteCrush;
