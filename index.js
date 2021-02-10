@@ -28,7 +28,7 @@ app.get('/crush/:id', async (request, response) => {
   const id = parseInt(request.params.id, 10);
   const readData = await readFile('crush.json');
   const dataJson = await JSON.parse(readData);
-  const dataFiltered = dataJson.filter((item) => item.id === +id);
+  const dataFiltered = dataJson.filter((item) => item.id === id);
   if (dataFiltered.length === 0) {
     return response.status(404).send({ message: 'Crush não encontrado' });
   }
@@ -62,6 +62,7 @@ app.post('/crush', async (request, response) => {
 
   if (!date || !date.datedAt || !date.rate) return response.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   if (!((/^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/).test(date.datedAt))) return response.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+
   if (date.rate < 1 || date.rate > 5) return response.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
   const readData = await readFile('crush.json');
@@ -88,7 +89,7 @@ app.put('/crush/:id', async (request, response) => {
 
   const readData = await readFile('crush.json');
   const dataJson = await JSON.parse(readData);
-  const newData = dataJson.filter((item) => item.id !== +id);
+  const newData = dataJson.filter((item) => item.id !== id);
   const itemModified = { id, ...request.body };
   newData.push(itemModified);
   await writeFile('crush.json', JSON.stringify(newData));
@@ -105,4 +106,4 @@ app.delete('/crush/:id', async (request, response) => {
   return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
-app.listen(3001);
+app.listen(3000);
