@@ -7,7 +7,7 @@ function generateToken() {
 }
 
 function checkIfExists(field) {
-  if (!field || field === '') return false;
+  if ((!field && field !== 0) || field === '') return false;
 
   return true;
 }

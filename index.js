@@ -72,4 +72,29 @@ app.post('/crush', async (req, res) => {
   res.status(201).json(newCrush);
 });
 
+app.put('/crush/:id', async (req, res) => {
+  const data = await getData();
+  const { id } = req.params;
+  const crushID = parseInt(id, 10);
+  const index = data.findIndex((person) => person.id === crushID);
+  const editCrush = req.body;
+  const editCrushWithID = { id: crushID, ...editCrush };
+
+  data[index] = editCrushWithID;
+
+  const dataJSON = JSON.stringify(data, null, '\t');
+
+  const { authorization } = req.headers;
+  const { name, age, date } = req.body;
+
+  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
+  if (validateName(name) !== true) return res.status(400).send({ message: `${validateName(name)}` });
+  if (validateAge(age) !== true) return res.status(400).send({ message: `${validateAge(age)}` });
+  if (validateDate(date) !== true) return res.status(400).send({ message: `${validateDate(date)}` });
+
+  await writeFile('./crush.json', dataJSON);
+
+  res.status(200).json(editCrushWithID);
+});
+
 app.listen(port);
