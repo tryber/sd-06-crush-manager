@@ -6,7 +6,7 @@ const readCrushes = async (_req, res) => {
     res.status(200).json(JSON.parse(crushes));
   } catch (e) {
     console.error(e);
-    res.status(200).json([]);
+    res.status(404).json([]);
   }
 };
 
