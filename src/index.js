@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 
 const app = express();
 const SUCCESS = 200;
@@ -12,6 +13,7 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 app.listen(3000, () => console.log('running'));
 const { readFile } = require('./utils/manageFiles');
+const { emailValid, passwordValid, dateValid } = require('./utils/validations');
 
 // ------- Requisito 1 --------
 
@@ -38,4 +40,21 @@ app.get('/crush/:id', async (request, response) => {
   } else {
     response.status(404).json({ message: 'Crush não encontrado' });
   }
+});
+
+// ------- Requisito 3 --------
+
+app.post('/login', async (request, response) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  const { email, password } = request.body;
+
+  if (email === '' || !email) response.status(400).json({ message: 'O campo "email" é obrigatório' });
+
+  if (password === '' || !password) response.status(400).json({ message: 'O campo "password" é obrigatório' });
+
+  if (emailValid(email)) response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+
+  if (passwordValid(email)) response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+
+  return response.status(200).json({ token });
 });
