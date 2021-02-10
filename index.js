@@ -87,12 +87,13 @@ app.post('/login', (req, res) => {
 
 // Desafio 04 - endpoint POST /crush
 app.post('/crush', async (req, res) => {
-  const { token } = req.headers;
+  const { authorization } = req.headers;
   const { name, age, date } = req.body;
-  if (!token || token === '') {
+  console.log('Authorization: ', authorization);
+  if (!authorization || authorization === '') {
     return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
   }
-  if (!verifyToken(token)) {
+  if (!verifyToken(authorization)) {
     return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
   }
   if (!checkCrushName(name)) {
