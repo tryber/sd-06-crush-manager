@@ -1,6 +1,16 @@
 const express = require('express');
 
-const { getAllCrushs, checkEmailAndPass } = require('./middleware');
+const {
+  getAllCrushs,
+  checkEmailAndPass,
+  checkAuthentication,
+  checkBody,
+  writeNewCrush,
+  editCrush,
+  deleteCrush,
+} = require('./middleware');
+
+const CREATED = 201;
 const { getToken } = require('./data');
 
 const app = express();
@@ -13,7 +23,7 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (request, response) => {
+app.get('/crush', async (_, response) => {
   const crushData = await getAllCrushs();
   if (crushData) {
     return response.status(200).json(crushData);
@@ -35,11 +45,18 @@ app.get('/crush/:id', async (request, response) => {
   return response.status(isValidId.status).json(isValidId.data);
 });
 
-app.post('/login', (request, response) => {
+app.post('/login', (_, response) => {
   const token = getToken();
   response.json({ token });
 });
 
-app.listen(3000, () => {
-  console.log('Server listening...');
+app.post('/crush', checkAuthentication, checkBody, async (request, response) => {
+  const { name, age, date } = request.body;
+  const newCrush = await writeNewCrush({ crushBody: { name, age, date } });
+  return response.status(CREATED).json(newCrush);
 });
+
+app.put('/crush/:id', checkAuthentication, checkBody, editCrush, () => {});
+app.delete('/crush/:id', checkAuthentication, deleteCrush, () => {});
+
+app.listen(3000, () => { console.log('Server listening...'); });

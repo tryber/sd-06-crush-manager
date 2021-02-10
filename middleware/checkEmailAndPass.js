@@ -2,13 +2,13 @@ const errorMessages = {
   fieldEmailRequired: {
     message: 'O campo "email" é obrigatório',
   },
-  invalidFieldEmail: {
+  invaliddEmailField: {
     message: 'O "email" deve ter o formato "email@email.com"',
   },
   fieldPasswordRequired: {
     message: 'O campo "password" é obrigatório',
   },
-  invaidFieldPassword: {
+  invalidPasswordField: {
     message: 'A "senha" deve ter pelo menos 6 caracteres',
   },
 };
@@ -28,11 +28,11 @@ const checkEmailAndPass = (request, response, next) => {
   }
 
   if (!resultEmailRegex(email)) {
-    return response.status(400).json(errorMessages.invalidFieldEmail);
+    return response.status(400).json(errorMessages.invaliddEmailField);
   }
 
   if (!resultPassRegex(password)) {
-    return response.status(400).json(errorMessages.invaidFieldPassword);
+    return response.status(400).json(errorMessages.invalidPasswordField);
   }
 
   return next();

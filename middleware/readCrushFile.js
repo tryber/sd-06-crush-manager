@@ -15,4 +15,7 @@ const getAllCrushs = async () => {
   }
 };
 
-module.exports = { getAllCrushs };
+module.exports = {
+  getAllCrushs,
+  readCrushFile,
+};
