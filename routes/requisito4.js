@@ -7,6 +7,7 @@ const fileName = 'crush.json';
 
 const addCrush = async (request, response, _next) => {
   const { authorization } = request.headers;
+  console.log(authorization);
   const crushToAdd = request.body;
   const dateFormat = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
 
