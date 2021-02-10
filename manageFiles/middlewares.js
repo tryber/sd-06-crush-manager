@@ -117,9 +117,8 @@ const validateDate = (req, _res, next) => {
   next();
 };
 
-const addNewCrush = async (req, res, _next) => {
+const addNewCrush = async (req, res) => {
   const newCrush = req.body;
-
   const { fileName } = req.params;
   const myCrushes = await readFile(fileName);
   newCrush.id = myCrushes.length + 1;
