@@ -18,22 +18,22 @@ app.get('/', (_request, response) => {
 app.get('/crush', async (_req, res) => {
   const crushes = JSON.parse(await fs.readFile('./crush.json'));
   if (crushes.length > 0) {
-    res.status(200).send(crushes);
-  } else {
-    console.log([]);
-    res.status(200).send([]);
+    return res.status(200).send(crushes);
   }
+  console.log([]);
+  return res.status(200).send([]);
 });
 
 app.post('/crush', async (req, res) => {
   const crushes = JSON.parse(await fs.readFile('./crush.json', 'utf-8'));
 
   if (!req.headers.authorization) {
-    res.status(401).send({ message: 'Token não encontrado' });
-  } else if (req.headers.authorization.length < 16) {
-    res.status(401).send({ message: 'Token inválido' });
+    return res.status(401).send({ message: 'Token não encontrado' });
   }
-  console.log(req.headers.mytoken);
+  if (req.headers.authorization.length < 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+  // console.log(req.headers.mytoken);
 
   //  VALIDAÇÃO
   const schema = Joi.object({
@@ -93,14 +93,14 @@ app.post('/crush', async (req, res) => {
   crushes.push(req.body);
   await fs.writeFile('./crush.json', JSON.stringify(crushes));
 
-  res.status(201).json(req.body);
+  return res.status(201).json(req.body);
 });
 
 app.get('/crush/:id', async (req, res) => {
   const crushes = JSON.parse(await fs.readFile('./crush.json'));
   const crush = await crushes.find((c) => c.id === parseInt(req.params.id, 10));
   if (!crush) return res.status(404).send({ message: 'Crush não encontrado' });
-  res.status(200).send(crush);
+  return res.status(200).send(crush);
 });
 
 app.post('/login', async (req, res) => {
@@ -133,7 +133,7 @@ app.post('/login', async (req, res) => {
   }
   // --
 
-  res.send({ token: myToken });
+  return res.send({ token: myToken });
 });
 
 app.listen(port, () => console.log('Listening on 3000...'));
