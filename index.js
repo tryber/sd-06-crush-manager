@@ -16,7 +16,6 @@ const {
   checkRate,
   checkDateRate,
   getNextId,
-  checkRateZero,
 } = require('./validations.js');
 
 const app = express();
@@ -156,10 +155,6 @@ app.put('/crush/:id', async (req, res) => {
   if (!checkRate(date)) {
     return res.status(BAD_REQUEST).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-
-  // const crushes = await getData();
-  // const id = getNextId(crushes);
-  // res.status(SUCCESS).json(crushSelected);
 
   const id = parseInt(req.params.id, 10);
   const crushes = await getData();
