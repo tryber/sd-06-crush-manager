@@ -5,8 +5,6 @@ const OK = 200;
 
 const deleteCrush = async (request, response) => {
   const { id } = request.params;
-  const { name, age, date } = request.body;
-
   const crushFile = await readCrushFile();
   const crushParsed = JSON.parse(crushFile);
 
