@@ -5,11 +5,10 @@ const readCrushId = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const element = JSON.parse(crushes).find((e) => e.id === id);
 
-  if (element) {
-    res.status(200).json(element);
-  } else {
-    res.status(404).json({ message: 'Crush não encontrado' });
+  if (!element) {
+    return res.status(404).json({ message: 'Crush não encontrado' });
   }
+  return res.status(200).json(element);
 };
 
 module.exports = readCrushId;
