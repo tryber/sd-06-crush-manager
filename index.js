@@ -96,11 +96,90 @@ app.post('/crush', async (req, res) => {
   return res.status(201).json(req.body);
 });
 
+// CRUSH/:ID GET
 app.get('/crush/:id', async (req, res) => {
   const crushes = JSON.parse(await fs.readFile('./crush.json'));
   const crush = await crushes.find((c) => c.id === parseInt(req.params.id, 10));
   if (!crush) return res.status(404).send({ message: 'Crush não encontrado' });
   return res.status(200).send(crush);
+});
+
+// CRUSH/:ID PUT
+app.put('/crush/:id', async (req, res) => {
+  const crushes = JSON.parse(await fs.readFile('./crush.json', 'utf-8'));
+
+  const myCrush = crushes.find((c) => c.id === parseInt(req.params.id, 10));
+  if (!myCrush) return res.status(404).send('Esse id não existe!');
+
+  // Token
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (req.headers.authorization.length < 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+
+  //  VALIDAÇÃO
+  const schema = Joi.object({
+    name: Joi.string()
+      .required()
+      .min(3)
+      .messages({
+        'any.required': 'O campo "name" é obrigatório',
+        'string.empty': 'O campo "name" é obrigatório',
+        'string.min': 'O "name" deve ter pelo menos 3 caracteres',
+      }),
+    age: Joi.number()
+      .required()
+      .integer()
+      .greater(17)
+      .messages({
+        'any.required': 'O campo "age" é obrigatório',
+        'number.greater': 'O crush deve ser maior de idade',
+      }),
+    date: Joi.object()
+      .required()
+      .keys({
+        datedAt: Joi.string()
+          .required()
+          .regex(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/)
+          .messages({
+            'any.required': 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+            'string.pattern.base': 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+          }),
+        rate: Joi.number()
+          .required()
+          .greater(0)
+          .max(5)
+          .messages({
+            'any.required': 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+            'number.greater': 'O campo "rate" deve ser um inteiro de 1 à 5',
+            'number.max': 'O campo "rate" deve ser um inteiro de 1 à 5',
+          }),
+      })
+      .messages({
+        'any.required': 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+      }),
+  });
+
+  const result = schema.validate({
+    name: req.body.name,
+    age: req.body.age,
+    date: req.body.date,
+  });
+
+  if (result.error) {
+    return res.status(400).send(result.error.details[0]);
+  }
+  // --
+
+  crushes[parseInt(req.params.id - 1, 10)] = req.body;
+  crushes[parseInt(req.params.id - 1, 10)].id = parseInt(req.params.id, 10);
+
+  await fs.writeFile('./crush.json', JSON.stringify(crushes));
+
+  console.log(crushes[parseInt(req.params.id - 1, 10)]);
+  return res.status(200).json(crushes[parseInt(req.params.id - 1, 10)]);
 });
 
 app.post('/login', async (req, res) => {
