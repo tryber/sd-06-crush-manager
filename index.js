@@ -4,8 +4,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const SUCCESS = 200;
 
-app.use(express.json());
-
 app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -49,9 +47,9 @@ app.post('/crush', validateCrush);
 
 // Requisito 6
 
-const { deleteCrush } = require('./src/middleware');
+// const { deleteCrush } = require('./src/middleware');
 
-app.delete('/crush/:id', deleteCrush);
+// app.delete('/crush/:id', deleteCrush);
 
 // _______________________________________________________
 
