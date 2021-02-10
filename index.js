@@ -50,5 +50,12 @@ app.post('/login', (req, res) => {
   res.status(SUCCESS).json({ token: resultToken });
 });
 // end requeriment 3
+// requeriment 4 / Crie o endpoint POST /crush
+app.post('/crush', (req, res) => {
+  const token = req.headers.authentication;
+  console.log(token);
+  res.status(SUCCESS).json({ token: token });
+});
+// end requeriment 4
 
 app.listen(PORT, () => console.log('funcional na porta 3000'));
