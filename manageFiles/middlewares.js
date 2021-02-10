@@ -64,7 +64,7 @@ const validateToken = (req, _res, next) => {
   if (!authorization) {
     next({ message: 'Token não encontrado', statusCode: 401 });
   }
-  if (authorization.length < SIXTEEN) {
+  if (authorization.length !== SIXTEEN) {
     next({ message: 'Token inválido', statusCode: 401 });
   }
   next();
