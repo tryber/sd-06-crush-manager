@@ -8,12 +8,14 @@ const PORT = 3000;
 const { verifyCrushes } = require('./middlewares/verifyCrushes');
 const { getByIdCrush } = require('./middlewares/getByIdCrush');
 const login = require('./middlewares/login');
+const searchCrush = require('./middlewares/searchCrush');
 
 app.use(bodyParser.json());
 
 app.get('/crush', verifyCrushes);
 app.get('/crush/:id', getByIdCrush);
 app.post('/login', login);
+app.post('/crush', login, searchCrush);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
