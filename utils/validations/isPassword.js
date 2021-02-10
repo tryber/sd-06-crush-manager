@@ -4,14 +4,14 @@ const regexEmailValidate = (password) => {
 };
 
 const isPassword = (password) => {
+  let resultPassword = [];
   if (!password || password.length === 0) {
-    const resultPassword = [400, 'O campo "password" é obrigatório'];
-    return resultPassword;
+    resultPassword = [400, 'O campo "password" é obrigatório'];
   } else if (!regexEmailValidate(password)) {
-    const resultPassword = [400, 'A "senha" deve ter pelo menos 6 caracteres'];
-    return resultPassword;
+    resultPassword = [400, 'A "senha" deve ter pelo menos 6 caracteres'];
+  } else {
+    resultPassword = [200, 'A "senha" foi validada com sucesso'];
   }
-  const resultPassword = [200, 'A "senha" foi validada com sucesso'];
   return resultPassword;
 };
 
