@@ -54,7 +54,7 @@ const formatDate = (datedAt) => {
 };
 
 const checkRate = (rate) => {
-  if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
+  if (!Number.isInteger(rate) || rate < 1 || rate > 5 || !rate || rate === '') {
     return false;
   }
   return true;
