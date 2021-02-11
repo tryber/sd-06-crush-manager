@@ -75,22 +75,27 @@ app.post('/crush', async (req, res) => {
   const age = novoCrush.age;
   const realDate = validDate(novoCrush.date.datedAt);
   const rate = novoCrush.date.rate;
+  const date = novoCrush.date;
+  const datedAt = novoCrush.date.datedAt;
 
   if (!token) return res.status(401).send({ message: 'Token não encontrado' });
   if (validToken(token) === false) return res.status(401).send({ message: 'Token inválido' });
 
-  if (!name === true) return res.status(400).send({ message: 'O campo name é obrigatório' }); // nao ta funfando
-  if (name.length < 3) return res.status(400).send({ message: 'O name deve ter pelo menos 3 caracteres' });
+  if (!name === true) return res.status(400).send({ message: 'O campo "name" é obrigatório' }); // nao ta funfando
+  if (name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
 
-  if (!age === true) return res.status(400).send({ message: 'O campo age é obrigatório' });
+  if (!age === true) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
 
-  if (realDate !== true) return res.status(400).send({ message: 'O campo date é obrigatório e datedAt e rate não podem ser vazios' });
-  if (realDate === false) return res.status(400).send({ message: 'O campo datedAt deve ter o formato dd/mm/aaaa' }); //verificar erro
+  if (date !== undefined && date.length !== 0) {
+    if (datedAt === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (realDate === false) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
-  if (!rate === true) return res.status(400).send({ message: 'O campo date é obrigatório e datedAt e rate não podem ser vazios' });
-  if (rate === String || rate < 1 || rate > 5) return res.status(400).send({ message: 'O campo rate deve ser um inteiro de 1 à 5' }); //verificar erro
+    if (!rate === true) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (rate < 1 || rate > 5 || rate === String) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
+    if (token) return res.status(201).send({ totalCrushes });
+  }
   if (token) return res.status(201).send({ totalCrushes });
 });
 
