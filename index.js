@@ -1,6 +1,7 @@
 const express = require('express');
-const fs = require('fs');
 const bodyParser = require('body-parser');
+
+const { pegandoCrushs } = require('./servicos');
 
 const app = express();
 const SUCCESS = 200;
@@ -10,20 +11,11 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-const getCrushs = async () => {
-  const crushs = await fs.readFileSync('./crush.json', 'utf8', (err) => {
-    if (err) throw new Error(err);
-    console.log(`algo inesperado aconteceu ${err}`);
-    process.exit(1);
-  });
-  return JSON.parse(crushs);
-};
-
 app.use(bodyParser.json());
 
 app.get('/crush', async (req, res) => {
-  const response = await getCrushs();
-  res.send(response);
+  const response = await pegandoCrushs();
+  res.status(200).send(response);
 });
 
 app.listen(3000, () => {
