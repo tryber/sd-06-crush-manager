@@ -80,9 +80,9 @@ app.post('/crush', async (request, response) => {
   const crushes = await readFile('crush');
   const parsedCrushes = JSON.parse(crushes);
   const crushesObject = { id: parsedCrushes.length + 1, ...request.body };
-  const crushesData = crushes.concat(crushesObject);
+  parsedCrushes.push(crushesObject);
 
-  await writeFile('crush', JSON.stringify(crushesData));
+  await writeFile('crush', JSON.stringify(parsedCrushes));
 
   return response.status(201).json(crushesObject);
 });
