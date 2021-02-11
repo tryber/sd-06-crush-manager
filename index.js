@@ -44,7 +44,7 @@ const verifyEmail = (email, response) => {
   }
 
   if (!isValidEmail) {
-    return response.status(400).json({ message: 'O campo "email" deve ter o formato "email@email.com"' });
+    return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
 };
 
@@ -55,7 +55,7 @@ const verifyPassword = (password, response) => {
     return response.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
 
-  if (password.toString().length < six) {
+  if (password.length < six) {
     return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
 };
@@ -80,7 +80,7 @@ app.get('/crush/:id', (request, response) => {
 // send requisition to receive token
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
-  console.log(password.toString().length);
+  // console.log(password.length);
 
   verifyEmail(email, response);
   verifyPassword(password, response);
