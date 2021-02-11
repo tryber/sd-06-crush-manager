@@ -125,7 +125,7 @@ app.put('/crush/:id', tokenValidation, async (req, res) => {
   if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   if (regex.test(date.datedAt) === false) return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
-  const mapCrush = crushes.map((item) => {
+  const crushEdited = crushes.map((item) => {
     if (item.id === id) {
       return {
         name,
@@ -138,13 +138,11 @@ app.put('/crush/:id', tokenValidation, async (req, res) => {
       };
     }
     return item;
-  });
+  }).find((crush) => crush.id === id);
 
-  const findCrush = mapCrush.find((crush) => crush.id === id);
-
-  const jsonCrush = JSON.stringify(findCrush);
+  const jsonCrush = JSON.stringify(crushEdited);
   await fs.writeFile('crush.json', jsonCrush);
-  return res.status(200).json(findCrush);
+  return res.status(200).json(crushEdited);
 });
 
 app.listen(3000, () => console.log('listening port 3000'));
