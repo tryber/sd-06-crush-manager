@@ -14,17 +14,50 @@ const getArrayOfCrushes = () => {
   return JSON.parse(crushesContent);
 };
 
-const crushById = (id, res) => {
+const crushById = (id, response) => {
   function compareCrushIdWithParams(crush) {
     if (crush.id === parseInt(id, 10)) {
-      return res.status(SUCCESS).send(crush);
+      return response.status(SUCCESS).send(crush);
     }
   }
   crushes.map((crush) => compareCrushIdWithParams(crush));
 };
 
-const responseError = (cod, message, res) => {
-  res.status(cod).send({ message });
+const responseError = (errorCode, message, response) => {
+  response.status(errorCode).send({ message });
+};
+
+const buildToken = () => {
+  // Metodo aprendido a partir desse link: https://qastack.com.br/programming/1349404/generate-random-string-characters-in-javascript
+  const tokenComponent = Math.random().toString(36).substring(2, 10);
+  const token = tokenComponent + tokenComponent;
+
+  return token;
+};
+
+const verifyEmail = (email, response) => {
+  const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
+  const isValidEmail = regex.test(email);
+
+  if (!email) {
+    return response.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+
+  if (!isValidEmail) {
+    return response.status(400).json({ message: 'O campo "email" deve ter o formato "email@email.com"' });
+  }
+};
+
+const verifyPassword = (password, response) => {
+  const six = 6;
+
+  if (!password) {
+    return response.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+
+  if (password.toString().length < six) {
+    return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  }
 };
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -33,15 +66,26 @@ app.get('/', (_request, response) => {
 });
 
 // get all crushes
-app.get('/crush', (_req, res) => {
-  res.status(SUCCESS).send(getArrayOfCrushes());
+app.get('/crush', (_request, response) => {
+  response.status(SUCCESS).send(getArrayOfCrushes());
 });
 
 // get crush by id
-app.get('/crush/:id', (req, res) => {
-  const { id } = req.params;
-  crushById(id, res);
-  responseError(NOTFOUND, 'Crush não encontrado', res);
+app.get('/crush/:id', (request, response) => {
+  const { id } = request.params;
+  crushById(id, response);
+  responseError(NOTFOUND, 'Crush não encontrado', response);
+});
+
+// send requisition to receive token
+app.post('/login', (request, response) => {
+  const { email, password } = request.body;
+  console.log(password.toString().length);
+
+  verifyEmail(email, response);
+  verifyPassword(password, response);
+
+  response.status(200).json({ token: buildToken() });
 });
 
 app.listen(PORT, console.log(`Server is running on port ${PORT}`));
