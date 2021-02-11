@@ -79,9 +79,8 @@ app.put('/crush/:id', isToken, isName, isAge, isDate, async (req, res) => {
 
   let crushsList = await readFile('crush.json');
   crushsList[crushId - 1] = bodyresponseAtt;
-
   writeFile('crush.json', JSON.stringify(crushsList, 0, 2));
-  
+
   return res.status(200).json(bodyresponseAtt);
 });
 
