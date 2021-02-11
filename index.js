@@ -23,7 +23,7 @@ app.get('/crush', async (_req, res) => {
   return res.status(200).json(JSON.parse(crushes));
 });
 
-// Requisito-2 obs: id da url vem formato string, por isso o Number(id)
+// Requisito-2         obs: id da url vem formato string, por isso o Number(id)
 // res com o crush doo id da rota ou { "message": "Crush não encontrado" } e o status 404;
 app.get('/crush/:id', async (req, res) => {
   const crushes = await fs.readFile(crushArray);
@@ -105,5 +105,52 @@ app.post('/crush', async (req, res) => { // fazer função mid authorization
   crushesJson.push(postCrush);
   await fs.writeFile(crushArray, JSON.stringify(crushesJson));
   return res.status(201).json(postCrush);
+});
+
+// Requisito-5        obs: id da url vem formato string, por isso o Number(id)
+// res deve ser capaz, através do endpoint()params,
+// editar um crush baseado no id da rota, sem alterar o id registrado;
+app.put('/crush/:id', async (req, res) => { // fazer função mid authorization
+  const { authorization } = req.headers;
+  // console.log(authorization);
+  const crushes = await fs.readFile(crushArray, 'utf-8');
+  let crushesJson = JSON.parse(crushes);
+  // postCrush + id(url)
+  const { id } = req.params;
+  const { name, age, date } = req.body;
+  // token
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  if (!name || name === '') {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name.length < 3) {
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  if (!age || age === '') {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'O crush deve ser maior de idade' });
+  }
+  if (!date || date.datedAt === '' || date.rate === '' || date === undefined || date.datedAt === undefined || date.rate === undefined) {
+    return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
+  if (!isADate(date.datedAt)) {
+    return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (date.rate < 1 || date.rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  const postCrush = { name, age, date, id: Number(id) };
+  crushesJson = crushesJson.map((toUpdateCrush) => (toUpdateCrush.id === postCrush.id
+    ? postCrush : toUpdateCrush));
+  await fs.writeFile(crushArray, JSON.stringify(crushesJson));
+  return res.status(200).json(postCrush);
 });
 app.listen(3000, () => console.log(`Using port: ${port}`));// authorization 78afe01ee29f9cb9 (Header)
