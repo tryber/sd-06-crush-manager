@@ -61,16 +61,26 @@ app.post('/crush', async (req, res) => {
   const data = await lerArquivo(meuArquivo);
   const dataConvertido = JSON.parse(data);
 
-  const totalCrushes = dataConvertido.concat(
+  // Essa const concatena o novo crush aos ja registrados
+  /* const totalCrushes = dataConvertido.concat(
     {
       name: novoCrush.name,
       age: novoCrush.age,
       id: dataConvertido.length + 1,
       date: novoCrush.date,
     },
-  );
+  ); */
 
+  // Aqui ele Le o totalCrush e adiciona aos crush registrados
   /* const novoCrushJson = await escreverArquivo(meuArquivo, JSON.stringify(totalCrushes)); */
+
+  // verificar como retornar o objeto com o valor de id sendo = 1
+  const novoCrushObj = {
+    name: novoCrush.name,
+    age: novoCrush.age,
+    id: 1,
+    date: novoCrush.date,
+  };
 
   const { name, age, date } = novoCrush;
   const { datedAt, rate } = novoCrush.date;
@@ -92,9 +102,9 @@ app.post('/crush', async (req, res) => {
     if (datedAt === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     if (realDate === false) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
-    if (token) return res.status(201).send(totalCrushes);
+    if (token) return res.status(201).send(novoCrushObj);
   }
-  if (token) return res.status(201).send(totalCrushes);
+  if (token) return res.status(201).send(novoCrushObj);
 });
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
