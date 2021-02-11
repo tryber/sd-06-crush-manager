@@ -47,9 +47,9 @@ app.post('/crush', validateCrush);
 
 // Requisito 5
 
-// const { editCrush } = require('./src/middleware');
+const { editCrush } = require('./src/middleware');
 
-// app.delete('/crush/:id', editCrush);
+app.put('/crush/:id', editCrush);
 
 // _______________________________________________________
 
