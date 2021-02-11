@@ -97,6 +97,20 @@ function crushValidation(name, age, date) {
 //   res.status(SUCCESS).json(matchCrush);
 // });
 
+app.post('/crush', (req, res) => {
+  const { name, age, date } = req.body;
+  const invalidCrush = crushValidation(name, age, date);
+  if (invalidCrush) {
+    return res.status(400).json({ message: invalidCrush });
+  }
+  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(cruchesFile);
+  const newCrush = { name, age, id: crushes.length + 1, date };
+  crushes.push(newCrush);
+  fs.writeFileSync('./crush.json', 'utf8', (crushes));
+  res.status(201).json(newCrush);
+});
+
 app.put('/crush/:id', (req, res) => {
   const { name, age, date } = req.body;
   const invalidCrush = crushValidation(name, age, date);
@@ -121,20 +135,6 @@ app.delete('/crush/:id', (req, res) => {
   crushes.splice(crushId, 1, crushes);
   fs.writeFileSync('./crush.json', 'utf8', (crushes));
   res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
-});
-
-app.post('/crush', (req, res) => {
-  const { name, age, date } = req.body;
-  const invalidCrush = crushValidation(name, age, date);
-  if (invalidCrush) {
-    return res.status(400).json({ message: invalidCrush });
-  }
-  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
-  const crushes = JSON.parse(cruchesFile);
-  const newCrush = { name, age, id: crushes.length + 1, date };
-  crushes.push(newCrush);
-  fs.writeFileSync('./crush.json', 'utf8', (crushes));
-  res.status(201).json(newCrush);
 });
 
 app.listen(3000, () => { console.log('porta: 3000 ativa'); });
