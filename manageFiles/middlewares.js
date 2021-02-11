@@ -25,14 +25,14 @@ const getCrushByID = async (req, res, next) => {
   }
 };
 
-const generateToken = async (_req, res, next) => {
+const generateToken = (_req, res, next) => {
   const token = crypto.randomBytes(8).toString('hex');
   // console.log(token);
   res.status(200).json({ token });
   next();
 };
 
-const validateEmail = async (req, _res, next) => {
+const validateEmail = (req, _res, next) => {
   const { email } = req.body;
   const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
 
@@ -45,7 +45,7 @@ const validateEmail = async (req, _res, next) => {
   next();
 };
 
-const validatePassword = async (req, _res, next) => {
+const validatePassword = (req, _res, next) => {
   const { password } = req.body;
   const SIX = 6;
   if (!password) {
@@ -57,7 +57,7 @@ const validatePassword = async (req, _res, next) => {
   next();
 };
 
-const validateToken = async (req, _res, next) => {
+const validateToken = (req, _res, next) => {
   const { authorization } = req.headers;
   const SIXTEEN = 16;
 
@@ -72,7 +72,7 @@ const validateToken = async (req, _res, next) => {
   next();
 };
 
-const validateName = async (req, _res, next) => {
+const validateName = (req, _res, next) => {
   const { name } = req.body;
   const THREE = 3;
 
@@ -85,7 +85,7 @@ const validateName = async (req, _res, next) => {
   next();
 };
 
-const validateAge = async (req, _res, next) => {
+const validateAge = (req, _res, next) => {
   const { age } = req.body;
   const EIGHTEEN = 18;
 
@@ -98,7 +98,7 @@ const validateAge = async (req, _res, next) => {
   next();
 };
 
-const validateDate = async (req, _res, next) => {
+const validateDate = (req, _res, next) => {
   const { date } = req.body;
   const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26]))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
   const ONE = 1;
@@ -116,7 +116,7 @@ const validateDate = async (req, _res, next) => {
   next();
 };
 
-const addNewCrush = async (req, res) => {
+const addNewCrush = async (req, res, _next) => {
   const newCrush = req.body;
   const { fileName } = req.params;
   const myCrushes = await readFile(fileName);

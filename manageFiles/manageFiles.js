@@ -6,7 +6,7 @@ const readFile = async (fileName) => {
   return JSON.parse(file);
 };
 
-const writeFile = async (fileName, content) => {
+const writeFile = async (_fileName, content) => {
   await fs.writeFile(path(__dirname, '..', 'crush.json'), content, 'utf-8');
   return true;
 };
