@@ -92,7 +92,7 @@ app.post('/crush', async (req, res) => {
     if (realDate === false) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
     if (!rate === true) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-    if (rate < 1 || rate > 5 || rate === String) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    if (rate < 1 || rate > 5 || typeof rate === 'string') return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
     if (token) return res.status(201).send({ totalCrushes });
   }
