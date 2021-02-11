@@ -10,16 +10,15 @@ app.use(bodyParser.json());
 async function editCrush(request, response) {
   const { id } = request.params;
   const data = await parsedData();
-  const crushId = data.findIndex((crush) => crush.id === parseInt(id, 10));
-
   const { name, age, date } = request.body;
   const parsedId = parseInt(id, 10);
   const updateCrush = { id: parsedId, name, age, date };
-  const newCrushArray = data.concat({ name, age, id, date });
-  if (parsedId > 0) modifyFile(newCrushArray);
+  const crushes = data.map((crush) => (crush.id === parsedId ? updateCrush : crush));
+
+  console.log(crushes);
+  if (parsedId > 0) modifyFile(crushes);
   // console.log(typeof parsedId);
-  console.log(crushId);
-  // console.log(updateCrush);
+  // console.log(crushId);
 
   response.status(200).json(updateCrush);
 }
