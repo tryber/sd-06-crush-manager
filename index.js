@@ -21,8 +21,8 @@ async function checkEmail(email) {
 }
 
 async function checkPass(pass) {
-  if (pass.toString().length > 5) return true;
-  return false;
+  if (!pass || pass.toString().length < 6) return false;
+  return true;
 }
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -50,10 +50,18 @@ app.post('/login', async (request, response) => {
   console.log(email, password);
   const validEmail = await checkEmail(email);
   const validPass = await checkPass(password);
+  const msgs = {
+    noEmail: { message: 'O campo "email" é obrigatório' },
+    invalidEmail: { message: 'O "email" deve ter o formato "email@email.com"' },
+    noPassword: { message: 'O campo "password" é obrigatório' },
+    invalidPassword: { message: 'A "senha" deve ter pelo menos 6 caracteres' },
+  };
 
-  if (validEmail && validPass) return response.status(SUCCESS).json(token);
-
-  response.status(403).json({ message: 'Inválido' });
+  if (validEmail && validPass) return response.status(SUCCESS).json({ token });
+  if (!email) return response.status(400).json(msgs.noEmail);
+  if (!password) return response.status(400).json(msgs.noPassword);
+  if (!validPass) return response.status(400).json(msgs.invalidPassword);
+  if (!validEmail) return response.status(400).json(msgs.invalidEmail);
 });
 
 app.listen(port, () => console.log(`Listening to port ${port}!`));
