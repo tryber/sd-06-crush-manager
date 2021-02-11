@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (String(password).length < 6) {
-    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres'});
+    return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
 
   const token = crypto.randomBytes(8).toString('hex');

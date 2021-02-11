@@ -1,5 +1,4 @@
 const fs = require('fs').promises;
-const firstId = 5;
 
 module.exports = async (req, res) => {
   const { name, age, date } = req.body;
@@ -22,7 +21,7 @@ module.exports = async (req, res) => {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   if (!date || !datedAt || !rate) {
-    return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios'});
+    return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
   if (!verifyDate.test(String(datedAt))) {
     return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -30,10 +29,10 @@ module.exports = async (req, res) => {
 
   const crushsId = JSON.parse(
     await fs.readFile('crush.json', 'utf-8', (err, data) => {
-      if(err) {
+      if (err) {
         return console.log('Arquivo não encontrado', err);
       }
-      return data
+      return data;
     }),
   );
 
@@ -57,4 +56,4 @@ module.exports = async (req, res) => {
   });
 
   res.status(201).json(newCrush);
-}
+};
