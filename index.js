@@ -42,6 +42,22 @@ app.get('/crush', async (req, res) => {
   res.status(SUCCESS).send(crushes);
 });
 
+// endpoint GET /crush/search?q=searchTerm - Requirement 07
+app.get('/crush/search', async (req, res) => {
+  const searchTerm = req.query.q;
+  const { authorization } = req.headers;
+
+  const validToken = validateToken(authorization);
+  if (validToken !== 'OK') {
+    return res.status(UNAUTHORIZED).json({ message: validToken });
+  }
+
+  const crushes = await getData();
+  const searchedCrushes = crushes.filter((crush) => crush.name.includes(searchTerm));
+
+  res.status(SUCCESS).json(searchedCrushes);
+});
+
 // endpoint GET /crush/:id - Requirement 02
 app.get('/crush/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
