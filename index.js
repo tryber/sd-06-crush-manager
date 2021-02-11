@@ -91,8 +91,8 @@ function crushValidation(name, age, date) {
 //   const { q } = req.query;
 //   const regex = new RegExp(q);
 //   // data: dd/mm/aaaa regex(\d{1,2}/\d{2}/(\d{2}|(\d{4}))); \d ->digito; numero
-//   const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
-//   const crushes = JSON.parse(cruchesFile);
+//   const crushesFile = fs.readFileSync('./crush.json', 'utf8');
+//   const crushes = JSON.parse(crushesFile);
 //   const matchCrush = crushes.filter((crush) => regex.test(crush.name));
 //   res.status(SUCCESS).json(matchCrush);
 // });
@@ -103,11 +103,11 @@ app.post('/crush', (req, res) => {
   if (invalidCrush) {
     return res.status(400).json({ message: invalidCrush });
   }
-  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
-  const crushes = JSON.parse(cruchesFile);
+  const crushesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(crushesFile);
   const newCrush = { name, age, id: crushes.length + 1, date };
   crushes.push(newCrush);
-  fs.writeFileSync('./crush.json', 'utf8', (crushes));
+  fs.writeFileSync('./crush.json', JSON.stringify(crushes), 'utf8');
   res.status(201).json(newCrush);
 });
 
@@ -118,22 +118,22 @@ app.put('/crush/:id', (req, res) => {
     return res.status(400).json({ message: invalidCrush });
   }
   const { id } = req.params;
-  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
-  const crushes = JSON.parse(cruchesFile);
+  const crushesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(crushesFile);
   const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
   const editCrush = { name, age, id: parseInt(id, 10), date };
   crushes.splice(crushId, 1, editCrush);
-  fs.writeFileSync('./crush.json', 'utf8', (crushes));
+  fs.writeFileSync('./crush.json', JSON.stringify(crushes), 'utf8');
   res.status(SUCCESS).json(editCrush);
 });
 
 app.delete('/crush/:id', (req, res) => {
   const { id } = req.params;
-  const cruchesFile = fs.readFileSync('./crush.json', 'utf8');
-  const crushes = JSON.parse(cruchesFile);
+  const crushesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(crushesFile);
   const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
   crushes.splice(crushId, 1, crushes);
-  fs.writeFileSync('./crush.json', 'utf8', (crushes));
+  fs.writeFileSync('./crush.json', JSON.stringify(crushes), 'utf8');
   res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
 });
 
