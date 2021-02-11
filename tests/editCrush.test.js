@@ -577,7 +577,7 @@ describe('5 - Crie o endpoint PUT /crush/:id', () => {
             age: 25,
             date: {
               datedAt: '24/10/2020',
-              rate: 0,
+              rate: 0
             },
           })
           .expect('status', 400)

@@ -11,11 +11,6 @@ const readFile = async (fileName) => {
 };
 
 const writeFile = async (fileName, content) => {
-  console.log({
-    path: `${filePath}${fileName}`,
-    content,
-  });
-
   await fs.writeFile(`${filePath}${fileName}`, content, 'utf-8');
   return true;
 };
