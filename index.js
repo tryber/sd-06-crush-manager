@@ -2,6 +2,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const listAllCrushs = require('./requests/listAllCrushs');
 const validLogin = require('./requests/validLogin');
+const validToken = require('./requests/validToken');
+const createCrush = require('./requests/createCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -31,6 +33,9 @@ app.get('/crush/:id', async (req, res) => {
 
 // -------------- Requirement 3 -----------------------
 app.post('/login', validLogin);
+
+// -------------- Requirement 4 -----------------------
+app.post('/crush', validToken, createCrush);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
