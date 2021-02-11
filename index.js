@@ -29,5 +29,3 @@ app.get('/crush', async (req, res) => {
 app.listen(3000, () => {
   console.log('trabalhando');
 });
-
-app.listen('3000');
