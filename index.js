@@ -145,4 +145,18 @@ app.put('/crush/:id', tokenValidation, async (req, res) => {
   return res.status(200).json(crushEdited);
 });
 
+// desafio 6
+app.delete('/crush/:id', tokenValidation, async (req, res) => {
+  const file = await fs.readFile(fileName);
+  const crushes = JSON.parse(file);
+  const id = Number(req.params.id);
+
+  const index = crushes.findIndex((item) => item.id === id);
+  if (index > -1) {
+    crushes.splice(index, 1);
+  }
+
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(3000, () => console.log('listening port 3000'));
