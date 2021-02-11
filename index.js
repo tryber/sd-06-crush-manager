@@ -20,7 +20,19 @@ const PORT = 3000;
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+// requeriment 7 / Crie o endpoint GET /crush/search?q=searchTerm
+app.get('/crush/search', isToken, async (req, res) => {
+  const parametro = req.query.q;
+  const crushsList = await readFile('crush.json');
 
+  if(!parametro) {
+    return res.status(200).json(crushsList);
+  } else {
+    const crushsListFilter = crushsList.filter(element => element.name.includes(parametro));
+    return res.status(200).json(crushsListFilter);
+  }
+});
+// end requeriment 7
 // requeriment 1 / Crie o endpoint GET /crush
 app.get('/crush', async (req, res) => {
   const crushs = await readFile('crush.json');
@@ -97,5 +109,7 @@ app.delete('/crush/:id', isToken, async (req, res) => {
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 // end requeriment 6
+
+// 2 problemas no CC || tratar o erro
 
 app.listen(PORT, () => console.log('funcional na porta 3000'));
