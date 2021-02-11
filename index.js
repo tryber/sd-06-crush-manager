@@ -27,6 +27,29 @@ app.get('/crush', async (_, res) => {
   res.status(200).send(data);
 });
 
+app.get('/crush/search', async (req, res) => {
+  const { q } = req.query;
+  const data = await getData('crush.json');
+  const { authorization } = req.headers;
+  const regexToken = /^[a-zA-Z0-9]*$/i;
+
+  if (!authorization) {
+    return res.status(401).json({
+      message: 'Token não encontrado',
+    });
+  }
+  if (!regexToken.test(authorization) || authorization.length !== 16) {
+    return res.status(401).json({
+      message: 'Token inválido',
+    });
+  }
+  const crushSearch = data.filter((crush) => crush.name.includes(q));
+  console.log(q);
+  if (crushSearch.length > 0) return res.status(200).json(crushSearch);
+  if (!q || q === '') return res.status(200).json(data);
+  return res.status(200).send([]);
+});
+
 app.get('/crush/:id', async (req, res) => {
   const data = await getData('crush.json');
   const { id } = req.params;
