@@ -196,7 +196,7 @@ app.put('/crush/:id', async (req, res) => {
   const data = await getData('crush.json');
   const filter = data.findIndex((usuario) => usuario.id === +id);
   if (filter === -1) return res.status(500).send({ message: 'usuário não encontrado' });
-  data[filter] = { ...data[filter], ...req.body };  
+  data[filter] = { ...data[filter], ...req.body };
   writingNewCrush('./crush.json', JSON.stringify(data));
   return res.status(200).json(data[filter]);
 });
