@@ -1,17 +1,30 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const tokenAuthorization = require('./tokenAuthorization');
+const crushValidation = require('./crushValidation');
 
 const app = express();
 const SUCCESS = 200;
 const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
 const token = { token: '7mqaVRXJSp886CGr' };
-const dateRegex = /(\d{2})[/](\d{2})[/](\d{4})/;
+
 app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
+});
+
+app.get(/\/crush\/search/, tokenAuthorization, (req, res) => {
+  const { q } = req.query;
+  const regex = new RegExp(q);
+  console.log('qualquer coisa');
+  // data: dd/mm/aaaa regex(\d{1,2}/\d{2}/(\d{2}|(\d{4}))); \d ->digito; numero
+  const crushesFile = fs.readFileSync('./crush.json', 'utf8');
+  const crushes = JSON.parse(crushesFile);
+  const matchCrush = crushes.filter((crush) => regex.test(crush.name));
+  res.status(SUCCESS).json(matchCrush);
 });
 
 app.get('/crush/:id', (req, res) => {
@@ -47,55 +60,7 @@ app.post('/login', (req, res) => {
   res.status(SUCCESS).json(token);
 });
 
-function tokenAutorization(req, res, next) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-  next();
-}
-
-app.use(tokenAutorization);
-
-function crushValidation(name, age, date) {
-  let message = '';
-  if (!name) {
-    message = 'O campo "name" é obrigatório';
-  } else if (name.length < 3) {
-    message = 'O "name" deve ter pelo menos 3 caracteres';
-  }
-  if (!age || !Number.isInteger(age)) {
-    message = 'O campo "age" é obrigatório';
-  }
-  if (age < 18) {
-    message = 'O crush deve ser maior de idade';
-  }
-  if (!date || !date.datedAt || (date.rate === undefined)) {
-    message = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
-  } else if (!dateRegex.test(date.datedAt)) {
-    message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
-  } else if (date.rate !== 1
-    && date.rate !== 2
-    && date.rate !== 3
-    && date.rate !== 4
-    && date.rate !== 5) {
-    message = 'O campo "rate" deve ser um inteiro de 1 à 5';
-  }
-  return message;
-}
-
-// app.get('/crush/search', (req, res) => {
-//   const { q } = req.query;
-//   const regex = new RegExp(q);
-//   // data: dd/mm/aaaa regex(\d{1,2}/\d{2}/(\d{2}|(\d{4}))); \d ->digito; numero
-//   const crushesFile = fs.readFileSync('./crush.json', 'utf8');
-//   const crushes = JSON.parse(crushesFile);
-//   const matchCrush = crushes.filter((crush) => regex.test(crush.name));
-//   res.status(SUCCESS).json(matchCrush);
-// });
+app.use(tokenAuthorization);
 
 app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
