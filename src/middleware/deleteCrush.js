@@ -1,4 +1,4 @@
-const { readFile } = require('../utils/managefile');
+const { readFile, writeFile } = require('../utils/managefile');
 
 // Requisito 6
 const deleteCrush = async (req, res) => {
@@ -11,10 +11,10 @@ const deleteCrush = async (req, res) => {
   }
   const crushes = await readFile('crush');
   const crushesParsed = JSON.parse(crushes);
-  const crushId = +req.params.id;
+  const crushId = parseInt(req.params.id, 10);
   const crushToDelete = crushesParsed.find((crush) => crush.id === crushId);
   const newCrushesArray = crushesParsed.filter((crush) => crush !== crushToDelete);
-  console.log(newCrushesArray);
+  writeFile('crush', JSON.stringify(newCrushesArray));
   res.status(200).json({ message: 'Crush deletado com sucesso' });
 };
 

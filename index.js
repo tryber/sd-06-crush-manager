@@ -45,6 +45,14 @@ app.post('/crush', validateCrush);
 
 // _______________________________________________________
 
+// Requisito 5
+
+// const { editCrush } = require('./src/middleware');
+
+// app.delete('/crush/:id', editCrush);
+
+// _______________________________________________________
+
 // Requisito 6
 
 const { deleteCrush } = require('./src/middleware');
