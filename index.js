@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
 const { promisify } = require('util');
@@ -6,7 +6,14 @@ const {
   validateEmail,
   validatePassword,
   checkRequestField,
-  generateToken } = require('./utils');
+  generateToken,
+  validateName,
+  validateAge,
+  datingValidation,
+  validateDate,
+  rateValidation } = require('./utils');
+
+const authenticate = require('./middlewares/authenticate');
 
 const readCrushes = promisify(fs.readFile);
 
@@ -85,10 +92,71 @@ app.post('/login', (request, response) => {
   );
 });
 
-app.all('/crush', (request, response) => {
-  const requestObject = request.body;
+app.post('/crush', authenticate, async (request, response) => {
+  const requestBody = request.body;
 
-  response.status(SUCCESS).send(requestObject);
+  if (!checkRequestField(requestBody, 'name')) {
+    return response.status(400).send(
+      {
+        message: 'O campo "name" é obrigatório',
+      },
+    );
+  }
+
+  if (!validateName(requestBody.name)) {
+    return response.status(400).send(
+      {
+        message: 'O "name" deve ter pelo menos 3 caracteres',
+      },
+    );
+  }
+
+  if (!checkRequestField(requestBody, 'age')) {
+    return response.status(400).send(
+      {
+        message: 'O campo "age" é obrigatório',
+      },
+    );
+  }
+
+  if (!validateAge(requestBody.age)) {
+    return response.status(400).send(
+      {
+        message: 'O crush deve ser maior de idade',
+      },
+    );
+  }
+
+  if (!datingValidation(requestBody.date)) {
+    return response.status(400).send(
+      {
+        message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+      },
+    );
+  }
+
+  if (!validateDate(requestBody.date.datedAt)) {
+    return response.status(400).send(
+      {
+        message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+      },
+    );
+  }
+
+  if (!rateValidation(requestBody.date.rate)) {
+    return response.status(400).send(
+      {
+        message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+      },
+    );
+  }
+
+  const fileName = './crush.json';
+  const rawData = await fs.readFile(fileName);
+  const crushes = JSON.parse(rawData);
+  crushes.push(requestBody);
+  await fs.writeFile(fileName, JSON.stringify(crushes));
+  response.status(201).send(requestBody);
 });
 
 app.listen(3000, () => {
