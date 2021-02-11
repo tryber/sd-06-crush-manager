@@ -68,7 +68,7 @@ app.post('/crush', isToken, isName, isAge, isDate, async (req, res) => {
   const result = { ...crush, id: crushs.length };
   crushs.push(result);
   writeFile('crush.json', JSON.stringify(crushs, 0, 2));
-  return res.status(SUCCESS).json(crushs);
+  return res.status(SUCCESS).json(result);
 });
 // end requeriment 4
 
