@@ -201,12 +201,27 @@ app.put('/crush/:id', async (req, res) => {
   return res.status(200).json(data[filter]);
 });
 
+app.delete('/crush/:id', async (req, res) => {
+  const { id } = req.params;
+  const data = await getData('crush.json');
+  const { authorization } = req.headers;
+  const regexToken = /^[a-zA-Z0-9]*$/i;
+
+  if (!authorization) {
+    return res.status(401).json({
+      message: 'Token não encontrado',
+    });
+  }
+  if (!regexToken.test(authorization) || authorization.length !== 16) {
+    return res.status(401).json({
+      message: 'Token inválido',
+    });
+  }
+  const crushIndex = data.findIndex((usuario) => usuario.id === parseInt(id, 10));
+  if (crushIndex === -1) return res.status(500).send({ message: 'usuário não encontrado' });
+  data.splice(crushIndex, 1);
+  writingNewCrush('./crush.json', JSON.stringify(data));
+  return res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(door, () => console.log('ON --- PORT --- 3000!'));
-
-// const ar = [{ id: 1, nome: 'paulo' }, { id: 2, nome: 'joão' }];
-
-// const filter = ar.findIndex((usuario) => usuario.id === 1);
-
-// ar[filter] = { ...ar[filter], cp: 'tentativas', nome: 'paulo C' };
-
-// console.log(ar);
