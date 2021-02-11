@@ -1,4 +1,5 @@
-const { readCrushFile } = require('../util');
+const crypto = require('crypto');
+const { readCrushFile, isValidEmail, isValidPassword } = require('../utils');
 
 const SUCCESS = 200;
 
@@ -23,8 +24,26 @@ const getCrush = async (req, res) => {
   }
 };
 
+const getToken = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email) res.status(400).send({ message: 'O campo "email" é obrigatório' });
+  if (!password) res.status(400).send({ message: 'O campo "password" é obrigatório' });
+
+  if (isValidEmail(email)) {
+    if (isValidPassword(password)) {
+      const token = crypto.randomBytes(8).toString('hex');
+      res.status(200).send({ token });
+    } else {
+      res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+    }
+  } else {
+    res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+};
+
 module.exports = {
   getCrushes,
   getCrush,
   standardResponse,
+  getToken,
 };

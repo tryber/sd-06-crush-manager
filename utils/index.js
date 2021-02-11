@@ -7,6 +7,12 @@ const readCrushFile = async () => {
   return allCrushes;
 };
 
+const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
+const isValidPassword = (password) => (password.toString().length >= 6);
+
 module.exports = {
   readCrushFile,
+  isValidEmail,
+  isValidPassword,
 };
