@@ -128,6 +128,35 @@ const addNewCrush = async (req, res) => {
   return res.status(201).json(newCrush);
 };
 
+const updateCrushByID = async (req, res, next) => {
+  const editedCrush = req.body;
+  const { fileName, id } = req.params;
+  const myCrushes = await readFile(fileName);
+  const myCrushToEdit = myCrushes.find((crush) => crush.id === parseInt(id, 10));
+
+  if (myCrushToEdit) {
+    myCrushToEdit.name = editedCrush.name;
+    myCrushToEdit.age = editedCrush.age;
+    myCrushToEdit.date = editedCrush.date;
+
+    res.status(200).json(myCrushToEdit);
+  } else {
+    next({ message: 'Crush não encontrado', statusCode: 404 });
+  }
+  console.log(myCrushes);
+  next();
+};
+
+const deleteCrushById = async (req, res, next) => {
+  const { fileName, id } = req.params;
+  const myCrushes = await readFile(fileName);
+  const filterWithoutMyCrysh = myCrushes.filter((crush) => crush.id !== parseInt(id, 10));
+
+  await writeFile(fileName, JSON.stringify(filterWithoutMyCrysh));
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
+  next();
+};
+
 const error = ((err, _req, res, _next) => {
   console.error(err.message);
 
@@ -146,4 +175,6 @@ module.exports = {
   validateAge,
   validateDate,
   addNewCrush,
+  updateCrushByID,
+  deleteCrushById,
 };
