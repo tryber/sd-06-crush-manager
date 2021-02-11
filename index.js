@@ -1,13 +1,14 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const listAllCrushs = require('./requests/listAllCrushs');
+const validLogin = require('./requests/validLogin');
 
 const app = express();
 const SUCCESS = 200;
 const PORT = 3000;
 app.use(bodyParser.json());
 
-// --------------Requirement 1 --------------
+// -------------- Requirement 1 --------------
 app.get('/crush', async (req, res) => {
   const crushs = await listAllCrushs();
   try {
@@ -18,7 +19,7 @@ app.get('/crush', async (req, res) => {
   }
 });
 
-// ---------------Requirement 2 -------------------
+// --------------- Requirement 2 -------------------
 app.get('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const crush = await listAllCrushs();
@@ -27,6 +28,9 @@ app.get('/crush/:id', async (req, res) => {
   if (!crushID) res.status(404).json({ message: 'Crush não encontrado' });
   res.status(200).json(crushID);
 });
+
+// -------------- Requirement 3 -----------------------
+app.post('/login', validLogin);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
