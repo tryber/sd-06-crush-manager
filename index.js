@@ -65,7 +65,7 @@ app.post('/login', (req, res) => {
 app.post('/crush', isToken, isName, isAge, isDate, async (req, res) => {
   const crush = req.body;
   const crushsList = await readFile('crush.json');
-  const result = { ...crush, id: crushsList.length + 1 };
+  const result = { id: crushsList.length + 1, ...crush };
   crushsList.push(result);
   writeFile('crush.json', JSON.stringify(crushsList, 0, 2));
   return res.status(201).json(result);
@@ -75,9 +75,9 @@ app.post('/crush', isToken, isName, isAge, isDate, async (req, res) => {
 app.put('/crush/:id', isToken, isName, isAge, isDate, async (req, res) => {
   const crushId = req.params.id;
   const bodyresponse = req.body;
-  const bodyresponseAtt = { ...bodyresponse, id: parseInt(crushId) };
+  const bodyresponseAtt = { id: parseInt(crushId, 10), ...bodyresponse };
 
-  let crushsList = await readFile('crush.json');
+  const crushsList = await readFile('crush.json');
   crushsList[crushId - 1] = bodyresponseAtt;
   writeFile('crush.json', JSON.stringify(crushsList, 0, 2));
 
