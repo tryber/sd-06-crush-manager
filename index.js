@@ -16,7 +16,7 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush/search?q=searchTerm', findCrush);
+app.get('/crush/search', findCrush);
 app.get('/crush', getCrushes);
 app.post('/crush', addCrush);
 app.get('/crush/:id', crushById);
