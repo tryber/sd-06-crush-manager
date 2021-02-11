@@ -1,5 +1,4 @@
 const fs = require('fs').promises;
-const path = require('path');
 
 // const filePath = path.basename('../crush.json');
 
@@ -11,7 +10,7 @@ const readFile = async (fileName) => {
 
 // escrita de um arquivo, nao carece de um retorno
 const writeFile = async (fileName, content) => {
-  await fs.writeFile(path(__dirname, '..', fileName), content, 'utf-8');
+  await fs.writeFile(fileName, content, 'utf-8');
   return true;
 };
 

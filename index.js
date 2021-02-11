@@ -1,5 +1,5 @@
 const express = require('express');
-const { readFile } = require('./utils/managerFiles');
+const { readFile, writeFile } = require('./utils/managerFiles');
 const { generateToken } = require('./utils/generateToken');
 const { isEmail } = require('./utils/validations/isEmail');
 const { isPassword } = require('./utils/validations/isPassword');
@@ -62,9 +62,13 @@ app.post('/login', (req, res) => {
 });
 // end requeriment 3
 // requeriment 4 / Crie o endpoint POST /crush
-app.post('/crush', isToken, isName, isAge, isDate, (req, res) => {
+app.post('/crush', isToken, isName, isAge, isDate, async (req, res) => {
   const crush = req.body;
-  return res.status(SUCCESS).json(crush);
+  const crushs = await readFile('crush.json');
+  const result = { ...crush, id: crushs.length };
+  crushs.push(result);
+  writeFile('crush.json', JSON.stringify(crushs, 0, 2));
+  return res.status(SUCCESS).json(crushs);
 });
 // end requeriment 4
 
