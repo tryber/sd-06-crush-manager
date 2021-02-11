@@ -70,13 +70,14 @@ app.post('/crush', async (req, res) => {
       date: novoCrush.date,
     },
   );
-
+  /* eslint-disable */
   const name = novoCrush.name;
   const age = novoCrush.age;
   const realDate = validDate(novoCrush.date.datedAt);
   const rate = novoCrush.date.rate;
   const date = novoCrush.date;
   const datedAt = novoCrush.date.datedAt;
+  /* eslint-enable */
 
   if (!token) return res.status(401).send({ message: 'Token não encontrado' });
   if (validToken(token) === false) return res.status(401).send({ message: 'Token inválido' });
