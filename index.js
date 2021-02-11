@@ -12,6 +12,25 @@ const app = express();
 const SUCCESS = 200;
 const port = 3000;
 
+const getData = async () => {
+  const data = await readFile('./crush.json');
+  return JSON.parse(data);
+};
+
+const searchCrush = async (req, res, next) => {
+  const { q } = req.query;
+  const { authorization } = req.headers;
+  const data = await getData();
+
+  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
+
+  if (!checkIfExists(q)) return res.status(200).send(data);
+
+  const filteredData = data.filter((crush) => crush.name.includes(q));
+
+  res.status(200).json(filteredData);
+};
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
@@ -19,15 +38,12 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-const getData = async () => {
-  const data = await readFile('./crush.json');
-  return JSON.parse(data);
-};
-
 app.get('/crush', async (req, res) => {
   const data = await getData();
   res.status(200).send(data);
 });
+
+app.get('/crush/search', searchCrush);
 
 app.get('/crush/:id', async (req, res) => {
   const data = await getData();
