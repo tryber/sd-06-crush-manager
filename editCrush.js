@@ -3,10 +3,11 @@ const { getData } = require('./getData');
 
 const updateCrush = async (crush, id) => {
   const data = await getData();
-  const index = data.findIndex((element) => element.id === id);
-  if (index !== -1) {
-    data.splice(index, 1);
-  }
+  data.forEach((element, index) => {
+    if (element.id === id) {
+      data.splice(index, 1);
+    }
+  });
   const updateList = [...data, crush];
   fs.writeFile('./crush.json', JSON.stringify(updateList), (err) => {
     if (err) throw new Error(err);
