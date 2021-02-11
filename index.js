@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParse = require('body-parser');
 const lerArquivo = require('./services/lerArquivo');
-const escreverArquivo = require('./services/escreverArquivo');
+/* const escreverArquivo = require('./services/escreverArquivo'); */
 const { validEmail, validPass, validToken } = require('./Regex');
 const { genToken } = require('./services/tokenGenerator');
 const { validDate } = require('./newCrush/date');
@@ -70,7 +70,7 @@ app.post('/crush', async (req, res) => {
     },
   );
 
-  const novoCrushJson = await escreverArquivo(meuArquivo, JSON.stringify(totalCrushes));
+  /* const novoCrushJson = await escreverArquivo(meuArquivo, JSON.stringify(totalCrushes)); */
 
   const { name, age, date } = novoCrush;
   const { datedAt, rate } = novoCrush.date;
