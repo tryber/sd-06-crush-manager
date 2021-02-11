@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { pegandoCrushs } = require('./servicos');
+const { pegandoCrushId } = require('./controle/pegandoPorId');
 
 const app = express();
 const SUCCESS = 200;
@@ -17,6 +18,8 @@ app.get('/crush', async (req, res) => {
   const response = await pegandoCrushs();
   res.status(200).send(response);
 });
+
+app.get('/crush/:id', pegandoCrushId);
 
 app.listen(3000, () => {
   console.log('trabalhando');
