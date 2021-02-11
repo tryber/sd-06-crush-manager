@@ -106,4 +106,45 @@ app.post('/crush', tokenValidation, async (req, res) => {
   return res.status(201).json(newCrush);
 });
 
+// desafio 5
+app.put('/crush/:id', tokenValidation, async (req, res) => {
+  const file = await fs.readFile(fileName);
+  const crushes = JSON.parse(file);
+  const id = Number(req.params.id);
+  const { name, age, date } = req.body;
+
+  const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
+
+  if (!name || name === '') return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  if (name.length < 3) return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!age || age === '' || !Number.isInteger(age)) return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  if (age < 18) return res.status(400).json({ message: 'O crush deve ser maior de idade' });
+  if (date === undefined || !date || date.datedAt === '' || date.datedAt === undefined || date.rate === '' || date.rate === undefined) {
+    return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
+  if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (regex.test(date.datedAt) === false) return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+
+  const mapCrush = crushes.map((item) => {
+    if (item.id === id) {
+      return {
+        name,
+        age,
+        id,
+        date: {
+          datedAt: date.datedAt,
+          rate: date.rate,
+        },
+      };
+    }
+    return item;
+  });
+
+  const findCrush = mapCrush.find((crush) => crush.id === id);
+
+  const jsonCrush = JSON.stringify(findCrush);
+  await fs.writeFile('crush.json', jsonCrush);
+  return res.status(200).json(findCrush);
+});
+
 app.listen(3000, () => console.log('listening port 3000'));
