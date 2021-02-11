@@ -13,12 +13,3 @@ const verifyCrushes = async (_req, res) => {
 };
 
 module.exports = { verifyCrushes };
-// const verifyCrushes = async (_req, res) => {
-//   const crushes = await readFile('./crush');
-//   try {
-//     res.status(200).json(JSON.parse(crushes));
-//   } catch (err) {
-//     console.error(err);
-//     res.status(200).json([]);
-//   }
-// };
