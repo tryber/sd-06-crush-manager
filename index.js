@@ -25,12 +25,11 @@ app.get('/crush/search', isToken, async (req, res) => {
   const parametro = req.query.q;
   const crushsList = await readFile('crush.json');
 
-  if(!parametro) {
+  if (!parametro) {
     return res.status(200).json(crushsList);
-  } else {
-    const crushsListFilter = crushsList.filter(element => element.name.includes(parametro));
-    return res.status(200).json(crushsListFilter);
   }
+  const crushsListFilter = crushsList.filter((element) => element.name.includes(parametro));
+  return res.status(200).json(crushsListFilter);
 });
 // end requeriment 7
 // requeriment 1 / Crie o endpoint GET /crush
@@ -102,7 +101,7 @@ app.delete('/crush/:id', isToken, async (req, res) => {
   const crushsList = await readFile('crush.json');
   crushsList.splice(crushId - 1, 1);
 
-  crushsList.forEach((element, index) => element.id = index + 1);
+  // crushsList.forEach((element, index) => element.id = index + 1);
 
   writeFile('crush.json', JSON.stringify(crushsList, 0, 2));
 
