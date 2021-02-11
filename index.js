@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const { createCrush } = require('./createCrush');
+const { editCrush } = require('./editCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -25,5 +26,7 @@ app.get('/crush', getAllCrush);
 app.get('/crush/:id', getCrushById);
 
 app.post('/crush', checkToken, validateCrush, createCrush);
+
+app.put('/crush/:id', checkToken, validateCrush, editCrush);
 
 app.listen(3000);
