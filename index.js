@@ -17,7 +17,7 @@ const getData = async () => {
   return JSON.parse(data);
 };
 
-const searchCrush = async (req, res, next) => {
+const searchCrush = async (req, res) => {
   const { q } = req.query;
   const { authorization } = req.headers;
   const data = await getData();
@@ -29,6 +29,13 @@ const searchCrush = async (req, res, next) => {
   const filteredData = data.filter((crush) => crush.name.includes(q));
 
   res.status(200).json(filteredData);
+};
+
+const checkAuthorization = (req, res, next) => {
+  const { authorization } = req.headers;
+  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
+
+  next();
 };
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -68,11 +75,11 @@ app.post('/login', (req, res) => {
   res.send({ token });
 });
 
+app.use(checkAuthorization);
+
 app.post('/crush', async (req, res) => {
-  const { authorization } = req.headers;
   const { name, age, date } = req.body;
 
-  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
   if (validateName(name) !== true) return res.status(400).send({ message: `${validateName(name)}` });
   if (validateAge(age) !== true) return res.status(400).send({ message: `${validateAge(age)}` });
   if (validateDate(date) !== true) return res.status(400).send({ message: `${validateDate(date)}` });
@@ -99,11 +106,8 @@ app.put('/crush/:id', async (req, res) => {
   data[index] = editCrushWithID;
 
   const dataJSON = JSON.stringify(data, null, '\t');
-
-  const { authorization } = req.headers;
   const { name, age, date } = req.body;
 
-  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
   if (validateName(name) !== true) return res.status(400).send({ message: `${validateName(name)}` });
   if (validateAge(age) !== true) return res.status(400).send({ message: `${validateAge(age)}` });
   if (validateDate(date) !== true) return res.status(400).send({ message: `${validateDate(date)}` });
@@ -118,13 +122,10 @@ app.delete('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const crushID = parseInt(id, 10);
   const index = data.findIndex((person) => person.id === crushID);
-  const { authorization } = req.headers;
 
   data.splice(index, 1);
 
   const dataJSON = JSON.stringify(data, null, '\t');
-
-  if (validateToken(authorization) !== true) return res.status(401).send({ message: `${validateToken(authorization)}` });
 
   await writeFile('./crush.json', dataJSON);
 
