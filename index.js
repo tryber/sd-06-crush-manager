@@ -72,11 +72,17 @@ app.post('/crush', isToken, isName, isAge, isDate, async (req, res) => {
 });
 // end requeriment 4
 // requeriment 5 / Crie o endpoint PUT /crush/:id
-app.put('/crush/:id', isToken, isName, isAge, isDate, (req, res) => {
+app.put('/crush/:id', isToken, isName, isAge, isDate, async (req, res) => {
   const crushId = req.params.id;
   const bodyresponse = req.body;
-  console.log(crushId);
-  return res.status(201).json(bodyresponse);
+  const bodyresponseAtt = { ...bodyresponse, id: parseInt(crushId) };
+
+  let crushsList = await readFile('crush.json');
+  crushsList[crushId - 1] = bodyresponseAtt;
+
+  writeFile('crush.json', JSON.stringify(crushsList, 0, 2));
+  
+  return res.status(200).json(bodyresponseAtt);
 });
 
 app.listen(PORT, () => console.log('funcional na porta 3000'));
