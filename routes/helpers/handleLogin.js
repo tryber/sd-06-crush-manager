@@ -22,8 +22,8 @@ const schema = yup.object().shape({
       (value) => value !== '',
     ),
   password: yup.string()
-    .required('O campo password é obrigatório')
-    .min(6, 'A senha deve ter pelo menos 6 caracteres')
+    .required('O campo \"password\" é obrigatório')
+    .min(6, 'A \"senha\" deve ter pelo menos 6 caracteres')
     .test(
       'O campo "password" é obrigatório',
       'is not correct',

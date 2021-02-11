@@ -9,7 +9,6 @@ const handleEditCrush = require('./helpers/handleEditCrush');
 const handleAuthorization = require('../middlewares/authorization/handleAuthorization');
 const getAllData = require('../middlewares/dataAcess/getAllData');
 const handleValidateCrushData = require('../middlewares/validations/handleValidateCrushData');
-const handleValidateID = require('../middlewares/validations/handleValidateID');
 const handleDeleteCrush = require('./helpers/handleDeleteCrush');
 const handleSearchCrush = require('./helpers/handleSearchCrush');
 
@@ -43,8 +42,6 @@ router.post('/login', async (req, res) => {
 router.use(handleAuthorization, getAllData);
 
 router.post('/crush', handleValidateCrushData, handleCreateCrush);
-
-router.use(handleValidateID);
 
 router.put('/crush/:id', handleValidateCrushData, handleEditCrush);
 
