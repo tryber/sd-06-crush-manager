@@ -109,6 +109,7 @@ app.put('/crush/:id', (req, res) => {
   const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
   const editCrush = { name, age, id: parseInt(id, 10), date };
   crushes.splice(crushId, 1, editCrush);
+  fs.writeFileSync('./crush.json', 'utf8', (crushes));
   res.status(SUCCESS).json(editCrush);
 });
 
