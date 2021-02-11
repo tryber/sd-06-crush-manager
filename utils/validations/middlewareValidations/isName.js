@@ -1,6 +1,7 @@
 const isName = (req, res, next) => {
   const nameBody = req.body.name;
-  if (nameBody === null || nameBody === '') {
+
+  if (!nameBody) {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
   if (nameBody.length < 3) {

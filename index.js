@@ -65,10 +65,10 @@ app.post('/login', (req, res) => {
 app.post('/crush', isToken, isName, isAge, isDate, async (req, res) => {
   const crush = req.body;
   const crushs = await readFile('crush.json');
-  const result = { ...crush, id: crushs.length };
+  const result = { ...crush, id: crushs.length + 1 };
   crushs.push(result);
   writeFile('crush.json', JSON.stringify(crushs, 0, 2));
-  return res.status(SUCCESS).json(result);
+  return res.status(201).json(result);
 });
 // end requeriment 4
 
