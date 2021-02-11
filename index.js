@@ -132,7 +132,7 @@ app.delete('/crush/:id', (req, res) => {
   const crushesFile = fs.readFileSync('./crush.json', 'utf8');
   const crushes = JSON.parse(crushesFile);
   const crushId = crushes.filter((crush) => crush.id === parseInt(id, 10));
-  crushes.splice(crushId, 1, crushes);
+  crushes.splice(crushId, 1);
   fs.writeFileSync('./crush.json', JSON.stringify(crushes), 'utf8');
   res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
 });
