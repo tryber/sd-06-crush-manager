@@ -83,5 +83,19 @@ app.put('/crush/:id', isToken, isName, isAge, isDate, async (req, res) => {
 
   return res.status(200).json(bodyresponseAtt);
 });
+// end requeriment 5
+// requeriment 6 / Crie o endpoint DELETE /crush/:id
+app.delete('/crush/:id', isToken, async (req, res) => {
+  const crushId = req.params.id;
+  const crushsList = await readFile('crush.json');
+  crushsList.splice(crushId-1, 1);
+
+  crushsList.forEach((element, index) => element.id = index+1);
+
+  writeFile('crush.json', JSON.stringify(crushsList, 0, 2));
+
+  return res.status(200).json({ message: "Crush deletado com sucesso" });
+})
+// end requeriment 6
 
 app.listen(PORT, () => console.log('funcional na porta 3000'));
