@@ -65,19 +65,14 @@ app.post('/login', (req, res) => {
   });
 });
 
-// function writingNewCrush(pathArq, newData) {
-//   fs.writeFile(pathArq, newData);
-// }
+function writingNewCrush(pathArq, newData) {
+  fs.writeFile(pathArq, newData);
+}
 
-app.post('/crush', async (req, res, _next) => {
+app.post('/crush', async (req, res) => {
   const { authorization } = req.headers;
   const regexToken = /^[a-zA-Z0-9]*$/i;
   const regexDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-
-  // const data = await getData('crush.json');
-  // const newArr = data.concat(bodyData);
-  // console.log(data);
-  // writingNewCrush('./crush.json', JSON.stringify(newArr));
 
   if (!authorization) {
     return res.status(401).json({
@@ -109,19 +104,18 @@ app.post('/crush', async (req, res, _next) => {
       message: 'O crush deve ser maior de idade',
     });
   }
-  const { date } = req.body;
 
-  if (!date || date === '') {
+  if (!req.body.date || req.body.date === '') {
     return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  if (!date.datedAt || date.datedAt === '' || date.rate === '' || !date.rate) {
+  if (!req.body.date.datedAt || req.body.date.datedAt === '' || req.body.date.rate === '' || !req.body.date.rate) {
     return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  if (!regexDate.test(date.datedAt)) {
+  if (!regexDate.test(req.body.date.datedAt)) {
     return res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
@@ -132,8 +126,87 @@ app.post('/crush', async (req, res, _next) => {
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
-  const resultNewCrush = { ...req.body, id: 5 };
+  const data = await getData('crush.json');
+  const newID = data[data.length - 1].id + 1;
+  const resultNewCrush = { ...req.body, id: newID };
+  const newArr = data.concat(resultNewCrush);
+  writingNewCrush('./crush.json', JSON.stringify(newArr));
+
   return res.status(201).json(resultNewCrush);
 });
 
-app.listen(door, () => console.log('ON --- PORT --- 300!'));
+app.put('/crush/:id', async (req, res) => {
+  const { authorization } = req.headers;
+  const regexToken = /^[a-zA-Z0-9]*$/i;
+  const regexDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
+
+  if (!authorization) {
+    return res.status(401).json({
+      message: 'Token não encontrado',
+    });
+  }
+  if (!regexToken.test(authorization) || authorization.length !== 16) {
+    return res.status(401).json({
+      message: 'Token inválido',
+    });
+  }
+  if (!req.body.name || req.body.name === '') {
+    return res.status(400).json({
+      message: 'O campo "name" é obrigatório',
+    });
+  }
+  if (req.body.name.length < 3) {
+    return res.status(400).json({
+      message: 'O "name" deve ter pelo menos 3 caracteres',
+    });
+  }
+  if (!req.body.age || req.body.age === '') {
+    return res.status(400).json({
+      message: 'O campo "age" é obrigatório',
+    });
+  }
+  if (req.body.age < 18) {
+    return res.status(400).json({
+      message: 'O crush deve ser maior de idade',
+    });
+  }
+
+  if (!req.body.date || req.body.date === '') {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (req.body.date.rate < 1 || req.body.date.rate > 5) {
+    return res.status(400).json({
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+    });
+  }
+  if (!req.body.date.datedAt || req.body.date.datedAt === '' || !req.body.date.rate) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!regexDate.test(req.body.date.datedAt)) {
+    return res.status(400).json({
+      message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+    });
+  }
+
+  const { id } = req.params;
+  const data = await getData('crush.json');
+  const filter = data.findIndex((usuario) => usuario.id === +id);
+  if (filter === -1) return res.status(500).send({ message: 'usuário não encontrado' });
+  data[filter] = { ...data[filter], ...req.body };  
+  writingNewCrush('./crush.json', JSON.stringify(data));
+  return res.status(200).json(data[filter]);
+});
+
+app.listen(door, () => console.log('ON --- PORT --- 3000!'));
+
+// const ar = [{ id: 1, nome: 'paulo' }, { id: 2, nome: 'joão' }];
+
+// const filter = ar.findIndex((usuario) => usuario.id === 1);
+
+// ar[filter] = { ...ar[filter], cp: 'tentativas', nome: 'paulo C' };
+
+// console.log(ar);
