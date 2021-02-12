@@ -5,7 +5,7 @@ const standardResponse = (_request, response) => response.status(200).send();
 
 const getCrushes = async (_req, res) => {
   const allCrushes = await readCrushFile();
-  return res.status(200).send(allCrushes);
+  res.status(200).send(allCrushes);
 };
 
 const getCrush = async (req, res) => {
@@ -16,7 +16,7 @@ const getCrush = async (req, res) => {
     return res.status(200).send(crush);
   }
   const message = 'Crush não encontrado';
-  return res.status(404).send({ message });
+  res.status(404).send({ message });
 };
 
 const getToken = async (req, res) => {
@@ -31,7 +31,7 @@ const getToken = async (req, res) => {
     }
     return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
-  return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
 };
 
 const verifyToken = (token, res) => {
@@ -66,13 +66,12 @@ const addCrush = async (req, res) => {
   const allCrushes = await readCrushFile();
   const newId = allCrushes.length + 1;
   allCrushes.push({ name, age, id: +newId, date });
-  console.log(allCrushes);
   writeCrushFile(allCrushes);
-  return res.status(201).send({ id: +newId, name, age, date });
+  res.status(201).send({ id: +newId, name, age, date });
 };
 
 const updateCrush = async (req, res) => {
-  const id = +req.params.id;
+  const id = parseInt(req.params.id, 10);
   const { name, age, date } = req.body;
   const { authorization } = req.headers;
 
@@ -89,7 +88,7 @@ const updateCrush = async (req, res) => {
   });
   console.log(newCrushesList);
   writeCrushFile(newCrushesList);
-  return res.status(200).send({ id, name, age, date });
+  res.status(200).send({ id, name, age, date });
 };
 
 module.exports = {
