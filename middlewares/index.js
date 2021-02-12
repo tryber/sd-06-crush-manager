@@ -32,11 +32,6 @@ const getToken = async (req, res) => {
   return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
 };
 
-// const verifyToken = (token, res) => {
-//   if (!token) return res.status(401).send({ message: 'Token não encontrado' });
-//   if (token.length !== 16) return res.status(401).send({ message: 'Token inválido' });
-// };
-
 const verifyCrushPackage = (req, res, next) => {
   const { name, age, date } = req.body;
   if (name && name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
@@ -66,11 +61,6 @@ const verifyToken = (req, res, next) => {
 
 const addCrush = async (req, res) => {
   const { name, age, date } = req.body;
-  // const { authorization } = req.headers;
-
-  // verifyToken(authorization, res);
-
-  // verifyCrushPackage(name, age, date, res);
 
   const allCrushes = await readCrushFile();
   const newId = allCrushes.length + 1;
@@ -82,11 +72,6 @@ const addCrush = async (req, res) => {
 const updateCrush = async (req, res) => {
   const id = +req.params.id;
   const { name, age, date } = req.body;
-  // const { authorization } = req.headers;
-
-  // verifyToken(authorization, res);
-
-  // verifyCrushPackage(name, age, date, res);
 
   const allCrushes = await readCrushFile();
   const newCrushesList = allCrushes.map((crush) => {
@@ -101,10 +86,6 @@ const updateCrush = async (req, res) => {
 };
 
 const deleteCrush = async (req, res) => {
-  // const { authorization } = req.headers;
-
-  // verifyToken(authorization, res);
-
   const id = +req.params.id;
   const allCrushes = await readCrushFile();
   const newCrushesList = allCrushes.filter((crush) => crush.id !== id);
