@@ -112,4 +112,51 @@ app.post('/crush', async (req, res) => {
   return novoCrushJson;
 });
 
+app.put('./crush/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const token = req.headers.authorization;
+
+  const data = await lerArquivo(meuArquivo);
+  const dataConvertido = JSON.parse(data);
+
+  const crushId = dataConvertido.filter((crush) => crush.id === id);
+
+  const editCrush = {
+    id: crushId.id,
+    name: req.body.name,
+    age: req.body.age,
+    date: req.body.date,
+  };
+
+  const crushEditJson = await escreverArquivo(meuArquivo, JSON.stringify(editCrush));
+
+  const { name, age, date } = editCrush;
+
+  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
+  if (validToken(token) === false) return res.status(401).send({ message: 'Token inválido' });
+
+  if (!name === true) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+
+  if (!age === true) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+
+  if (date === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+
+  if (date !== undefined) {
+    // coloquei aqui dentro para tentativa de validar a desconstruçao
+    const { datedAt, rate } = editCrush.date;
+    const realDate = validDate(datedAt);
+
+    if (!rate && rate === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (rate < 1 || rate > 5 || typeof rate === 'string') return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+
+    if (datedAt === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (realDate === false) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+
+  if (token) return res.status(201).send(editCrush);
+  return crushEditJson;
+});
+
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
