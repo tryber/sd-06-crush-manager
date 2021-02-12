@@ -15,11 +15,7 @@ async function editCrush(request, response) {
   const updateCrush = { id: parsedId, name, age, date };
   const crushes = data.map((crush) => (crush.id === parsedId ? updateCrush : crush));
 
-  console.log(crushes);
   if (parsedId > 0) modifyFile(crushes);
-  // console.log(typeof parsedId);
-  // console.log(crushId);
-
   response.status(200).json(updateCrush);
 }
 
