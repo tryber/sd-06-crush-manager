@@ -19,7 +19,15 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', async (__request, response) => {
   const data = await lerArquivo('/crush.json');
-  response.status(SUCCESS).send(data);
+  response.status(SUCCESS).send(JSON.parse(data));
+});
+
+app.get('/crush/:id', async (request, response) => {
+  const { id } = request.params;
+  const data = await lerArquivo('/crush.json');
+  const newData = JSON.parse(data);
+  const actor = newData.find((element) => element.id === Number(id));
+  response.status(SUCCESS).json(actor);
 });
 
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
