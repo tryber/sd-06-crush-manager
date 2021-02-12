@@ -99,7 +99,20 @@ const deleteCrush = async (req, res) => {
   const newCrushesList = allCrushes.filter((crush) => crush.id !== id);
 
   await writeCrushFile(newCrushesList);
-  res.status(200).send({ message: 'Crush deletado com sucesso' });
+  return res.status(200).send({ message: 'Crush deletado com sucesso' });
+};
+
+const searchCrush = async (req, res) => {
+  const { q } = req.query;
+  const { authorization } = req.headers;
+
+  verifyToken(authorization, res);
+
+  const allCrushes = await readCrushFile();
+  if (!q) return res.status(200).send(allCrushes);
+
+  const newCrushesList = allCrushes.filter((crush) => crush.name.match(new RegExp(q)));
+  return res.status(200).json(newCrushesList);
 };
 
 module.exports = {
@@ -109,4 +122,5 @@ module.exports = {
   addCrush,
   updateCrush,
   deleteCrush,
+  searchCrush,
 };
