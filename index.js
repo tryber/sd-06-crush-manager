@@ -93,12 +93,14 @@ app.post('/crush', async (req, res) => {
   if (!age === true) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
 
-  if (date !== undefined || date.length !== 0) {
+  if (date === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+
+  if (date !== undefined) {
     // coloquei aqui dentro para tentativa de validar a desconstruçao
     const { datedAt, rate } = novoCrush.date;
     const realDate = validDate(datedAt);
 
-    if (!rate === true) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (!rate && rate === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     if (rate < 1 || rate > 5 || typeof rate === 'string') return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
     if (datedAt === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
