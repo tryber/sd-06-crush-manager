@@ -8,7 +8,7 @@ const readCrushFile = async () => {
 };
 
 const writeCrushFile = async (newData) => {
-  await fs.writeFile(`${path()}/crush.json`, JSON.stringify(newData), 'utf-8', (err) => console.log(err));
+  await fs.writeFile(`${path()}/crush.json`, JSON.stringify(newData, 0, 2), 'utf-8', (err) => console.log(err));
 };
 
 const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
