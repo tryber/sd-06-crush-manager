@@ -1,14 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { standardResponse, getCrushes, getCrush, getToken, addCrush, updateCrush } = require('./middlewares');
+const { getCrushes, getCrush, getToken, addCrush, updateCrush } = require('./middlewares');
 
 const app = express();
 const port = 3000;
+const SUCCESS = 200;
 
 app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', standardResponse);
+app.get('/', (_request, response) => {
+  response.status(SUCCESS).send();
+});
 
 app.get('/crush', getCrushes);
 app.post('/crush', addCrush);

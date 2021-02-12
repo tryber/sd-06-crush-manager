@@ -8,7 +8,8 @@
     "debug": "nodemon -w --exec node index.js",
     "start": "node index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "restore": "cp tests/seed.json ./crush.json"
   },
   "keywords": [],
   "author": "",

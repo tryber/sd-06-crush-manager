@@ -1,11 +1,9 @@
 const crypto = require('crypto');
 const { readCrushFile, writeCrushFile, isValidEmail, isValidPassword, isValidDate, isValidRate } = require('../utils');
 
-const standardResponse = (_request, response) => response.status(200).send();
-
 const getCrushes = async (_req, res) => {
   const allCrushes = await readCrushFile();
-  res.status(200).send(allCrushes);
+  return res.status(200).send(allCrushes);
 };
 
 const getCrush = async (req, res) => {
@@ -16,7 +14,7 @@ const getCrush = async (req, res) => {
     return res.status(200).send(crush);
   }
   const message = 'Crush não encontrado';
-  res.status(404).send({ message });
+  return res.status(404).send({ message });
 };
 
 const getToken = async (req, res) => {
@@ -31,7 +29,7 @@ const getToken = async (req, res) => {
     }
     return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
-  res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
 };
 
 const verifyToken = (token, res) => {
@@ -67,7 +65,7 @@ const addCrush = async (req, res) => {
   const newId = allCrushes.length + 1;
   allCrushes.push({ name, age, id: +newId, date });
   writeCrushFile(allCrushes);
-  res.status(201).send({ id: +newId, name, age, date });
+  return res.status(201).send({ id: +newId, name, age, date });
 };
 
 const updateCrush = async (req, res) => {
@@ -82,19 +80,18 @@ const updateCrush = async (req, res) => {
   const allCrushes = await readCrushFile();
   const newCrushesList = allCrushes.map((crush) => {
     if (crush.id === id) {
-      return { name, age, id, date };
+      return { name, age, id: +id, date };
     }
     return crush;
   });
   console.log(newCrushesList);
   writeCrushFile(newCrushesList);
-  res.status(200).send({ id, name, age, date });
+  return res.status(200).send({ id: +id, name, age, date });
 };
 
 module.exports = {
   getCrushes,
   getCrush,
-  standardResponse,
   getToken,
   addCrush,
   updateCrush,
