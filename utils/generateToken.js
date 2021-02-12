@@ -3,7 +3,7 @@ const charList = chars.split('');
 const charListLength = charList.length;
 
 function sortCharIndex() {
-  return Math.round(Math.random() * charListLength - 1);
+  return Math.round(Math.random() * (charListLength - 10));
 }
 
 module.exports = function generateToken(tokenSize) {
