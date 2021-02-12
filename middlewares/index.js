@@ -86,7 +86,7 @@ const updateCrush = async (req, res) => {
   });
   console.log(newCrushesList);
   await writeCrushFile(newCrushesList);
-  return res.status(200).json({ id, name, age, date });
+  return res.status(200).send({ id, name, age, date });
 };
 
 const deleteCrush = async (req, res) => {
