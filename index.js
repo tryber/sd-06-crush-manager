@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readMyFile, getCrushByID, error, generateToken,
+const { readMyFile, getCrushByID, error,
   validateEmail, validatePassword, validateToken,
   validateName, validateAge, validateDate, addNewCrush,
-  updateCrushByID, deleteCrushById,
+  updateCrushByID, deleteCrushById, generatedToken,
 } = require('./manageFiles/middlewares');
+
+// generateToken,
 
 const app = express();
 const SUCCESS = 200;
@@ -28,7 +30,7 @@ app.use((req, _res, next) => {
 
 app.get('/:fileName', readMyFile);
 app.get('/:fileName/:id', getCrushByID);
-app.post('/login', validateEmail, validatePassword, generateToken);
+app.post('/login', validateEmail, validatePassword, generatedToken);
 app.post('/:fileName', validateToken, validateName, validateAge, validateDate, addNewCrush);
 app.put('/:fileName/:id', validateToken, validateName, validateAge, validateDate, updateCrushByID);
 app.delete('/:fileName/:id', validateToken, deleteCrushById);

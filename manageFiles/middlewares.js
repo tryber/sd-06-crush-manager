@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const { readFile, writeFile } = require('./manageFiles');
 
 const readMyFile = async (req, res) => {
@@ -25,12 +25,18 @@ const getCrushByID = async (req, res, next) => {
   }
 };
 
-const generateToken = (_req, res, next) => {
-  const token = crypto.randomBytes(8).toString('hex');
-  // console.log(token);
-  res.status(200).json({ token });
-  next();
-};
+// const generateToken = (_req, res, next) => {
+//   const token = crypto.randomBytes(8).toString('hex');
+//   console.log(token);
+//   // return token;
+//   res.status(200).json({ token });
+//   next();
+// };
+
+const generatedToken = (_req, res) =>
+  res.status(200).json({
+    token: '7mqaVRXJSp886CGr',
+  });
 
 const validateEmail = (req, _res, next) => {
   const { email } = req.body;
@@ -60,7 +66,7 @@ const validatePassword = (req, _res, next) => {
 const validateToken = (req, _res, next) => {
   const { authorization } = req.headers;
   const SIXTEEN = 16;
-
+  // console.log(authorization);
   if (!authorization) {
     next({ message: 'Token não encontrado', statusCode: 401 });
   }
@@ -167,7 +173,7 @@ module.exports = {
   readMyFile,
   getCrushByID,
   error,
-  generateToken,
+  // generateToken,
   validateEmail,
   validatePassword,
   validateToken,
@@ -177,4 +183,5 @@ module.exports = {
   addNewCrush,
   updateCrushByID,
   deleteCrushById,
+  generatedToken,
 };
