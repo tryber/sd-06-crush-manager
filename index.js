@@ -4,7 +4,7 @@ const app = express();
 const SUCCESS = 200;
 const port = 3000;
 
-const { getCrush, getCrushId } = require('./getRequest');
+const { getCrush, getCrushId, getCrushByTerm } = require('./getRequest');
 const { handleLogin, addCrush, handleLoginValidation, handleCrushValidation } = require('./postRequest');
 const { editCrush } = require('./putRequest');
 const { deleteCrush } = require('./deleteRequest');
@@ -15,6 +15,7 @@ app.use(express.json());
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+app.get('/crush/search', handleLoginValidation, getCrushByTerm);
 app.get('/crush', getCrush);
 app.get('/crush/:id', getCrushId);
 
