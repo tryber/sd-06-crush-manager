@@ -122,19 +122,19 @@ app.put('/crush/:id', async (request, response) => {
 
 // // ------- Requisito 6 --------
 
-// app.delete('/crush/:id', async (request, response) => {
-//   const token = request.headers.authorization;
+app.delete('/crush/:id', async (request, response) => {
+  const token = request.headers.authorization;
 
-//   if (!token) return response.status(401).json({ message: 'Token não encontrado' });
-//   if (token.length !== 16) return response.status(401).json({ message: 'Token inválido' });
+  if (!token) return response.status(401).json({ message: 'Token não encontrado' });
+  if (token.length !== 16) return response.status(401).json({ message: 'Token inválido' });
 
-//   const crushes = await readFile('crush');
-//   const parsedCrushes = JSON.parse(crushes);
-//   const crushId = parseInt(request.params.id, 10);
-//   const crushToDelete = parsedCrushes.find((crush) => crush.id === crushId);
-//   const newCrushesArray = parsedCrushes.filter((crush) => crush !== crushToDelete);
+  const crushes = await readFile('crush');
+  const parsedCrushes = JSON.parse(crushes);
+  const crushId = parseInt(request.params.id, 10);
+  const crushToDelete = parsedCrushes.find((crush) => crush.id === crushId);
+  const newCrushesArray = parsedCrushes.filter((crush) => crush !== crushToDelete);
 
-//   writeFile('crush', JSON.stringify(newCrushesArray));
+  await writeFile('crush', JSON.stringify(newCrushesArray));
 
-//   response.status(200).json({ message: 'Crush deletado com sucesso' });
-// });
+  response.status(200).json({ message: 'Crush deletado com sucesso' });
+});
