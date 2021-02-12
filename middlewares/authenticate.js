@@ -4,7 +4,7 @@ module.exports = function authenticate(request, response, next) {
   const requestHeader = request.headers;
 
   if (!checkRequestField(requestHeader, 'authorization')) {
-    return response.status(401).send(
+    return response.status(401).json(
       {
         message: 'Token não encontrado',
       },
@@ -12,7 +12,7 @@ module.exports = function authenticate(request, response, next) {
   }
 
   if (!validateToken(requestHeader.authorization)) {
-    return response.status(401).send(
+    return response.status(401).json(
       {
         message: 'Token inválido',
       },
