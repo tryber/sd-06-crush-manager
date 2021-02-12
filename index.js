@@ -12,7 +12,7 @@ const searchCrush = require('./middlewares/searchCrush');
 const { putCrush } = require('./middlewares/putCrush');
 const { delCrush } = require('./middlewares/delCrush');
 const { authToken } = require('./middlewares/authToken');
-const { searchByWord } = require('./middlewares/searchByWord');
+// const { searchByWord } = require('./middlewares/searchByWord');
 
 app.use(bodyParser.json());
 
@@ -24,7 +24,7 @@ app.get('/', (_request, response) => {
 app.post('/login', login);
 app.post('/crush', authToken, searchCrush);
 app.get('/crush', verifyCrushes);
-app.get('/crush/search', authToken, searchByWord);
+// app.get('/crush/search', authToken, searchByWord);
 app.get('/crush/:id', getByIdCrush);
 app.put('/crush/:id', authToken, putCrush);
 app.delete('/crush/:id', authToken, delCrush);
