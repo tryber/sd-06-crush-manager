@@ -1,9 +1,9 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 
-const readDB = async () => fs.readFile('./crush.json', 'utf-8', (crushes) => {
-  if (!crushes) throw new Error('error');
-  return JSON.parse(crushes);
-});
+const readDB = () => new Promise((resolve, reject) => fs.readFile('./crush.json', 'utf-8', (err, file) => {
+  if (err) return reject(new Error(err));
+  resolve(JSON.parse(file));
+}));
 
 const putCrush = async (req, res) => {
   const findCrush = req.params.id;
@@ -35,7 +35,7 @@ const putCrush = async (req, res) => {
   results[indexedCrush].age = age;
   results[indexedCrush].date.datedAt = datedAt;
   results[indexedCrush].date.rate = rate;
-  await fs.writeFile('crush.json', JSON.stringify(results), 'utf-8');
+  await fs.promises.writeFile('crush.json', JSON.stringify(results), 'utf-8');
   res.status(200).json(results[indexedCrush]);
 };
 
