@@ -28,10 +28,28 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
+const released = (request, response, next) => {
+  // authorization esta no test
+  const { authorization } = request.headers;
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+  if (authorization !== token.token) return response.status(401).json({ message: 'Token inválido' });
+  next();
+};
+
 // Requisito 1
 app.get('/crush', (_request, response) => {
   const crushes = readerFile();
   response.status(SUCCESS).send(crushes);
+});
+
+// Requisito 7 (Ordem Influência - dica do Renato na aula ao vivo do dia 12)
+app.get('/crush/search', released, (request, response) => {
+  const searchTerm = request.query.q;
+  const crushes = readerFile();
+  if (!searchTerm) response.status(200).json(crushes);
+  const crush = crushes.filter((element) => element.name.includes(searchTerm));
+  console.log(crushes, searchTerm, crush);
+  response.status(200).json(crush);
 });
 
 // Requisito 2
@@ -54,14 +72,6 @@ app.post('/login', (request, response) => {
 });
 
 // Requisito 4
-const released = (request, response, next) => {
-  // authorization esta no test
-  const { authorization } = request.headers;
-  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
-  if (authorization !== token.token) return response.status(401).json({ message: 'Token inválido' });
-  next();
-};
-
 app.use(released);
 
 const validationInfo = (name, age, date) => {
@@ -115,15 +125,6 @@ app.delete('/crush/:id', (request, response) => {
   const { id } = request.params;
   readerFile().filter((element) => element.id !== id);
   response.status(200).json({ message: 'Crush deletado com sucesso' });
-});
-
-// Requisito 7
-app.get('/crush/search?q=searchTerm', (request, response) => {
-  const { searchTerm } = request.query;
-  const crushes = readerFile();
-  if (!searchTerm || searchTerm === '') return response.status(200).send(crushes);
-  const crush = crushes.filter((element) => element.searchTerm === searchTerm);
-  response.status(200).send(crush);
 });
 
 app.listen(PORT, () => console.log(`Em execução ${PORT}`));
