@@ -6,6 +6,10 @@ const readIndexCrush = async () => {
   });
   return JSON.parse(crush);
 };
+// const readDB = async () => fs.readFile('./crush.json', 'utf-8', (crushes) => {
+//   if (!crushes) throw new Error('error');
+//   return JSON.parse(crushes);
+// });
 
 const getByIdCrush = async (req, res) => {
   const results = await readIndexCrush();

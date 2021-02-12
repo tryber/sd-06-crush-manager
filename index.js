@@ -12,20 +12,22 @@ const searchCrush = require('./middlewares/searchCrush');
 const { putCrush } = require('./middlewares/putCrush');
 const { delCrush } = require('./middlewares/delCrush');
 const { authToken } = require('./middlewares/authToken');
+const { searchByWord } = require('./middlewares/searchByWord');
 
 app.use(bodyParser.json());
-
-app.get('/crush', verifyCrushes);
-app.get('/crush/:id', getByIdCrush);
-app.post('/login', login);
-app.post('/crush', authToken, searchCrush);
-app.put('/crush/:id', authToken, putCrush);
-app.delete('/crush/:id', authToken, delCrush);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.post('/login', login);
+app.post('/crush', authToken, searchCrush);
+app.get('/crush', verifyCrushes);
+app.get('/crush/search', authToken, searchByWord);
+app.get('/crush/:id', getByIdCrush);
+app.put('/crush/:id', authToken, putCrush);
+app.delete('/crush/:id', authToken, delCrush);
 
 app.use((err, req, res, next) => {
   next(err);
