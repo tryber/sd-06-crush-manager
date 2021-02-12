@@ -59,7 +59,21 @@ const addCrush = async (req, res) => {
 
   verifyToken(authorization, res);
 
-  verifyCrushPackage(name, age, date, res);
+  // verifyCrushPackage(name, age, date, res);
+
+  if (name && name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+
+  if (date) {
+    const { datedAt, rate } = date;
+    if (!datedAt || (!rate && rate !== 0)) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (!isValidDate(datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+    if (!isValidRate(rate)) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  } else {
+    return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
 
   const allCrushes = await readCrushFile();
   const newId = allCrushes.length + 1;
@@ -75,7 +89,21 @@ const updateCrush = async (req, res) => {
 
   verifyToken(authorization, res);
 
-  verifyCrushPackage(name, age, date, res);
+  // verifyCrushPackage(name, age, date, res);
+
+  if (name && name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+
+  if (date) {
+    const { datedAt, rate } = date;
+    if (!datedAt || (!rate && rate !== 0)) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    if (!isValidDate(datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+    if (!isValidRate(rate)) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  } else {
+    return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  }
 
   const allCrushes = await readCrushFile();
   const newCrushesList = allCrushes.map((crush) => {
