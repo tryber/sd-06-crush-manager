@@ -96,9 +96,6 @@ const deleteCrush = async (req, res) => {
 
 const searchCrush = async (req, res) => {
   const { q } = req.query;
-  // const { authorization } = req.headers;
-
-  // verifyToken(authorization, res);
 
   const allCrushes = await readCrushFile();
   if (!q) return res.status(200).send(allCrushes);
