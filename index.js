@@ -67,7 +67,7 @@ app.post('/login', (request, response) => {
     });
   }
 
-  response.status(SUCCESS).send(
+  response.status(SUCCESS).json(
     {
       token: `${generateToken(16)}`,
     },
