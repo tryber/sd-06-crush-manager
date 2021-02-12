@@ -157,7 +157,6 @@ app.post('/crush', authenticate, async (request, response) => {
   const nextId = lastId + 1;
   const newCrush = { ...requestBody, id: nextId };
   crushes.push(newCrush);
-  console.log(newCrush);
   await fs.writeFile(fileName, JSON.stringify(crushes));
   response.status(201).json(newCrush);
 });
