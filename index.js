@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParse = require('body-parser');
 const lerArquivo = require('./services/lerArquivo');
-/* const escreverArquivo = require('./services/escreverArquivo'); */
+const escreverArquivo = require('./services/escreverArquivo');
 const { validEmail, validPass, validToken } = require('./Regex');
 const { genToken } = require('./services/tokenGenerator');
 const { validDate } = require('./newCrush/date');
@@ -62,29 +62,27 @@ app.post('/crush', async (req, res) => {
   const dataConvertido = JSON.parse(data);
 
   // Essa const concatena o novo crush aos ja registrados
-  /* const totalCrushes = dataConvertido.concat(
+  const totalCrushes = dataConvertido.concat(
     {
       name: novoCrush.name,
       age: novoCrush.age,
       id: dataConvertido.length + 1,
       date: novoCrush.date,
     },
-  ); */
+  );
 
   // Aqui ele Le o totalCrush e adiciona aos crush registrados
-  /* const novoCrushJson = await escreverArquivo(meuArquivo, JSON.stringify(totalCrushes)); */
+  const novoCrushJson = await escreverArquivo(meuArquivo, JSON.stringify(totalCrushes));
 
   // verificar como retornar o objeto com o valor de id sendo = 1
   const novoCrushObj = {
     name: novoCrush.name,
     age: novoCrush.age,
-    id: 1,
+    id: dataConvertido.length + 1,
     date: novoCrush.date,
   };
 
   const { name, age, date } = novoCrush;
-  const { datedAt, rate } = novoCrush.date;
-  const realDate = validDate(datedAt);
 
   if (!token) return res.status(401).send({ message: 'Token não encontrado' });
   if (validToken(token) === false) return res.status(401).send({ message: 'Token inválido' });
@@ -96,15 +94,20 @@ app.post('/crush', async (req, res) => {
   if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
 
   if (date !== undefined || date.length !== 0) {
+    // coloquei aqui dentro para tentativa de validar a desconstruçao
+    const { datedAt, rate } = novoCrush.date;
+    const realDate = validDate(datedAt);
+
     if (!rate === true) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     if (rate < 1 || rate > 5 || typeof rate === 'string') return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
     if (datedAt === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     if (realDate === false) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
-    if (token) return res.status(201).send(novoCrushObj);
+    /* if (token) return res.status(201).send(novoCrushObj); */
   }
   if (token) return res.status(201).send(novoCrushObj);
+  return novoCrushJson;
 });
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
