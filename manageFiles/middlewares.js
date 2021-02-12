@@ -34,9 +34,7 @@ const getCrushByID = async (req, res, next) => {
 // };
 
 const generatedToken = (_req, res) =>
-  res.status(200).json({
-    token: '7mqaVRXJSp886CGr',
-  });
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 
 const validateEmail = (req, _res, next) => {
   const { email } = req.body;
@@ -53,11 +51,10 @@ const validateEmail = (req, _res, next) => {
 
 const validatePassword = (req, _res, next) => {
   const { password } = req.body;
-  const SIX = 6;
   if (!password) {
     next({ message: 'O campo "password" é obrigatório', statusCode: 400 });
   }
-  if (password.length < SIX) {
+  if (password.length < 6) {
     next({ message: 'A "senha" deve ter pelo menos 6 caracteres', statusCode: 400 });
   }
   next();
@@ -65,13 +62,12 @@ const validatePassword = (req, _res, next) => {
 
 const validateToken = (req, _res, next) => {
   const { authorization } = req.headers;
-  const SIXTEEN = 16;
   // console.log(authorization);
   if (!authorization) {
-    next({ message: 'Token não encontrado', statusCode: 401 });
+    return next({ message: 'Token não encontrado', statusCode: 401 });
   }
-  if (authorization.length !== SIXTEEN) {
-    next({ message: 'Token inválido', statusCode: 401 });
+  if (authorization.length !== 16) {
+    return next({ message: 'Token inválido', statusCode: 401 });
   }
   // console.log(authorization);
 
@@ -80,12 +76,11 @@ const validateToken = (req, _res, next) => {
 
 const validateName = (req, _res, next) => {
   const { name } = req.body;
-  const THREE = 3;
 
   if (!name) {
     next({ message: 'O campo "name" é obrigatório', statusCode: 400 });
   }
-  if (name.length < THREE) {
+  if (name.length < 3) {
     next({ message: 'O "name" deve ter pelo menos 3 caracteres', statusCode: 400 });
   }
   next();
@@ -93,12 +88,12 @@ const validateName = (req, _res, next) => {
 
 const validateAge = (req, _res, next) => {
   const { age } = req.body;
-  const EIGHTEEN = 18;
+  console.log(age);
 
   if (!age) {
     next({ message: 'O campo "age" é obrigatório', statusCode: 400 });
   }
-  if (age <= EIGHTEEN) {
+  if (age <= 18) {
     next({ message: 'O crush deve ser maior de idade', statusCode: 400 });
   }
   next();
@@ -106,14 +101,13 @@ const validateAge = (req, _res, next) => {
 
 const validateDate = (req, _res, next) => {
   const { date } = req.body;
+  // console.log(date);
   const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26]))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
-  const ONE = 1;
-  const FIVE = 5;
 
   if (!dateRegex.test(date.datedAt)) {
     next({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"', statusCode: 400 });
   }
-  if (!date.rate >= ONE && !date.rate <= FIVE) {
+  if (date.rate < 1 || date.rate > 5) {
     next({ message: 'O campo "rate" deve ser um inteiro de 1 à 5', statusCode: 400 });
   }
   if (!date || !date.datedAt || !date.rate) {
