@@ -64,7 +64,7 @@ const addCrush = async (req, res) => {
   const allCrushes = await readCrushFile();
   const newId = allCrushes.length + 1;
   allCrushes.push({ name, age, id: newId, date });
-  writeCrushFile(allCrushes);
+  writeCrushFile(JSON.stringify(allCrushes, 0, 2));
   return res.status(201).send({ id: newId, name, age, date });
 };
 
@@ -85,7 +85,7 @@ const updateCrush = async (req, res) => {
     return crush;
   });
   console.log(newCrushesList);
-  writeCrushFile(newCrushesList);
+  writeCrushFile(JSON.stringify(newCrushesList, 0, 2));
   return res.status(200).send({ id: +id, name, age, date });
 };
 
