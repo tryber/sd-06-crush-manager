@@ -37,6 +37,7 @@ const verifyToken = (token, res) => {
   if (token.length !== 16) return res.status(401).send({ message: 'Token inválido' });
 };
 
+// eslint-disable-next-line no-unused-vars
 const verifyCrushPackage = (name, age, date, res) => {
   if (name && name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
