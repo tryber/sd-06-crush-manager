@@ -69,7 +69,7 @@ const addCrush = async (req, res) => {
 };
 
 const updateCrush = async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const id = +req.params.id;
   const { name, age, date } = req.body;
   const { authorization } = req.headers;
 
@@ -80,13 +80,26 @@ const updateCrush = async (req, res) => {
   const allCrushes = await readCrushFile();
   const newCrushesList = allCrushes.map((crush) => {
     if (crush.id === id) {
-      return { name, age, id: +id, date };
+      return { name, age, id, date };
     }
     return crush;
   });
   console.log(newCrushesList);
   await writeCrushFile(newCrushesList);
-  return res.status(200).send({ id: +id, name, age, date });
+  return res.status(200).send({ id, name, age, date });
+};
+
+const deleteCrush = async (req, res) => {
+  const { authorization } = req.headers;
+
+  verifyToken(authorization, res);
+
+  const id = +req.params.id;
+  const allCrushes = await readCrushFile();
+  const newCrushesList = allCrushes.filter((crush) => crush.id !== id);
+
+  await writeCrushFile(newCrushesList);
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
 };
 
 module.exports = {
@@ -95,4 +108,5 @@ module.exports = {
   getToken,
   addCrush,
   updateCrush,
+  deleteCrush,
 };
