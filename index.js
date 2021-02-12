@@ -54,6 +54,24 @@ app.get('/crush', async (req, res) => {
   res.status(200).send(crushes);
 });
 
+// Desafio 07 - endpoint GET /crush/search?q=searchTerm
+app.get('/crush/search', async (req, res) => {
+  const searchTerm = req.query.q;
+  const { authorization } = req.headers;
+
+  if (!authorization || authorization === '') {
+    return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  }
+  if (!verifyToken(authorization)) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+
+  const crushes = await getData();
+  const searchResult = crushes.filter((crush) => crush.name.includes(searchTerm));
+
+  res.status(SUCCESS).json(searchResult);
+});
+
 // Desafio 02 - endpoint GET /crush/:id
 app.get('/crush/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
@@ -166,13 +184,13 @@ app.put('/crush/:id', async (req, res) => {
 
 // Desafio 06 - endpoint DELETE /crush/:id
 app.delete('/crush/:id', async (req, res) => {
-  const data = await getData();
+  const crushes = await getData();
   const { id } = req.params;
   const crushId = parseInt(id, 10);
-  const index = data.findIndex((person) => person.id === crushId);
+  const index = crushes.findIndex((crush) => crush.id === crushId);
   const { authorization } = req.headers;
-  data.splice(index, 1);
-  const dataJSON = JSON.stringify(data, null, '\t');
+  crushes.splice(index, 1);
+  const dataJSON = JSON.stringify(crushes, null, '\t');
   if (!authorization || authorization === '') {
     return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
   }
