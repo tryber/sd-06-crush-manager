@@ -1,7 +1,6 @@
 const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
-const { promisify } = require('util');
 const {
   validateEmail,
   validatePassword,
@@ -14,8 +13,6 @@ const {
   rateValidation } = require('./utils');
 
 const authenticate = require('./middlewares/authenticate');
-
-const readCrushes = promisify(fs.readFile);
 
 const app = express();
 const SUCCESS = 200;
@@ -38,21 +35,22 @@ app.get('/', (_request, response) => {
   });
 }); */
 
-app.get('/crush', (request, response) => {
+app.get('/crush', async (request, response) => {
   const fileName = './crush.json';
-  readCrushes(fileName)
+  const rawData = await fs.readFile(fileName);
+  const crushes = JSON.parse(rawData);
+  response.status(SUCCESS).json(crushes);
+  /* readCrushes(fileName)
     .then((rawData) => JSON.parse(rawData))
     .then((data) => response.status(SUCCESS).send(data))
-    .catch((error) => console.log(`Could not read file ${fileName}\n Error: ${error}`));
+    .catch((error) => console.log(`Could not read file ${fileName}\n Error: ${error}`)); */
 });
 
 app.get('/crush/:id', async (request, response) => {
   const id = parseInt(request.params.id, 10);
   const fileName = './crush.json';
-  const crushes = await readCrushes(fileName)
-    .then((rawData) => JSON.parse(rawData))
-    .then((data) => data)
-    .catch((error) => console.log(`Could not read file ${fileName}\n Error: ${error}`));
+  const rawData = await fs.readFile(fileName);
+  const crushes = JSON.parse(rawData);
   const retrievedCrush = crushes.find((crush) => crush.id === id);
   if (!retrievedCrush) response.status(404).json({ message: 'Crush não encontrado' });
   response.status(SUCCESS).send(retrievedCrush);
@@ -62,25 +60,25 @@ app.post('/login', (request, response) => {
   const requestObject = request.body;
 
   if (!checkRequestField(requestObject, 'email')) {
-    return response.status(400).send({
+    return response.status(400).json({
       message: 'O campo "email" é obrigatório',
     });
   }
 
   if (!checkRequestField(requestObject, 'password')) {
-    return response.status(400).send({
+    return response.status(400).json({
       message: 'O campo "password" é obrigatório',
     });
   }
 
   if (!validateEmail(requestObject.email)) {
-    return response.status(400).send({
+    return response.status(400).json({
       message: 'O "email" deve ter o formato "email@email.com"',
     });
   }
 
   if (!validatePassword(requestObject.password)) {
-    return response.status(400).send({
+    return response.status(400).json({
       message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
   }
@@ -96,7 +94,7 @@ app.post('/crush', authenticate, async (request, response) => {
   const requestBody = request.body;
 
   if (!checkRequestField(requestBody, 'name')) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O campo "name" é obrigatório',
       },
@@ -104,7 +102,7 @@ app.post('/crush', authenticate, async (request, response) => {
   }
 
   if (!validateName(requestBody.name)) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O "name" deve ter pelo menos 3 caracteres',
       },
@@ -112,7 +110,7 @@ app.post('/crush', authenticate, async (request, response) => {
   }
 
   if (!checkRequestField(requestBody, 'age')) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O campo "age" é obrigatório',
       },
@@ -120,7 +118,7 @@ app.post('/crush', authenticate, async (request, response) => {
   }
 
   if (!validateAge(requestBody.age)) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O crush deve ser maior de idade',
       },
@@ -128,7 +126,7 @@ app.post('/crush', authenticate, async (request, response) => {
   }
 
   if (!datingValidation(requestBody.date)) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
       },
@@ -136,7 +134,7 @@ app.post('/crush', authenticate, async (request, response) => {
   }
 
   if (!validateDate(requestBody.date.datedAt)) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
       },
@@ -144,7 +142,7 @@ app.post('/crush', authenticate, async (request, response) => {
   }
 
   if (!rateValidation(requestBody.date.rate)) {
-    return response.status(400).send(
+    return response.status(400).json(
       {
         message: 'O campo "rate" deve ser um inteiro de 1 à 5',
       },
@@ -154,9 +152,14 @@ app.post('/crush', authenticate, async (request, response) => {
   const fileName = './crush.json';
   const rawData = await fs.readFile(fileName);
   const crushes = JSON.parse(rawData);
-  crushes.push(requestBody);
+  const lastIndex = crushes.length - 1;
+  const lastId = crushes[lastIndex].id;
+  const nextId = lastId + 1;
+  const newCrush = { ...requestBody, id: nextId };
+  crushes.push(newCrush);
+  console.log(newCrush);
   await fs.writeFile(fileName, JSON.stringify(crushes));
-  response.status(201).send(requestBody);
+  response.status(201).json(newCrush);
 });
 
 app.listen(3000, () => {
