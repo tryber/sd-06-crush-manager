@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getCrushes, getCrush, getToken, addCrush, updateCrush, deleteCrush, searchCrush } = require('./middlewares');
+const { getCrushes, getCrush, getToken, addCrush, updateCrush, deleteCrush, searchCrush, verifyToken } = require('./middlewares');
 
 const app = express();
 const port = 3000;
@@ -14,11 +14,11 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', getCrushes);
-app.post('/crush', addCrush);
-app.get('/crush/search', searchCrush);
+app.post('/crush', verifyToken, addCrush);
+app.get('/crush/search', verifyToken, searchCrush);
 app.get('/crush/:id', getCrush);
-app.put('/crush/:id', updateCrush);
-app.delete('/crush/:id', deleteCrush);
+app.put('/crush/:id', verifyToken, updateCrush);
+app.delete('/crush/:id', verifyToken, deleteCrush);
 app.post('/login', getToken);
 
 app.listen(port);

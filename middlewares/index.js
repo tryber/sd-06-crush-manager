@@ -32,16 +32,25 @@ const getToken = async (req, res) => {
   return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
 };
 
-const verifyToken = (token, res) => {
-  if (!token) return res.status(401).send({ message: 'Token não encontrado' });
-  if (token.length !== 16) return res.status(401).send({ message: 'Token inválido' });
+// const verifyToken = (token, res) => {
+//   if (!token) return res.status(401).send({ message: 'Token não encontrado' });
+//   if (token.length !== 16) return res.status(401).send({ message: 'Token inválido' });
+// };
+
+const verifyToken = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
+
+  next();
 };
 
 const addCrush = async (req, res) => {
   const { name, age, date } = req.body;
-  const { authorization } = req.headers;
+  // const { authorization } = req.headers;
 
-  verifyToken(authorization, res);
+  // verifyToken(authorization, res);
 
   // verifyCrushPackage(name, age, date, res);
 
@@ -69,9 +78,9 @@ const addCrush = async (req, res) => {
 const updateCrush = async (req, res) => {
   const id = +req.params.id;
   const { name, age, date } = req.body;
-  const { authorization } = req.headers;
+  // const { authorization } = req.headers;
 
-  verifyToken(authorization, res);
+  // verifyToken(authorization, res);
 
   // verifyCrushPackage(name, age, date, res);
 
@@ -102,9 +111,9 @@ const updateCrush = async (req, res) => {
 };
 
 const deleteCrush = async (req, res) => {
-  const { authorization } = req.headers;
+  // const { authorization } = req.headers;
 
-  verifyToken(authorization, res);
+  // verifyToken(authorization, res);
 
   const id = +req.params.id;
   const allCrushes = await readCrushFile();
@@ -116,9 +125,9 @@ const deleteCrush = async (req, res) => {
 
 const searchCrush = async (req, res) => {
   const { q } = req.query;
-  const { authorization } = req.headers;
+  // const { authorization } = req.headers;
 
-  verifyToken(authorization, res);
+  // verifyToken(authorization, res);
 
   const allCrushes = await readCrushFile();
   if (!q) return res.status(200).send(allCrushes);
@@ -135,4 +144,5 @@ module.exports = {
   updateCrush,
   deleteCrush,
   searchCrush,
+  verifyToken,
 };
