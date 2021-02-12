@@ -103,15 +103,17 @@ const validateDate = (req, _res, next) => {
   const { date } = req.body;
   // console.log(date);
   const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26]))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
-
-  if (!dateRegex.test(date.datedAt)) {
+  // console.log(correctDatedAt);
+  // console.log(date);
+  // console.log(date.datedAt);
+  if (date === undefined || date.datedAt === undefined || date.rate === undefined) {
+    next({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios', statusCode: 400 });
+  }
+  if (date && !dateRegex.test(date.datedAt)) {
     next({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"', statusCode: 400 });
   }
   if (date.rate < 1 || date.rate > 5) {
     next({ message: 'O campo "rate" deve ser um inteiro de 1 à 5', statusCode: 400 });
-  }
-  if (!date || !date.datedAt || !date.rate) {
-    next({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios', statusCode: 400 });
   }
   next();
 };
