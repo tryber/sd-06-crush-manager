@@ -112,7 +112,6 @@ app.post('/crush', async (req, res) => { // fazer função mid authorization
 // editar um crush baseado no id da rota, sem alterar o id registrado;
 app.put('/crush/:id', async (req, res) => { // fazer função mid authorization
   const { authorization } = req.headers;
-  // console.log(authorization);
   const crushes = await fs.readFile(crushArray, 'utf-8');
   let crushesJson = JSON.parse(crushes);
   // postCrush + id(url)
@@ -152,5 +151,25 @@ app.put('/crush/:id', async (req, res) => { // fazer função mid authorization
     ? postCrush : toUpdateCrush));
   await fs.writeFile(crushArray, JSON.stringify(crushesJson));
   return res.status(200).json(postCrush);
+});
+
+// Requisito-6
+// res deve deletar um crush baseado no id da rota
+// e retornar { "message": "Crush deletado com sucesso" };
+app.delete('/crush/:id', async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+  const crushes = await fs.readFile(crushArray, 'utf-8');
+  let crushesJson = JSON.parse(crushes);
+  // token
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  crushesJson = crushesJson.filter((crushJson) => crushJson.id !== Number(id));
+  await fs.writeFile(crushArray, JSON.stringify(crushesJson));
+  return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 app.listen(3000, () => console.log(`Using port: ${port}`));// authorization 78afe01ee29f9cb9 (Header)
