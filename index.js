@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllCrushes } = require('./middlewares');
+const { getAllCrushes, getCrush } = require('./middlewares');
 
 const app = express();
 const SUCCESS = 200;
@@ -13,6 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', getAllCrushes);
+app.get('/crush/:id', getCrush);
 
 app.listen(3000, function () {
   console.log('Listening on port 3000!');
