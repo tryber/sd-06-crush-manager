@@ -25,11 +25,13 @@ const getCrush = async (request, response) => {
 
 const getToken = async (request, response) => {
   const { email, password } = request.body;
-  if (!email)
+  if (!email) {
     response.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
 
-  if (!password)
+  if (!password) {
     response.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
 
   if (validateEmail(email)) {
     if (validatePassword(password)) {

@@ -9,15 +9,11 @@ const readFromFile = async () => {
   return allCrushes;
 };
 
-const validateEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const validatePassword = (password) => password.length >= 6;
 
-const createToken = () => {
-  return crypto.randomBytes(8).toString('hex');
-};
+const createToken = () => crypto.randomBytes(8).toString('hex');
 
 module.exports = {
   readFromFile,
