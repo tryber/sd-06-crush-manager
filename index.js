@@ -160,7 +160,7 @@ app.put('/crush/:id', async (req, res) => {
   }
 
   if (token) return res.status(200).send(editCrush);
-  return editCrush;
+  return crushEditJson;
 });
 
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
