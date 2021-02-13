@@ -1,6 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllCrushes, getCrush, getToken } = require('./controllers');
+const {
+  getAllCrushes,
+  getCrush,
+  createCrush,
+  checkCrush,
+  getToken,
+  checkToken,
+} = require('./controllers');
 
 const app = express();
 const SUCCESS = 200;
@@ -13,6 +20,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', getAllCrushes);
+app.post('/crush', checkToken, checkCrush, createCrush);
 app.get('/crush/:id', getCrush);
 app.post('/login', getToken);
 
