@@ -1,4 +1,3 @@
-const { request, response } = require('express');
 const {
   readFromFile,
   validateEmail,
@@ -6,7 +5,7 @@ const {
   createToken,
 } = require('../services');
 
-const getAllCrushes = async (request, response) => {
+const getAllCrushes = async (_request, response) => {
   const allCrushes = await readFromFile();
 
   return response.status(200).json(allCrushes);
@@ -15,7 +14,7 @@ const getAllCrushes = async (request, response) => {
 const getCrush = async (request, response) => {
   const { id } = request.params;
   const allCrushes = await readFromFile();
-  const crush = allCrushes.find((crush) => crush.id === +id);
+  const crush = allCrushes.find((element) => element.id === +id);
 
   if (!crush) {
     return response.status(404).json({ message: 'Crush não encontrado' });
@@ -27,13 +26,10 @@ const getCrush = async (request, response) => {
 const getToken = async (request, response) => {
   const { email, password } = request.body;
   if (!email)
-    return response
-      .status(400)
-      .json({ message: 'O campo "email" é obrigatório' });
+    response.status(400).json({ message: 'O campo "email" é obrigatório' });
+
   if (!password)
-    return response
-      .status(400)
-      .json({ message: 'O campo "password" é obrigatório' });
+    response.status(400).json({ message: 'O campo "password" é obrigatório' });
 
   if (validateEmail(email)) {
     if (validatePassword(password)) {

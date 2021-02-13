@@ -16,6 +16,4 @@ app.get('/crush', getAllCrushes);
 app.get('/crush/:id', getCrush);
 app.post('/login', getToken);
 
-app.listen(3000, function () {
-  console.log('Listening on port 3000!');
-});
+app.listen(3000);
