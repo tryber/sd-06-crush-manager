@@ -210,14 +210,15 @@ app.put('/crush/:id', authenticate, async (request, response) => {
   const crushes = JSON.parse(rawData);
   const retrievedCrush = crushes.find((crush) => crush.id === id);
   if (!retrievedCrush) response.status(404).json({ message: 'Crush não encontrado' });
+  const newCrush = { ...requestBody, id };
   const newCrushes = crushes.map((crush) => {
     if (crush.id === id) {
-      return requestBody;
+      return newCrush;
     }
     return crush;
   });
   await fs.writeFile(fileName, JSON.stringify(newCrushes));
-  response.status(201).json(requestBody);
+  response.status(200).json(newCrush);
 });
 
 app.listen(3000, () => {
