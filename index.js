@@ -163,4 +163,21 @@ app.put('/crush/:id', async (req, res) => {
   return crushEditJson;
 });
 
+app.delete('/crush/:id', async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const token = req.headers.authorization;
+
+  const data = await lerArquivo(meuArquivo);
+  const dataConvertido = JSON.parse(data);
+
+  const crushSelect = dataConvertido.filter((crush) => crush.id !== id);
+
+  const deletedCrush = await escreverArquivo(meuArquivo, JSON.stringify(crushSelect));
+
+  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
+  if (validToken(token) === false) return res.status(401).send({ message: 'Token inválido' });
+  if (token) return res.status(200).json({ message: 'Crush deletado com sucesso' });
+  return deletedCrush;
+});
+
 app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
