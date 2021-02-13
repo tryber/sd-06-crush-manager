@@ -2,17 +2,10 @@ const express = require('express');
 
 const app = express();
 const bodyParser = require('body-parser');
+const middleware = require('./middlewares');
 
 const SUCCESS = 200;
 const PORT = 3000;
-const { verifyCrushes } = require('./middlewares/verifyCrushes');
-const { getByIdCrush } = require('./middlewares/getByIdCrush');
-const login = require('./middlewares/login');
-const searchCrush = require('./middlewares/searchCrush');
-const { putCrush } = require('./middlewares/putCrush');
-const { delCrush } = require('./middlewares/delCrush');
-const { authToken } = require('./middlewares/authToken');
-// const { searchByWord } = require('./middlewares/searchByWord');
 
 app.use(bodyParser.json());
 
@@ -21,13 +14,12 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.post('/login', login);
-app.post('/crush', authToken, searchCrush);
-app.get('/crush', verifyCrushes);
-// app.get('/crush/search', authToken, searchByWord);
-app.get('/crush/:id', getByIdCrush);
-app.put('/crush/:id', authToken, putCrush);
-app.delete('/crush/:id', authToken, delCrush);
+app.post('/login', middleware.login);
+app.post('/crush', middleware.authToken, middleware.searchCrush);
+app.get('/crush', middleware.verifyCrushes);
+app.get('/crush/:id', middleware.getByIdCrush);
+app.put('/crush/:id', middleware.authToken, middleware.putCrush);
+app.delete('/crush/:id', middleware.authToken, middleware.delCrush);
 
 app.use((err, req, res, next) => {
   next(err);
