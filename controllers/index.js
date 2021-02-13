@@ -36,8 +36,8 @@ const getToken = async (request, response) => {
     response.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
 
-  if (validateEmail(email)) {
-    if (validatePassword(password)) {
+  if (email && validateEmail(email)) {
+    if (password && validatePassword(password)) {
       const token = createToken();
       return response.status(200).json({ token });
     }
@@ -91,7 +91,7 @@ const checkCrush = async (request, response, next) => {
         'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     });
   }
-  if (name.length < 3) {
+  if (name && name.length < 3) {
     return response
       .status(400)
       .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
