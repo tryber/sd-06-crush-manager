@@ -221,6 +221,20 @@ app.put('/crush/:id', authenticate, async (request, response) => {
   response.status(200).json(newCrush);
 });
 
+app.delete('/crush/:id', authenticate, async (request, response) => {
+  const id = parseInt(request.params.id, 10);
+  const fileName = './crush.json';
+  const rawData = await fs.readFile(fileName);
+  const crushes = JSON.parse(rawData);
+  const retrievedCrush = crushes.find((crush) => crush.id === id);
+  if (!retrievedCrush) response.status(404).json({ message: 'Crush não encontrado' });
+  const newCrushes = crushes.filter((crush) => crush.id !== id);
+  await fs.writeFile(fileName, JSON.stringify(newCrushes));
+  response.status(200).json({
+    message: 'Crush deletado com sucesso',
+  });
+});
+
 app.listen(3000, () => {
   console.log('Listening on port 3000!');
 });
