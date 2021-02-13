@@ -112,20 +112,23 @@ app.post('/crush', async (req, res) => {
   return novoCrushJson;
 });
 
-app.put('./crush/:id', async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+app.put('/crush/:id', async (req, res) => {
+  const { id } = req.params.id;
   const token = req.headers.authorization;
+  const bodyModify = req.body;
 
   const data = await lerArquivo(meuArquivo);
+
   const dataConvertido = JSON.parse(data);
+  /* console.log(dataConvertido); */
 
   const crushId = dataConvertido.filter((crush) => crush.id === id);
 
   const editCrush = {
     id: crushId.id,
-    name: req.body.name,
-    age: req.body.age,
-    date: req.body.date,
+    name: bodyModify.name,
+    age: bodyModify.age,
+    date: bodyModify.date,
   };
 
   const crushEditJson = await escreverArquivo(meuArquivo, JSON.stringify(editCrush));
@@ -144,7 +147,6 @@ app.put('./crush/:id', async (req, res) => {
   if (date === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
   if (date !== undefined) {
-    // coloquei aqui dentro para tentativa de validar a desconstruçao
     const { datedAt, rate } = editCrush.date;
     const realDate = validDate(datedAt);
 
@@ -155,7 +157,7 @@ app.put('./crush/:id', async (req, res) => {
     if (realDate === false) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 
-  if (token) return res.status(201).send(editCrush);
+  if (token) return res.status(200).send(crushEditJson);
   return crushEditJson;
 });
 
