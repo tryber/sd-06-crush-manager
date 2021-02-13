@@ -9,8 +9,8 @@ const readFromFile = async () => {
   return allCrushes;
 };
 
-const writeToFile = async (data) => {
-  await fs.writeFile('../crush.json', JSON.stringify(data, 0, 2), 'utf-8');
+const writeToFile = async (d) => {
+  await fs.writeFile(`${path()}/crush.json`, JSON.stringify(d, 0, 2), 'utf-8');
 };
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
