@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllCrushes, getCrush, getToken } = require('./middlewares');
+const { getAllCrushes, getCrush, getToken } = require('./controllers');
 
 const app = express();
 const SUCCESS = 200;
