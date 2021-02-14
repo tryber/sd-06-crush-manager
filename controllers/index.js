@@ -144,12 +144,24 @@ const updateCrush = async (request, response) => {
   return response.status(200).json({ id, name, age, date });
 };
 
+const deleteCrush = async (request, response) => {
+  const id = +request.params.id;
+  const allCrushes = await readFromFile();
+
+  const findCrush = allCrushes.filter((element) => element.id !== id);
+
+  await writeToFile(findCrush);
+
+  return response.status(200).json({ message: 'Crush deletado com sucesso' });
+};
+
 module.exports = {
   getAllCrushes,
   getCrush,
   createCrush,
   checkCrush,
   updateCrush,
+  deleteCrush,
   getToken,
   checkToken,
 };
