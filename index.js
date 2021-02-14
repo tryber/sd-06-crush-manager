@@ -30,6 +30,22 @@ app.get('/crush', async (request, response) => {
   response.status(SUCCESS).json(crushes);
 });
 
+app.get('/crush/search', authenticate, async (request, response) => {
+  const searchTerm = request.query.q;
+  if (!searchTerm) {
+    const fileName = './crush.json';
+    const rawData = await fs.readFile(fileName);
+    const crushes = JSON.parse(rawData);
+    response.status(SUCCESS).json(crushes);
+  }
+  const fileName = './crush.json';
+  const rawData = await fs.readFile(fileName);
+  const crushes = JSON.parse(rawData);
+  const retrievedCrushes = crushes.filter((crush) => crush.name.includes(searchTerm));
+  if (!retrievedCrushes) response.status(SUCCESS).json([]);
+  response.status(SUCCESS).json(retrievedCrushes);
+});
+
 app.get('/crush/:id', async (request, response) => {
   const id = parseInt(request.params.id, 10);
   const fileName = './crush.json';
