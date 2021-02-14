@@ -8,7 +8,7 @@ describe('3 - Crie o endpoint POST /login', () => {
       .post(`${url}/login`, {
         body: {
           email: 'deferiascomigo@gmail.com',
-          password: '12345678',
+          password: '1234567',
         },
       })
       .expect('status', 200)
