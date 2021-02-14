@@ -127,11 +127,29 @@ const checkCrush = async (request, response, next) => {
   next();
 };
 
+const updateCrush = async (request, response) => {
+  const id = +request.params.id;
+  const { name, age, date } = request.body;
+  const allCrushes = await readFromFile();
+
+  const findCrush = allCrushes.map((element) => {
+    if (element.id === id) {
+      return { name, age, id, date };
+    }
+    return element;
+  });
+  console.log(findCrush);
+  await writeToFile(findCrush);
+
+  return response.status(200).json({ id, name, age, date });
+};
+
 module.exports = {
   getAllCrushes,
   getCrush,
   createCrush,
   checkCrush,
+  updateCrush,
   getToken,
   checkToken,
 };
