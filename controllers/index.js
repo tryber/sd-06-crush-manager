@@ -138,7 +138,7 @@ const updateCrush = async (request, response) => {
     }
     return element;
   });
-  console.log(findCrush);
+
   await writeToFile(findCrush);
 
   return response.status(200).json({ id, name, age, date });
@@ -155,6 +155,18 @@ const deleteCrush = async (request, response) => {
   return response.status(200).json({ message: 'Crush deletado com sucesso' });
 };
 
+const searchCrush = async (request, response) => {
+  const { q } = request.query;
+
+  const allCrushes = await readFromFile();
+
+  if (!q) {
+    return response.status(200).json(allCrushes);
+  }
+  const foundCrushes = allCrushes.filter((e) => e.name.match(new RegExp(q)));
+  return response.status(200).json(foundCrushes);
+};
+
 module.exports = {
   getAllCrushes,
   getCrush,
@@ -162,6 +174,7 @@ module.exports = {
   checkCrush,
   updateCrush,
   deleteCrush,
+  searchCrush,
   getToken,
   checkToken,
 };

@@ -7,6 +7,7 @@ const {
   checkCrush,
   updateCrush,
   deleteCrush,
+  searchCrush,
   getToken,
   checkToken,
 } = require('./controllers');
@@ -23,6 +24,7 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', getAllCrushes);
 app.post('/crush', checkToken, checkCrush, createCrush);
+app.get('/crush/search', checkToken, searchCrush);
 app.get('/crush/:id', getCrush);
 app.put('/crush/:id', checkToken, checkCrush, updateCrush);
 app.delete('/crush/:id', checkToken, deleteCrush);
