@@ -12,7 +12,7 @@ const getRequest = require('./getRequest');
 
 routes.get('/crush', getRequest.readCrush);
 
-// routes.get('/crush/:id', getRequest.crushID);
+routes.get('/crush/:id', getRequest.crushID);
 
 // routes.post('/login', postRequest.login);
 
