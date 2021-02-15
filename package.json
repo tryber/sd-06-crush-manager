@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --runInBand",
     "debug": "nodemon -w --exec node index.js",
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "keywords": [],
@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "express-rescue": "^1.1.30"
   },
