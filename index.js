@@ -105,7 +105,7 @@ app.post('/crush', async (req, res) => {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
-  file.concat(newCrush);
+  file.push(newCrush);
 
   fs.writeFile('crush.json', JSON.stringify(file), (err, data) => {
     if (err) {
