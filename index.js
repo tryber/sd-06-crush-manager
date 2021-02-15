@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs').promises;
+const fs = require('fs');
 const crypto = require('crypto');
 
 const app = express();
@@ -13,8 +13,8 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1
-app.get('/crush', async (_req, res) => {
-  const file = await fs.readFile('crush.json');
+app.get('/crush', (_req, res) => {
+  const file = fs.readFileSync('./crush.json', 'utf-8');
   if (!file) {
     return res.status(200).json([]);
   }
@@ -22,8 +22,8 @@ app.get('/crush', async (_req, res) => {
 });
 
 // Requisito 2
-app.get('/crush/:id', async (req, res) => {
-  const file = await fs.readFile('crush.json');
+app.get('/crush/:id', (req, res) => {
+  const file = fs.readFileSync('./crush.json', 'utf-8');
   const { id } = req.params;
   const getCrush = JSON.parse(file).find((crush) => crush.id === Number(id));
   if (!getCrush) {
@@ -58,21 +58,19 @@ app.post('/login', (req, res) => {
 // Requisito 4
 const validateDate = (data) => /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(data);
 
-app.post('/crush', async (req, res) => {
+app.post('/crush', (req, res) => {
   const { token } = req.headers;
 
-  const file = await fs.readFile('crush.json');
-  const fileJSON = JSON.parse(file);
-
-  const newID = file.length + 1;
+  const file = JSON.parse(fs.readFileSync('./crush.json'));
+  const newID = JSON.parse(fs.readFileSync('./crush.json')).length + 1;
   const newCrush = { ...req.body, id: newID };
   const { name, age, date } = newCrush;
 
   if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
+    return res.status(400).json({ message: 'Token não encontrado' });
   }
   if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
+    return res.status(400).json({ message: 'Token inválido' });
   }
   if (!name || name === '') {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
@@ -96,17 +94,16 @@ app.post('/crush', async (req, res) => {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
-  fileJSON.push(newCrush);
+  file.push(newCrush);
 
-  await fs.writeFile('crush.json', JSON.stringify(fileJSON));
+  fs.writeFileSync('crush.json', JSON.stringify(file));
   return res.status(201).json(newCrush);
 });
 
 // Requisito 5
-app.put('/crush/:id', async (req, res) => {
+app.put('/crush/:id', (req, res) => {
   const { token } = req.headers;
-  const file = await fs.readFile('crush.json');
-  const fileJSON = JSON.parse(file);
+  const file = JSON.parse(fs.readFileSync('./crush.json'));
 
   const { id } = req.params;
   const { name, age, date } = req.body;
@@ -139,23 +136,22 @@ app.put('/crush/:id', async (req, res) => {
   if (date.rate < 1 || date.rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  const newFile = fileJSON.map((addedCrush) => {
+  const newFile = file.map((addedCrush) => {
     if (addedCrush.id === newCrush.id) {
       return newCrush;
     }
     return addedCrush;
   });
 
-  await fs.writeFile('crush.json', JSON.stringify(newFile));
+  fs.writeFileSync('crush.json', JSON.stringify(newFile));
   return res.status(200).json(newCrush);
 });
 
 // Requisito 6
-app.delete('/crush/:id', async (req, res) => {
+app.delete('/crush/:id', (req, res) => {
   const { token } = req.headers;
   const { id } = req.params;
-  const file = await fs.readFile('crush.json');
-  const fileJSON = JSON.parse(file);
+  const file = JSON.parse(fs.readFileSync('./crush.json'));
 
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
@@ -163,8 +159,8 @@ app.delete('/crush/:id', async (req, res) => {
   if (token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
-  const newFile = fileJSON.filter((crush) => crush.id !== Number(id));
-  await fs.writeFile('crush.json', JSON.stringify(newFile));
+  const newFile = file.filter((crush) => crush.id !== Number(id));
+  fs.writeFileSync('crush.json', JSON.stringify(newFile));
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
