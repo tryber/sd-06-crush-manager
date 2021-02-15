@@ -150,7 +150,7 @@ app.put('/crush/:id', async (req, res) => {
   }
 
   const edit = { id: +id, name, age, date };
-  const editedCrush = [...parsedJson, edit]
+  const editedCrush = [...parsedJson, edit];
   await fs.writeFile(fileName, JSON.stringify(editedCrush));
   return res.status(SUCCESS).json(edit);
 });
