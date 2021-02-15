@@ -1,7 +1,32 @@
-// module.exports = {
-//   async login(request, response) {
-//   },
+const crypto = require('crypto');
 
-//   async add(request, response) {
-//   },
-// };
+const verifyEmail = (email) => {
+  const emailRegex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
+  return emailRegex.test(email);
+};
+
+const verifyPassword = (password) => {
+  const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
+  return passwordRegex.test(password);
+};
+
+module.exports = {
+  async login(request, response) {
+    const { email, password } = request.body;
+
+    if (email === '' || !email) return response.status(400).json({ message: 'O campo "email" é obrigatório' });
+
+    if (verifyEmail(email) === false) return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+
+    if (password === '' || !password) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
+
+    if (verifyPassword(password) === false) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+
+    const token = crypto.randomBytes(8).toString('hex');
+    return response.json({ token });
+  },
+
+  //  async add(request, response) {
+  //  },
+
+};
