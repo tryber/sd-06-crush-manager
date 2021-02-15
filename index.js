@@ -1,9 +1,10 @@
 const express = require('express');
 const fs = require('fs');
-const crypto = require('crypto');
 
 const app = express();
 const SUCCESS = 200;
+
+const auth = { authorization: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
@@ -51,26 +52,25 @@ app.post('/login', (req, res) => {
   if (validatePassword(password).length < 6) {
     return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
-  const token = () => crypto.randomBytes(8).toString('hex');
-  return res.status(200).json({ token: token() });
+  return res.status(200).json({ token: auth.authorization });
 });
 
 // Requisito 4
 const validateDate = (data) => /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(data);
 
 app.post('/crush', (req, res) => {
-  const { token } = req.headers;
+  const { authorization } = req.headers;
 
   const file = JSON.parse(fs.readFileSync('./crush.json'));
-  const newID = JSON.parse(fs.readFileSync('./crush.json')).length + 1;
+  const newID = file.length + 1;
   const newCrush = { ...req.body, id: newID };
   const { name, age, date } = newCrush;
 
-  if (!token) {
-    return res.status(400).json({ message: 'Token não encontrado' });
+  if (!authorization || authorization === undefined || authorization === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token.length !== 16) {
-    return res.status(400).json({ message: 'Token inválido' });
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
   }
   if (!name || name === '') {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
@@ -102,17 +102,17 @@ app.post('/crush', (req, res) => {
 
 // Requisito 5
 app.put('/crush/:id', (req, res) => {
-  const { token } = req.headers;
+  const { authorization } = req.headers;
   const file = JSON.parse(fs.readFileSync('./crush.json'));
 
   const { id } = req.params;
   const { name, age, date } = req.body;
   const newCrush = { name, age, date, id: Number(id) };
 
-  if (!token) {
+  if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token.length !== 16) {
+  if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
   if (!name || name === '') {
@@ -149,14 +149,14 @@ app.put('/crush/:id', (req, res) => {
 
 // Requisito 6
 app.delete('/crush/:id', (req, res) => {
-  const { token } = req.headers;
+  const { authorization } = req.headers;
   const { id } = req.params;
   const file = JSON.parse(fs.readFileSync('./crush.json'));
 
-  if (!token) {
+  if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token.length !== 16) {
+  if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
   const newFile = file.filter((crush) => crush.id !== Number(id));
