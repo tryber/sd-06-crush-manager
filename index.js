@@ -142,4 +142,29 @@ app.put('/crush/:id', async (req, res) => {
   });
   res.status(200).json(searchFile[0]);
 });
+// desafio 6
+app.delete('/crush/:id', async (req, res) => {
+  const file = await fs.readFile('./crush.json');
+  const fileJson = JSON.parse(file);
+  const { id } = req.params;
+  const { authorization } = req.headers;
+
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+
+  const deleted = fileJson.filter((el) => el.id !== Number(id));
+
+  const newFile = JSON.stringify(deleted);
+
+  await fs.writeFile('./crush.json', newFile, (err, data) => {
+    if (err) {
+      console.error(`Não foi possível ler o arquivo ${file}\n Erro: ${err}`);
+      process.exit(1);
+    }
+    console.log(`Conteúdo do arquivo: ${data}`);
+  });
+
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(port, () => console.log('working...'));
