@@ -28,6 +28,26 @@ app.get('/crush', async (_req, res) => {
   return res.status(SUCCESS).json(JSON.parse(file));
 });
 
+app.get('/crush/search', async (req, res) => {
+  const { searchTerm } = req.query;
+  const file = await fs.readFile(fileName, 'utf-8');
+  const parsedJson = JSON.parse(file);
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(ERROR).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length < 16) {
+    return res.status(ERROR).json({ message: 'Token inválido' });
+  }
+  if (searchTerm === '' || searchTerm === undefined) {
+    return res.status(SUCCESS).json(parsedJson);
+  }
+
+  const searchedCrush = parsedJson.map((crush) => crush.name.includes(searchTerm));
+  return res.status(SUCCESS).json(searchedCrush);
+});
+
 app.get('/crush/:id', async (req, res) => {
   const file = await fs.readFile(fileName, 'utf-8');
   const parsedJson = JSON.parse(file);
