@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const routes = require('./routes');
+const routes = require('./routes');
 
 const app = express();
 const SUCCESS = 200;
@@ -12,7 +12,7 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-// app.use(routes);
+app.use(routes);
 
 app.listen(3000, () => console.log('Running'));
 
