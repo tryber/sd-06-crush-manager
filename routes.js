@@ -1,12 +1,17 @@
 const express = require('express');
 
 const routes = express.Router();
-
-// importa as funções das requisições
-const listarUsuarios = require('./requests/getRequest');
+const fs = require('fs');
 
 // vai rotear os endpoints que se quer acessar
-// POST, GRET, PUT, DELETE
-routes.get('/', listarUsuarios.listarTodosUsuarios);
+// POST, GET, PUT, DELETE
+routes.get('/crush', (_request, response) => {
+  let contatinhos = fs.readFileSync('./crush.json');
+  if (!contatinhos) {
+    contatinhos = [];
+  }
+
+  return response.status(200).send(contatinhos);
+});
 
 module.exports = routes;
