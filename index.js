@@ -22,6 +22,29 @@ app.get('/crush', (_req, res) => {
   return res.status(200).json(JSON.parse(file));
 });
 
+// Requisito 7
+app.get('/crush/search', (req, res) => {
+  const file = JSON.parse(fs.readFileSync('./crush.json', 'utf-8'));
+  const searchParam = req.query.name;
+  const { authorization } = req.headers;
+
+  if (!authorization || authorization === undefined || authorization === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  if (!searchParam || searchParam === '') {
+    return res.status(200).json(file);
+  }
+
+  const getCrush = file.find((crush) => crush.name.includes(searchParam));
+
+  if (!getCrush) {
+    return res.status(200).json([]);
+  }
+});
+
 // Requisito 2
 app.get('/crush/:id', (req, res) => {
   const file = fs.readFileSync('./crush.json', 'utf-8');
