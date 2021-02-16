@@ -38,7 +38,7 @@ app.post('/login', (req, res) => {
   }
   if (!formatEmail(email)) {
     return res.status(BADREQUEST)
-      .send({ message: 'O campo "email" deve ter esse formato "email@email.com"' });
+      .send({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   if (!password || password === '') {
     return res.status(BADREQUEST)
