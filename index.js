@@ -61,7 +61,7 @@ app.get('/crush/:id', async (request, response, next) => {
   }
 });
 
-app.post('/login', async (request, response, next) => {
+app.post('/login', async (request, response) => {
   try {
     const aleatorio = numeroRandomico + numeroRandomico;
     const loginUser = request.body;
@@ -75,7 +75,7 @@ app.post('/login', async (request, response, next) => {
     if (tamanhoPasswordVerificado < TAMANHO_PASSWORD) throw new Error('A "senha" deve ter pelo menos 6 caracteres');
     response.status(SUCCESS).json({ token: aleatorio });
   } catch (error) {
-    next(error);
+    response.status(400).json({ message: error.message });
   }
 });
 
