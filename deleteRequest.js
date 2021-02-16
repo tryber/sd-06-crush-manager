@@ -1,4 +1,8 @@
+// const fs = require('fs').promises;
+
+// const crushData = 'crush.json';
+
 // module.exports = {
-//  async delete(request, response) {
-//  },
+//   async deleteCrush(request, response) {
+//   },
 // };

@@ -1,14 +1,11 @@
 const fs = require('fs').promises;
-const path = require('path');
 
-const readCrushFile = async () => {
-  const content = await fs.readFile(path.resolve(__dirname, '.', 'crush.json'));
-  return JSON.parse(content.toString('utf-8'));
-};
+const crushData = 'crush.json';
 
 module.exports = {
   async readCrush(_request, response) {
-    const file = await readCrushFile();
+    const file = await fs.readFile(crushData, 'utf-8');
+    const fileJson = JSON.parse(file);
 
     if (!file) {
       return response.status(200).json([]);
@@ -16,17 +13,18 @@ module.exports = {
 
     // console.log(file)
 
-    return response.status(200).json(file);
+    return response.status(200).json(fileJson);
   },
 
   async crushID(request, response) {
-    const file = await readCrushFile();
+    const file = await fs.readFile(crushData, 'utf-8');
+    const fileJson = JSON.parse(file);
 
     const id = Number(request.params.id);
 
     // console.log(typeof id)
 
-    const filteredCrush = file.find((crush) => crush.id === id);
+    const filteredCrush = fileJson.find((crush) => crush.id === id);
 
     if (!filteredCrush) return response.status(404).json({ message: 'Crush não encontrado' });
 

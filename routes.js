@@ -4,24 +4,21 @@ const routes = express.Router();
 
 const getRequest = require('./getRequest');
 
+routes.get('/crush', getRequest.readCrush);
+// routes.get('/btc/price', getRequest.search);
+routes.get('/crush/:id', getRequest.crushID);
+
 const postRequest = require('./postRequest');
+
+routes.post('/login', postRequest.login);
+routes.post('/crush', postRequest.addCrush);
 
 // const putRequest = require('./putRequest');
 
+// routes.put('/recipe/:id', putRequest.editCrush);
+
 // const deleteRequest = require('./deleteRequest');
 
-routes.get('/crush', getRequest.readCrush);
-
-routes.get('/crush/:id', getRequest.crushID);
-
-routes.post('/login', postRequest.login);
-
-// routes.post('/crush', postRequest.add);
-
-// routes.put('/crush/:id', putRequest.edit);
-
-// routes.delete('/crush/:id', deleteRequest.delete);
-
-// routes.get('/crush/search?q=searchTerm', getRequest.search);
+// routes.delete('/recipe/:id', deleteRequest.deleteCrush);
 
 module.exports = routes;

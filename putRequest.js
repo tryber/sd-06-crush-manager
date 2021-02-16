@@ -1,5 +1,4 @@
 // module.exports = {
-//   async edit(request, response) {
-
+//   async editCrush(request, response) {
 //   },
 // };
