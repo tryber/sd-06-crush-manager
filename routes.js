@@ -13,9 +13,9 @@ const postRequest = require('./postRequest');
 routes.post('/login', postRequest.login);
 routes.post('/crush', postRequest.addCrush);
 
-// const putRequest = require('./putRequest');
+const putRequest = require('./putRequest');
 
-// routes.put('/recipe/:id', putRequest.editCrush);
+routes.put('/crush/:id', putRequest.editCrush);
 
 // const deleteRequest = require('./deleteRequest');
 

@@ -26,13 +26,13 @@ module.exports = {
     const fileJson = JSON.parse(file);
 
     const lastID = fileJson[fileJson.length - 1].id;
-    
+
     const newCrush = { ...request.body, id: lastID + 1 };
 
     const { name, age, date } = newCrush;
 
     const { authorization } = request.headers;
-  
+
     if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
 
     if (authorization.length < 16) return response.status(401).json({ message: 'Token inválido' });
