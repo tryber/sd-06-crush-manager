@@ -17,8 +17,8 @@ const putRequest = require('./putRequest');
 
 routes.put('/crush/:id', putRequest.editCrush);
 
-// const deleteRequest = require('./deleteRequest');
+const deleteRequest = require('./deleteRequest');
 
-// routes.delete('/recipe/:id', deleteRequest.deleteCrush);
+routes.delete('/crush/:id', deleteRequest.deleteCrush);
 
 module.exports = routes;
