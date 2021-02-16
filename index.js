@@ -1,11 +1,12 @@
 const express = require('express');
 
-const { readCrush, formatEmail } = require('./services');
+const { readCrush, formatEmail, authToken, verifyCrush } = require('./services');
 
 const app = express();
 const SUCCESS = 200;
 const NOTFOUND = 404;
 const BADREQUEST = 400;
+const UNAUTHORIZED = 401;
 const token = { token: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
@@ -49,6 +50,21 @@ app.post('/login', (req, res) => {
       .send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
   return res.status(SUCCESS).send(token);
+});
+
+app.post('/crush', (req, res) => {
+  app.use(authToken);
+  const { name, age, date } = req.body;
+  const crushList = readCrush();
+  const id = crushList.length + 1;
+  const authCrush = verifyCrush(name, age, date);
+  console.log(authCrush);
+  if (authCrush !== true) {
+    return res.status(UNAUTHORIZED).send(authCrush);
+  }
+  crushList.push({ name, age, id, date });
+  console.log(crushList);
+  return res.status(SUCCESS).send(req.body);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
