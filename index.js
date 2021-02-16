@@ -35,19 +35,19 @@ app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email) {
     return res.status(BADREQUEST)
-      .send({ message: 'O campo \'email\' é obrigatório' });
+      .send({ message: 'O campo "email" é obrigatório' });
   }
   if (!formatEmail(email)) {
     return res.status(BADREQUEST)
-      .send({ message: 'O campo \'email\' deve ter esse formato \'email@email.com\'' });
+      .send({ message: 'O campo "email" deve ter esse formato \'email@email.com\'' });
   }
   if (password === '') {
     return res.status(BADREQUEST)
-      .send({ message: 'O campo \'password\' é obrigatório' });
+      .send({ message: 'O campo "password" é obrigatório' });
   }
   if (password.length < 6) {
     return res.status(BADREQUEST)
-      .send({ message: 'A \'senha\' deve ter pelo menos 6 caracteres' });
+      .send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
   return res.status(SUCCESS).send(token);
 });
