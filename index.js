@@ -1,6 +1,5 @@
 const express = require('express');
 
-const crushResgistered = require('./crush.json');
 const { readCrush, formatEmail } = require('./services');
 
 const app = express();
@@ -15,7 +14,7 @@ app.listen(3000, () => console.log('Executando na 3000'));
 app.get('/crush', (_req, res) => {
   const fileCrush = readCrush();
   if (fileCrush < 1) {
-    return res.status(SUCCESS).json(crushResgistered);
+    return res.status(SUCCESS).json([]);
   }
   return res.status(SUCCESS).send(fileCrush);
 });
@@ -39,9 +38,9 @@ app.post('/login', (req, res) => {
   }
   if (!formatEmail(email)) {
     return res.status(BADREQUEST)
-      .send({ message: 'O campo "email" deve ter esse formato \'email@email.com\'' });
+      .send({ message: 'O campo "email" deve ter esse formato "email@email.com"' });
   }
-  if (password === '') {
+  if (!password || password === '') {
     return res.status(BADREQUEST)
       .send({ message: 'O campo "password" é obrigatório' });
   }
