@@ -1,7 +1,5 @@
 const express = require('express');
-const fs = require('fs');
-
-const database = fs.readFileSync('crush.json', 'utf-8');
+const fs = require('fs').promises;
 
 const app = express();
 const SUCCESS = 200;
@@ -11,8 +9,16 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', (_request, response) => {
-  response.status(SUCCESS).send(JSON.parse(database));
+const readData = async () => {
+  const file = await fs.readFile('crush.json', 'utf-8');
+  return JSON.parse(file);
+};
+
+app.get('/crush', async (_req, res) => {
+  const crushData = await readData();
+  res
+    .status(SUCCESS)
+    .send(crushData);
 });
 
 app.listen(3000);
