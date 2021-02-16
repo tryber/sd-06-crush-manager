@@ -38,6 +38,21 @@ app.get('/crush', async (_req, res) => {
 
   res.status(SUCCESS).send(JSON.parse(data));
 });
+// desafio 7
+app.get('/crush/search', async (req, res) => {
+  const data = await fs.readFile('./crush.json');
+  const dataJson = JSON.parse(data);
+  const { q } = req.query;
+  const { authorization } = req.headers;
+
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  if (!q || q === '') return res.status(200).json(dataJson);
+  const foundedCrush = dataJson.filter((el) => el.name.includes(q));
+  // console.log(test);
+  if (foundedCrush === false) return res.status(200).json([]);
+  res.status(200).json(foundedCrush);
+});
 
 // requisito 2
 app.get('/crush/:id', async (req, res) => {
