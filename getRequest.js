@@ -31,7 +31,24 @@ module.exports = {
     return response.status(200).send(filteredCrush);
   },
 
-  // async search(request, response) {
-  // },
+  async search(request, response) {
+    const file = await fs.readFile(crushData, 'utf-8');
+
+    const fileJson = JSON.parse(file);
+
+    const { searchTerm } = request.query;
+
+    const { authorization } = request.headers;
+  
+    if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+
+    if (authorization.length < 16) return response.status(401).json({ message: 'Token inválido' });
+
+    if (searchTerm === '' || searchTerm === undefined) return response.status(200).json(fileJson);
+
+    const crushFound = fileJson.filter((crush) => crush.name.includes(searchTerm));
+
+    return response.status(200).json(crushFound);
+  },
 
 };

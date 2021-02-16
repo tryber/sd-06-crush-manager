@@ -5,7 +5,7 @@ const routes = express.Router();
 const getRequest = require('./getRequest');
 
 routes.get('/crush', getRequest.readCrush);
-// routes.get('/btc/price', getRequest.search);
+routes.get('/crush/search', getRequest.search);
 routes.get('/crush/:id', getRequest.crushID);
 
 const postRequest = require('./postRequest');
