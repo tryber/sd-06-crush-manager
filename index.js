@@ -49,7 +49,7 @@ app.get('/crush/search', async (req, res) => {
   if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   if (!q || q === '') return res.status(200).json(dataJson);
   const foundedCrush = dataJson.filter((el) => el.name.includes(q));
-  // console.log(test);
+
   if (foundedCrush === false) return res.status(200).json([]);
   res.status(200).json(foundedCrush);
 });
