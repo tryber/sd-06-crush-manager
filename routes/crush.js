@@ -5,7 +5,6 @@ const { auth, isName, isAge, isDate } = require('../middlewares');
 const crushRouter = express.Router();
 const SUCCESS = 200;
 const CREATED = 201;
-const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 
 const readData = async () => {
@@ -25,33 +24,19 @@ crushRouter.get('/crush/:id', async (req, res) => {
   const crushData = await readData();
   const crushFound = crushData.find((crush) => crush.id === id);
 
-  if (crushFound) return res.status(SUCCESS).json(crushFound);
+  if (!crushFound) return res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
 
-  res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
+  res.status(SUCCESS).json(crushFound);
 });
 
-crushRouter.post('/crush', auth, async (req, res) => {
+crushRouter.post('/crush', auth, isName, isAge, isDate, async (req, res) => {
   const { name, age, date } = req.body;
-  const file = await readData();
-  const id = file.length + 1;
+  const crushData = await readData();
+  const id = crushData.length + 1;
   const newCrush = { name, age, id, date };
 
-  const isValidDated = (date) ? /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/.test(date.datedAt) : true;
-
-  if (!name) return res.status(BAD_REQUEST).json({ message: 'O campo "name" é obrigatório' });
-  if (name.length < 3) return res.status(BAD_REQUEST).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  if (!age) return res.status(BAD_REQUEST).json({ message: 'O campo "age" é obrigatório' });
-  if (age < 18) return res.status(BAD_REQUEST).json({ message: 'O crush deve ser maior de idade' });
-  if (!date || !date.datedAt || !date.rate) {
-    return res.status(BAD_REQUEST).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-  }
-  if (!isValidDated) return res.status(BAD_REQUEST).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) {
-    return res.status(BAD_REQUEST).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-
-  file.push(newCrush);
-  await fs.writeFile('crush.json', JSON.stringify(file));
+  crushData.push(newCrush);
+  await fs.writeFile('crush.json', JSON.stringify(crushData));
 
   res.status(CREATED).json({ name, age, id, date });
 });
@@ -69,6 +54,18 @@ crushRouter.put('/crush/:id', auth, isName, isAge, isDate, async (req, res) => {
   await fs.writeFile('crush.json', JSON.stringify(crushData));
 
   res.status(SUCCESS).json(crushData[crushFound]);
+});
+
+crushRouter.delete('/crush/:id', auth, async (req, res) => {
+  const { id: stringId } = req.params;
+  const id = parseInt(stringId, 10);
+
+  const crushData = await readData();
+  const restCrushs = crushData.filter((crush) => crush.id !== id);
+
+  await fs.writeFile('crush.json', JSON.stringify(restCrushs));
+
+  res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
 });
 
 module.exports = crushRouter;
