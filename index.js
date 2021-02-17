@@ -6,6 +6,8 @@ const routes = require('./routes');
 
 const app = express();
 const SUCCESS = 200;
+// body-parser para leituras de arquivos json (vindos, por exemplo, do body)
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -13,8 +15,6 @@ app.get('/', (_request, response) => {
 });
 
 // app.use(); garante que todas as requisições passarão por ele
-// body-parser para leituras de arquivos json (vindos, por exemplo, do body)
-app.use(bodyParser.json());
 app.use(routes);
 
 // "A função app.listen() do Express inicia um socket UNIX e escuta as conexões
