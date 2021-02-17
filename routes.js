@@ -22,7 +22,7 @@ routes.get('/crush', (_request, response) => {
 routes.get('/crush/:id', (request, response) => {
   const { id } = request.params;
 
-  const listaContatinhos = JSON.parse(contatinhos);
+  const listaContatinhos = JSON.parse(lerArquivo());
   const neoTheChosenOne = listaContatinhos
     .filter((contatinho) => contatinho.id === parseInt(id, 10));
 
