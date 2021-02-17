@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crushRouter = require('./routes/crush');
 const loginRouter = require('./routes/login');
+const { error } = require('./middlewares');
 
 const app = express();
 const SUCCESS = 200;
@@ -14,5 +15,7 @@ app.get('/', (_request, response) => {
 app.use(bodyParser.json());
 app.use(crushRouter);
 app.use(loginRouter);
+
+app.use(error);
 
 app.listen(3000);

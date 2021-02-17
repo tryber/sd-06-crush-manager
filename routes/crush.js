@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
+const { auth } = require('../middlewares');
 
 const crushRouter = express.Router();
 const SUCCESS = 200;
@@ -29,10 +30,11 @@ crushRouter.get('/crush/:id', async (req, res) => {
   res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
 });
 
-crushRouter.post('/crush', async (req, res) => {
+crushRouter.post('/crush', auth, async (req, res) => {
   const { name, age, date } = req.body;
   const file = await readData();
   const id = file.length + 1;
+  const newCrush = { name, age, id, date };
 
   const isValidDated = (date) ? /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/.test(date.datedAt) : true;
 
@@ -47,6 +49,9 @@ crushRouter.post('/crush', async (req, res) => {
   if (!Number.isInteger(date.rate) || date.rate < 1 || date.rate > 5) {
     return res.status(BAD_REQUEST).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
+  file.push(newCrush);
+  await fs.writeFile('crush.json', JSON.stringify(file));
 
   res.status(CREATED).json({ name, age, id, date });
 });
