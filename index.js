@@ -82,13 +82,15 @@ const verificaDate = (date) => {
 const adicionaCrush = async (id, name, age, date) => {
   const crushes = await lerArquivo('/crush.json');
   const crushesJson = JSON.parse(crushes);
-  const newCrush = [...crushesJson, {
+  const novoObjeto = {
     name,
     age,
     id: (crushesJson.length) + id,
     date,
-  }];
-  await escreverArquivo('/crush.json', JSON.stringify(newCrush), 'utf-8');
+  };
+  const novoCrush = [...crushesJson, novoObjeto];
+  await escreverArquivo('/crush.json', JSON.stringify(novoCrush), 'utf-8');
+  return novoObjeto;
 };
 
 app.use(express.json());
@@ -154,8 +156,8 @@ app.post('/crush', rescue(async (request, response) => {
   if (dateVerificada === null || dateVerificada) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   if (!dataVerificada) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   if (!notaVerificada) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  adicionaCrush(id, name, age, date);
-  response.status(201).json({ id, name, age, date });
+  const crushAdicionado = await adicionaCrush(id, name, age, date);
+  response.status(201).json(crushAdicionado);
 }));
 
 app.use((err, __request, response, __next) => {
