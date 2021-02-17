@@ -28,9 +28,9 @@ const getCrushById = async (req, res) => {
 };
 
 const addCrush = async (req, res) => {
-  const { headers, body: crushToAdd } = req;
+  const { headers, body } = req;
   const { authorization } = headers;
-  const { name, age, date } = crushToAdd;
+  const { name, age, date } = body;
 
   if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
   if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
@@ -53,6 +53,18 @@ const addCrush = async (req, res) => {
   if (!ageIsValid) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
   if (!datedAtFormatIsValid) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   if (!rateIsValid) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+
+  const { id: lastId } = await readFilePromise(file)
+    .then((content) => JSON.parse(content))
+    .then((allCrushes) => allCrushes.slice(-1)[0])
+    .catch((error) => console.log(error));
+
+  const crushToAdd = {
+    name,
+    age,
+    id: lastId + 1,
+    date,
+  };
 
   return res.status(201).send(crushToAdd);
 };
