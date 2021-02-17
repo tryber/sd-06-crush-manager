@@ -7,24 +7,26 @@ const crypto = require('crypto');
 const contatinhos = fs.readFileSync('./crush.json');
 // vai rotear os endpoints que se quer acessar
 // POST, GET, PUT, DELETE
+
+// cria enpoint GET /crush (req1)
 routes.get('/crush', (_request, response) => response.status(200).send(contatinhos));
 
-// Requisito 2 -> GET /crush/:id
-
+//  cria endpoint GET /crush/:id (req2)
 routes.get('/crush/:id', (request, response) => {
   const { id } = request.params;
 
   const listaContatinhos = JSON.parse(contatinhos);
-  const neo = listaContatinhos.filter((contatinho) => contatinho.id === parseInt(id, 10));
+  const neoTheChosenOne = listaContatinhos
+    .filter((contatinho) => contatinho.id === parseInt(id, 10));
 
-  if (neo.length) {
-    return response.status(200).json(neo);
+  if (neoTheChosenOne.length) {
+    return response.status(200).json(neoTheChosenOne);
   }
 
   return response.status(404).json({ message: 'Crush não encontrado' });
 });
 
-// Requisito 3 -> /login
+// cria endpoint POST /login (req3)
 routes.post('/login', (request, response) => {
   const { email, password } = request.body;
 
