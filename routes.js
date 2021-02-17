@@ -1,21 +1,22 @@
 const express = require('express');
 
 const routes = express.Router();
-const fs = require('fs');
+const fs = require('fs').promises;
 const crypto = require('crypto');
 
 // cria função readFile
-const lerArquivo = () => {
-  const contatinhos = fs.readFileSync('./crush.json', 'utf8');
-  return contatinhos;
+const lerArquivo = async () => {
+  const contatinhos = await fs.readFile('./crush.json', 'utf8');
+  return JSON.parse(contatinhos);
 };
 
 // vai rotear os endpoints que se quer acessar
 // POST, GET, PUT, DELETE
 
 // cria enpoint GET /crush (req1)
-routes.get('/crush', (_request, response) => {
-  response.status(200).send(lerArquivo());
+routes.get('/crush', async (_request, response) => {
+  const crushes = await lerArquivo();
+  response.status(200).send(crushes);
 });
 
 //  cria endpoint GET /crush/:id (req2)
