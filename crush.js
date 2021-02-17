@@ -27,7 +27,38 @@ const getCrushById = async (req, res) => {
     .catch((error) => console.log(error));
 };
 
+const addCrush = async (req, res) => {
+  const { headers, body: crushToAdd } = req;
+  const { authorization } = headers;
+  const { name, age, date } = crushToAdd;
+
+  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
+  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (!date) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+
+  const { datedAt, rate } = date;
+
+  if (!datedAt || !rate) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+
+  const dateFormatRegEx = /^[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]/;
+  const tokenIsValid = authorization.length === 16;
+  const nameIsValid = name.length >= 3;
+  const ageIsValid = age >= 18;
+  const datedAtFormatIsValid = dateFormatRegEx.test(datedAt);
+  const rateIsValid = rate >= 1 && rate <= 5;
+
+  if (!tokenIsValid) return res.status(401).send({ message: 'Token inválido' });
+  if (!nameIsValid) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!ageIsValid) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+  if (!datedAtFormatIsValid) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (!rateIsValid) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+
+  return res.status(201).send(crushToAdd);
+};
+
 module.exports = {
   getAllCrushes,
   getCrushById,
+  addCrush,
 };
