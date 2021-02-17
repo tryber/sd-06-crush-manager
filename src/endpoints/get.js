@@ -24,7 +24,7 @@ module.exports = {
     if (selectedCrush.length >= minimumLength) {
       res.status(SUCCESS).send(selectedCrush[firstIndex]);
     } else {
-      res.status(NOT_FOUND).json({ message: 'Crush not found.' });
+        res.status(NOT_FOUND).json({ message: 'Crush não encontrado' });
     }
   },
 };
