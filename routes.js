@@ -4,12 +4,19 @@ const routes = express.Router();
 const fs = require('fs');
 const crypto = require('crypto');
 
-const contatinhos = fs.readFileSync('./crush.json');
+// cria função readFile
+const lerArquivo = () => {
+  const contatinhos = fs.readFileSync('./crush.json', 'utf8');
+  return contatinhos;
+};
+
 // vai rotear os endpoints que se quer acessar
 // POST, GET, PUT, DELETE
 
 // cria enpoint GET /crush (req1)
-routes.get('/crush', (_request, response) => response.status(200).send(contatinhos));
+routes.get('/crush', (_request, response) => {
+  response.status(200).send(lerArquivo());
+});
 
 //  cria endpoint GET /crush/:id (req2)
 routes.get('/crush/:id', (request, response) => {
