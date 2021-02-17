@@ -3,8 +3,8 @@ const { getCrushes, getCrushById, getBySearchTerm } = require('./src/endpoints/g
 const { handleLogin, addCrush } = require('./src/endpoints/post');
 const { editCrush } = require('./src/endpoints/put');
 const { deleteCrush } = require('./src/endpoints/delete');
-const { loginValidator, alterCrushValidator } = require('./src/middlewares/dataValidator');
-const { tokenAuthenticator } = require('./src/middlewares/tokenAuthenticator');
+const { loginValidator, alterCrushValidator } = require('./src/middlewares/dataValid');
+const { tokenAuthenticator } = require('./src/middlewares/tokenAuth');
 
 const app = express();
 const SUCCESS = 200;
