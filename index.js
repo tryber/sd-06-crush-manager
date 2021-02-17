@@ -67,7 +67,7 @@ app.post('/crush', (req, res) => {
   return res.status(CREATED).send(req.body);
 });
 
-app.post('/crush/:id', (req, res) => {
+app.put('/crush/:id', (req, res) => {
   const { id } = req.params;
   const { name, age, date } = req.body;
   const authCrush = validateCrush(name, age, date);
