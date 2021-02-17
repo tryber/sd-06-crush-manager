@@ -23,4 +23,10 @@ routes.get('/crush/:id', (request, response) => {
   return response.status(404).json({ message: 'Crush não encontrado' });
 });
 
+// Requisito 3 -> /login
+routes.post('/login', (request, response) => {
+  console.log(request.body);
+  response.status(201).send('tudo ok');
+});
+
 module.exports = routes;
