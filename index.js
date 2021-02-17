@@ -135,7 +135,8 @@ app.post('/login', async (request, response) => {
 });
 
 app.post('/crush', rescue(async (request, response) => {
-  const { id, name, age, date } = request.body;
+  const { name, age, date } = request.body;
+  const id = 1;
   const { authorization } = request.headers;
   const nomeVerificado = verificaNome(name);
   const idadeVerificada = verificaIdade(age);
