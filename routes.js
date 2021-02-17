@@ -25,7 +25,22 @@ routes.get('/crush/:id', (request, response) => {
 
 // Requisito 3 -> /login
 routes.post('/login', (request, response) => {
-  console.log(request.body);
+  const { email, password } = request.body;
+
+  // testar se o campo email não é passado ou é vazio:
+  if (email === '' || !email) {
+    return response.status(400).send({
+      message: 'O campo "email" é obrigatório',
+    });
+  }
+  // regex do AppReceitas e da Atividade de 5 fev 2021:
+  const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
+  // segundo mdn [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test]
+  if (!regexEmail.test(email)) {
+    return response.status(400).send({
+      message: 'O "email" deve ter o formato "email@email.com"',
+    });
+  }
   response.status(201).send('tudo ok');
 });
 
