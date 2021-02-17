@@ -27,11 +27,10 @@ routes.get('/crush/:id', async (request, response) => {
   const neoTheChosenOne = listaContatinhos
     .filter((contatinho) => contatinho.id === parseInt(id, 10));
 
-  if (neoTheChosenOne.length) {
-    return response.status(200).json(neoTheChosenOne);
+  if (neoTheChosenOne.length === 0) {
+    return response.status(404).send({ message: 'Crush não encontrado' });
   }
-
-  return response.status(404).json({ message: 'Crush não encontrado' });
+  return response.status(200).send(neoTheChosenOne);
 });
 
 // cria endpoint POST /login (req3)
