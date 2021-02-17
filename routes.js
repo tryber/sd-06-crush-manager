@@ -85,6 +85,19 @@ routes.post('/crush', (request, response) => {
       message: 'Token inválido',
     });
   }
+  // testa se o campo name não é passado ou é vazio
+  if (name === '' || !name) {
+    return response.status(400).send({
+      message: 'O campo "name" é obrigatório',
+    });
+  }
+
+  // testa se o campo name não tem pelo menso 3 caracteres
+  if (name.length < 3) {
+    return response.status(400).send({
+      message: 'O "name" deve ter pelo menos 3 caracteres',
+    });
+  }
 });
 
 module.exports = routes;
