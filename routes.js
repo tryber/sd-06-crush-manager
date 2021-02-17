@@ -20,10 +20,10 @@ routes.get('/crush', async (_request, response) => {
 });
 
 //  cria endpoint GET /crush/:id (req2)
-routes.get('/crush/:id', (request, response) => {
+routes.get('/crush/:id', async (request, response) => {
   const { id } = request.params;
 
-  const listaContatinhos = JSON.parse(lerArquivo());
+  const listaContatinhos = await lerArquivo();
   const neoTheChosenOne = listaContatinhos
     .filter((contatinho) => contatinho.id === parseInt(id, 10));
 
