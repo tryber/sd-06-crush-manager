@@ -1,6 +1,7 @@
 const express = require('express');
 const readFile = require('./util/readFile');
 const writeFile = require('./util/writeFile');
+const removeFromFile = require('./util/removeFromFile');
 const tokenGenerator = require('./util/tokenGenerator');
 
 const app = express();
@@ -131,6 +132,17 @@ app.post('/crush', auth, async (request, response) => {
   await writeFile(newCrush);
 
   return response.status(201).send(newCrush);
+});
+
+// challenge 6
+app.delete('/crush/:id', auth, async (request, response) => {
+  const { id } = request.params;
+  const itWorked = await removeFromFile(id);
+  if (itWorked) {
+    return response.status(200).send({ message: 'Crush deletado com sucesso' });
+  }
+
+  return response.status(400).send({ message: 'Crush não foi removido' });
 });
 
 app.listen(port, () => console.log('Example app listening on port 3000!'));
