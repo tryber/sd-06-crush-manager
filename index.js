@@ -30,7 +30,7 @@ app.get('/', (_request, response) => {
 
 // Requisito 1
 app.get('/crush', async (_req, res) => {
-  const data = await fs.readFile('./crush.json');
+  const data = await fs.readFile('./crush.json', 'utf-8');
 
   if (data.length < 1) {
     res.status(SUCCESS).send([]);
@@ -40,7 +40,7 @@ app.get('/crush', async (_req, res) => {
 });
 // desafio 7
 app.get('/crush/search', async (req, res) => {
-  const data = await fs.readFile('./crush.json');
+  const data = await fs.readFile('./crush.json', 'utf-8');
   const dataJson = JSON.parse(data);
   const { q } = req.query;
   const { authorization } = req.headers;
@@ -56,7 +56,7 @@ app.get('/crush/search', async (req, res) => {
 
 // requisito 2
 app.get('/crush/:id', async (req, res) => {
-  const data = await fs.readFile('./crush.json');
+  const data = await fs.readFile('./crush.json', 'utf-8');
 
   const { id } = req.params;
 
@@ -84,7 +84,7 @@ app.post('/login', async (req, res) => {
 });
 // desafio 4
 app.post('/crush', async (req, res) => {
-  const crushRead = await fs.readFile('./crush.json');
+  const crushRead = await fs.readFile('./crush.json', 'utf-8');
   const dataJson = JSON.parse(crushRead);
   const id = dataJson.length + 1;
   const { name, age, date } = req.body;
@@ -102,19 +102,13 @@ app.post('/crush', async (req, res) => {
   if ((date.rate) < 1 || (date.rate) > 5) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   if (validDate(date.datedAt) === false) return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
-  const fileJson = ('./crush.json');
-  fs.writeFile('./crush.json', newCrush, (err, data) => {
-    if (err) {
-      console.error(`Não foi possível ler o arquivo ${fileJson}\n Erro: ${err}`);
-      process.exit(1);
-    }
-    console.log(`Conteúdo do arquivo: ${data}`);
-  });
+  await fs.writeFile('./crush.json', newCrush, 'utf-8');
+
   res.status(201).send(bodyObj);
 });
 // desafio 5
 app.put('/crush/:id', async (req, res) => {
-  const file = await fs.readFile('./crush.json');
+  const file = await fs.readFile('./crush.json', 'utf-8');
   const fileJson = JSON.parse(file);
   const { id } = req.params;
   const { authorization } = req.headers;
@@ -148,14 +142,8 @@ app.put('/crush/:id', async (req, res) => {
   update.push(searchFile[0]);
 
   const stringfile = JSON.stringify(update);
-  const text = ('./crush.json');
-  await fs.writeFile('./crush.json', stringfile, (err, data) => {
-    if (err) {
-      console.error(`Não foi possível ler o arquivo ${text}\n Erro: ${err}`);
-      process.exit(1);
-    }
-    console.log(`Conteúdo do arquivo: ${data}`);
-  });
+
+  await fs.writeFile('./crush.json', stringfile, 'utf-8');
   res.status(200).json(searchFile[0]);
 });
 // desafio 6
@@ -172,13 +160,7 @@ app.delete('/crush/:id', async (req, res) => {
 
   const newFile = JSON.stringify(deleted);
 
-  await fs.writeFile('./crush.json', newFile, (err, data) => {
-    if (err) {
-      console.error(`Não foi possível ler o arquivo ${file}\n Erro: ${err}`);
-      process.exit(1);
-    }
-    console.log(`Conteúdo do arquivo: ${data}`);
-  });
+  await fs.writeFile('./crush.json', newFile, 'utf-8');
 
   res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
