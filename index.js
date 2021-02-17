@@ -11,7 +11,6 @@ const token = { token: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 app.listen(3000, () => console.log('Executando na 3000'));
-app.use(authToken);
 
 app.get('/crush', (_req, res) => {
   const fileCrush = readCrush();
@@ -52,6 +51,8 @@ app.post('/login', (req, res) => {
   }
   return res.status(SUCCESS).send(token);
 });
+
+app.use(authToken);
 
 app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
