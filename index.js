@@ -38,6 +38,24 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
+// challenge 7
+app.get('/crush/search', auth, async (request, response) => {
+  const searchTerm = request.query.q;
+  const allCrushes = await readFile('crush.json');
+
+  if (!searchTerm || request.query.q.length === 0) {
+    return response.status(200).send(allCrushes);
+  }
+
+  const filteredCrushes = allCrushes.filter((crush) => {
+    const crushIsFound = crush.name.includes(searchTerm);
+
+    return crushIsFound ? crush.name : '';
+  });
+
+  return response.status(200).send(filteredCrushes);
+});
+
 // challenge 1
 app.get('/crush', async (_request, response) => {
   const fileData = await readFile('crush.json');
