@@ -64,4 +64,27 @@ routes.post('/login', (request, response) => {
   response.status(201).send({ token });
 });
 
+// cria endpoint POST /crush (req4)
+routes.post('/crush', (request, response) => {
+  const { authorization } = request.headers;
+  const { name, age, date } = request.body;
+
+  /* o authorization deve estar presente no headers e seu valor deve ser o token
+  pq isso significa que a pessoa com email e senha estão logadas (eu acho) e aí
+  ela tem autorização pra criar um crush. */
+
+  // testa se existe token
+  if (authorization === '' || !authorization) {
+    return response.status(401).send({
+      message: 'Token não encontrado',
+    });
+  }
+  // testa se o token é válido (como o token é válido? Se tiver length === 16)
+  if (authorization.length !== 16) {
+    return response.status(401).send({
+      message: 'Token inválido',
+    });
+  }
+});
+
 module.exports = routes;
