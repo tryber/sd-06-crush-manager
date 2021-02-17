@@ -13,13 +13,14 @@ const formatEmail = (email) => {
 };
 
 const authToken = (req, res, next) => {
-  const token = { token: '7JSp886CGr' };
+  const token = { token: '7mqaVRXJSp886CGr' };
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
+    return res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (authorization !== token) {
-    return res.status(401).json({ message: 'Token inválido' });
+  console.log(authorization);
+  if (authorization !== token.token) {
+    return res.status(401).send({ message: 'Token inválido' });
   }
   next();
 };
@@ -29,7 +30,7 @@ const formatDate = (date) => {
   return expectedFormat.test(date);
 };
 
-const verifyCrush = (name, age, date) => {
+const validateCrush = (name, age, date) => {
   if (!name) {
     return { message: 'O campo "name" é obrigatório' };
   }
@@ -59,5 +60,5 @@ module.exports = {
   formatEmail,
   authToken,
   formatDate,
-  verifyCrush,
+  validateCrush,
 };
