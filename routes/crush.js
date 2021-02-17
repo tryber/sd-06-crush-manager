@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
-const { auth } = require('../middlewares');
+const { auth, isName, isAge, isDate } = require('../middlewares');
 
 const crushRouter = express.Router();
 const SUCCESS = 200;
@@ -54,6 +54,21 @@ crushRouter.post('/crush', auth, async (req, res) => {
   await fs.writeFile('crush.json', JSON.stringify(file));
 
   res.status(CREATED).json({ name, age, id, date });
+});
+
+crushRouter.put('/crush/:id', auth, isName, isAge, isDate, async (req, res) => {
+  const { id: stringId } = req.params;
+  const { name, age, date } = req.body;
+  const id = parseInt(stringId, 10);
+
+  const crushData = await readData();
+  const crushFound = crushData.findIndex((crush) => crush.id === id);
+
+  crushData[crushFound] = { name, age, id, date };
+
+  await fs.writeFile('crush.json', JSON.stringify(crushData));
+
+  res.status(SUCCESS).json(crushData[crushFound]);
 });
 
 module.exports = crushRouter;
