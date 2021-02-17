@@ -41,6 +41,19 @@ routes.post('/login', (request, response) => {
       message: 'O "email" deve ter o formato "email@email.com"',
     });
   }
+
+  // testar se o campo password não é passado ou é vazio
+  if (password === '' || !password) {
+    return response.status(400).send({
+      message: 'O campo "password" é obrigatório',
+    });
+  }
+  // testar se o campo password não tem pelo menos 6 caracteres
+  if (password.length < 6) {
+    return response.status(400).send({
+      message: 'A "senha" deve ter pelo menos 6 caracteres',
+    });
+  }
   response.status(201).send('tudo ok');
 });
 
