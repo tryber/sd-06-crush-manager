@@ -98,6 +98,20 @@ routes.post('/crush', (request, response) => {
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
+
+  // testa se o campo age não é passado ou é vazio
+  if (age === '' || !age) {
+    return response.status(400).send({
+      message: 'O campo "age" é obrigatório',
+    });
+  }
+
+  // testa se o campo age é menor do que 18
+  if (age < 18) {
+    return response.status(400).send({
+      message: 'O crush deve ser maior de idade',
+    });
+  }
 });
 
 module.exports = routes;
