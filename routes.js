@@ -2,6 +2,7 @@ const express = require('express');
 
 const routes = express.Router();
 const fs = require('fs');
+const crypto = require('crypto');
 
 const contatinhos = fs.readFileSync('./crush.json');
 // vai rotear os endpoints que se quer acessar
@@ -33,7 +34,7 @@ routes.post('/login', (request, response) => {
       message: 'O campo "email" é obrigatório',
     });
   }
-  // regex do AppReceitas e da Atividade de 5 fev 2021:
+  // regex do AppReceitas e da Atividade de 05 fev 2021:
   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
   // segundo mdn [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test]
   if (!regexEmail.test(email)) {
@@ -54,7 +55,11 @@ routes.post('/login', (request, response) => {
       message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
   }
-  response.status(201).send('tudo ok');
+
+  // caso email e senha correspondam ao solicitado, gerar token
+  // como visto na Atividade do dia 05 fev 2021
+  const token = crypto.randomBytes(8).toString('hex');
+  response.status(201).send({ token });
 });
 
 module.exports = routes;
