@@ -3,6 +3,7 @@ const express = require('express');
 const { readCrush, formatEmail, authToken, validateCrush } = require('./services');
 
 const app = express();
+const crushList = readCrush();
 const SUCCESS = 200;
 const CREATED = 201;
 const NOT_FOUND = 404;
@@ -21,9 +22,8 @@ app.get('/crush', (_req, res) => {
 });
 
 app.get('/crush/:id', (req, res) => {
-  const fileCrush = readCrush();
   const { id } = req.params;
-  const existCrushId = fileCrush.find((crush) => crush.id === parseInt(id, 10));
+  const existCrushId = crushList.find((crush) => crush.id === parseInt(id, 10));
   console.log(existCrushId);
   if (!existCrushId) {
     return res.status(NOT_FOUND).send({ message: 'Crush não encontrado' });
@@ -56,7 +56,6 @@ app.use(authToken);
 
 app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
-  const crushList = readCrush();
   const id = crushList.length + 1;
   const authCrush = validateCrush(name, age, date);
   console.log(authCrush);
@@ -66,6 +65,20 @@ app.post('/crush', (req, res) => {
   crushList.push({ name, age, id, date });
   console.log(crushList);
   return res.status(CREATED).send(req.body);
+});
+
+app.post('/crush/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, age, date } = req.body;
+  const authCrush = validateCrush(name, age, date);
+  console.log(authCrush);
+  if (authCrush !== true) {
+    return res.status(BAD_REQUEST).send(authCrush);
+  }
+  const crushIndex = crushList.findIndex((crush) => crush.id === parseInt(id, 10));
+  console.log(crushIndex);
+  crushList[crushIndex] = { ...crushList[crushIndex], name, age, date };
+  res.status(CREATED).send(crushList[crushIndex]);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
