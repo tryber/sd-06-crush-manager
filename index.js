@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs').promises;
+const readFile = require('./manageFiles');
 
 const app = express();
 const SUCCESS = 200;
@@ -11,8 +11,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', async (req, res) => {
-  const result = await fs.readFile('./crush.json', 'utf-8');
-  if (result === []) return res.status(200).send('[]');
+  const result = await readFile();
+  if (result === []) return res.status(200).json('[]');
   res.status(200).send(result);
 });
 
