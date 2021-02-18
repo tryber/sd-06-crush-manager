@@ -22,7 +22,7 @@ const escreverArquivo = async (novoContatinho) => {
 // cria endpoint GET /crush (req1)
 routes.get('/crush', async (_request, response) => {
   const crushes = await lerArquivo();
-  response.status(200).send(crushes);
+  return response.status(200).send(crushes);
 });
 
 //  cria endpoint GET /crush/:id (req2)
