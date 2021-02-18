@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', async (_req, res) => {
   const file = await fs.readFile('./crush.json', 'utf-8');
-  if (file.length === 0) return res.status(200).send('[]');
+  if (file === []) return res.status(200).send('[]');
   res.status(200).send(file);
 });
 
