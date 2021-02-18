@@ -69,7 +69,7 @@ routes.post('/login', (request, response) => {
   // caso email e senha correspondam ao solicitado, gerar token
   // como visto na Atividade do dia 05 fev 2021
   const token = crypto.randomBytes(8).toString('hex');
-  response.status(200).send({ token });
+  response.status(201).send({ token });
 });
 
 // cria endpoint POST /crush (req4)
