@@ -114,6 +114,12 @@ const editaCrush = async (id, name, age, date) => {
   return crushEditado;
 };
 
+const deletaCrush = async (id) => {
+  const crushes = await lerArquivo('/crush.json');
+  const crushDeletado = crushes.filter((crush) => crush.id !== +id);
+  await escreverArquivo('/crush.json', JSON.stringify(crushDeletado));
+};
+
 app.use(express.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -203,6 +209,15 @@ app.put('/crush/:id', rescue(async (request, response) => {
   if (!notaVerificada || notaVerificada === 0) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   const crushEditadoOk = await editaCrush(parseId, name, age, date);
   response.status(200).json(crushEditadoOk);
+}));
+
+app.delete('/crush/:id', rescue(async (request, response) => {
+  const { id } = request.params;
+  const { authorization } = request.headers;
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== TAMANHO_TOKEN) return response.status(401).json({ message: 'Token inválido' });
+  await deletaCrush(id);
+  response.status(200).json({ message: 'Crush deletado com sucesso' });
 }));
 
 app.use((err, __request, response, __next) => {
