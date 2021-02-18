@@ -1,6 +1,7 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
-const chushRouter = require('./chushRouter');
+const crushRouter = require('./crushRouter');
 const loginRouter = require('./loginRouter');
 
 const app = express();
@@ -12,18 +13,18 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.use((req, _res, next) => {
-  console.log({
-    data: new Date(),
-    method: req.method,
-    router: req.originalUrl,
-  });
-  next();
-});
+// app.use((req, _res, next) => {
+//   console.log({
+//     data: new Date(),
+//     method: req.method,
+//     router: req.originalUrl,
+//   });
+//   next();
+// });
 
-app.use(express.json());
+app.use(bodyParser.json());
 
-app.use('/crush', chushRouter);
+app.use('/crush', crushRouter);
 
 app.use('/login', loginRouter);
 
