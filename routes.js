@@ -155,7 +155,7 @@ routes.post('/crush', async (request, response) => {
   // contatinho criado ao crush.json através do writeFile
   const listaContatinhos = await lerArquivo();
   const contatinhoCriado = { id: listaContatinhos.length + 1, name, age, date };
-  await escreverArquivo(contatinhoCriado);
+  await escreverArquivo(JSON.stringify([...listaContatinhos, contatinhoCriado], 0, 2));
   return response.status(201).send(contatinhoCriado);
 });
 
