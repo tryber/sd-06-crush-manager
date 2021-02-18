@@ -11,12 +11,14 @@ function verifyToken(request, response, next) {
   if (tokenHeader.length < 16) return response.status(401).json({ message: 'Token inválido' });
   next();
 }
+
 function verifySenha(request, response, next) {
   const { password } = request.body;
   if (!password || !password.length) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
   if (password.length < 6) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
   next();
 }
+
 // js considera falso quando - false, string vazia (''), undefined, null, zero (0)
 function verifyEmail(request, response, next) {
   const { email } = request.body;
@@ -25,33 +27,26 @@ function verifyEmail(request, response, next) {
   if (!regex.test(email)) return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   next();
 }
-function verifyName(request, response, next) {
-  const { name } = request.body;
-  if (!name.length) return response.status(400).json({ message: 'O campo "name" é obrigatório' });
-  if (name.length < 3) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  next();
-}
-function verifyAge(request, response, next) {
-  const { age } = request.body;
-  if (!age) return response.status(400).json({ message: 'O campo "age" é obrigatório' });
-  if (age < 18) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
-  next();
-}
-function verifyDate(request, response, next) {
-  const { datedAt, rate } = request.body;
+
+function verifyCrush(request, response, next) {
+  const { name, age, date } = request.body;
   const regex = /(^(((0[1-9]|1[0-9]|2[0-8])[/](0[1-9]|1[012]))|((29|30|31)[/](0[13578]|1[02]))|((29|30)[/](0[4,6,9]|11)))[/](19|[2-9][0-9])\d\d$)|(^29[/]02[/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/;
-  if (!regex.test(datedAt)) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (rate < 1 || rate > 5) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  if (!datedAt || !rate) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (!name || !name.length) return response.status(400).json({ message: 'O campo "name" é obrigatório' });
+  if (name.length < 3) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+
+  if (!age || !age.length) return response.status(400).json({ message: 'O campo "age" é obrigatório' });
+  if (age < 18) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
+
+  if (!date || !date.datedAt || !date.rate) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (date.rate < 1 || date.rate > 5) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (!regex.test(date.datedAt)) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   next();
 }
 
 module.exports = {
   verifyToken,
   generateToken,
+  verifyCrush,
   verifyEmail,
   verifySenha,
-  verifyName,
-  verifyAge,
-  verifyDate,
 };

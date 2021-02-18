@@ -1,37 +1,5 @@
-const path = require('path');
-const fs = require('fs').promises;
+const { readJson } = require('./readWrite');
 
-const crush = path.join(__dirname, './crush.json');
-
-// função de leitura
-async function readJson() {
-  const readData = await fs.readFile(crush);
-  const parseData = JSON.parse(readData);
-  return parseData;
-}
-// função de escrita
-/* async function writeJson() {
-  const readData = await fs.writeFile(crush);
-  const parseData = JSON.stringify(readData);
-  return parseData;
-} */
-function writeJson() {
-  return new Promise((resolve, reject) => {
-    fs.readFile(crush, (err, content) => {
-      if (err) return reject(err);
-      resolve(content);
-    });
-  });
-}
-
-writeJson('crush')
-  .then((content) => {
-    console.log(`Lido crush ${content.byteLength} bytes`);
-    return writeJson('crush');
-  })
-  .catch((err) => {
-    console.log(`Erro ao ler arquivos: ${err.message}`);
-  });
 //  Crie o endpoint GET `/crush`
 async function listRoute(request, response) {
   const data = await readJson();
@@ -49,6 +17,4 @@ async function listRoutId(request, response) {
 module.exports = {
   listRoute,
   listRoutId,
-  readJson,
-  writeJson,
 };
