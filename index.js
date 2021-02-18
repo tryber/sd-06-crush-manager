@@ -16,9 +16,20 @@ const numeroRandomico = () => {
   return token;
 };
 
+const comparar = (a, b) => {
+  let compar = 0;
+  if (a.id > b.id) {
+    compar = 1;
+  } else if (a.id < b.id) {
+    compar = -1;
+  }
+  return compar;
+};
+
 const lerArquivo = async (arquivo) => {
   const conteudoArquivo = await fs.readFile(path.resolve(path.join(__dirname, arquivo)), 'utf-8');
-  return conteudoArquivo;
+  const parseConteudoArquivo = JSON.parse(conteudoArquivo);
+  return parseConteudoArquivo;
 };
 
 const escreverArquivo = async (arquivo, crush) => {
@@ -81,16 +92,25 @@ const verificaDate = (date) => {
 
 const adicionaCrush = async (id, name, age, date) => {
   const crushes = await lerArquivo('/crush.json');
-  const crushesJson = JSON.parse(crushes);
   const novoObjeto = {
     name,
     age,
-    id: (crushesJson.length) + id,
+    id: (crushes.length) + id,
     date,
   };
-  const novoCrush = [...crushesJson, novoObjeto];
+  const novoCrush = [...crushes, novoObjeto];
   await escreverArquivo('/crush.json', JSON.stringify(novoCrush), 'utf-8');
   return novoObjeto;
+};
+
+const editaCrush = async (id, name, age, date) => {
+  const idCrush = await lerArquivo('/crush.json');
+  const idCrushEncontrado = idCrush.filter((crush) => crush.id !== id);
+  const crushEditado = { name, age, id, date };
+  idCrushEncontrado.push(crushEditado);
+  idCrushEncontrado.sort(comparar);
+  await escreverArquivo('/crush.json', JSON.stringify(idCrushEncontrado));
+  return crushEditado;
 };
 
 app.use(express.json());
@@ -102,15 +122,14 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', async (__request, response) => {
   const data = await lerArquivo('/crush.json');
-  response.status(SUCCESS).json(JSON.parse(data));
+  response.status(SUCCESS).json(data);
 });
 
 app.get('/crush/:id', async (request, response, next) => {
   try {
     const { id } = request.params;
     const data = await lerArquivo('/crush.json');
-    const newData = JSON.parse(data);
-    const actor = newData.find((element) => element.id === Number(id));
+    const actor = data.find((element) => element.id === Number(id));
     if (!actor) throw new Error('Crush não encontrado');
     response.status(SUCCESS).json(actor);
   } catch (error) {
@@ -158,6 +177,31 @@ app.post('/crush', rescue(async (request, response) => {
   if (!notaVerificada) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   const crushAdicionado = await adicionaCrush(id, name, age, date);
   response.status(201).json(crushAdicionado);
+}));
+
+app.put('/crush/:id', rescue(async (request, response) => {
+  const { id } = request.params;
+  const parseId = parseInt(id, 10);
+  const { name, age, date } = request.body;
+  const { authorization } = request.headers;
+  const nomeVerificado = verificaNome(name);
+  const idadeVerificada = verificaIdade(age);
+  const dateVerificada = verificaDate(date);
+  const dataVerificada = verificaData(date);
+  const notaVerificada = verificaNota(date);
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length < TAMANHO_TOKEN || authorization.length > TAMANHO_TOKEN) {
+    return response.status(401).json({ message: 'Token inválido' });
+  }
+  if (nomeVerificado === null) return response.status(400).json({ message: 'O campo "name" é obrigatório' });
+  if (nomeVerificado === false) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (idadeVerificada === null) return response.status(400).json({ message: 'O campo "age" é obrigatório' });
+  if (idadeVerificada === false) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
+  if (dateVerificada === null || dateVerificada) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (!dataVerificada) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (!notaVerificada) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  const crushEditadoOk = await editaCrush(parseId, name, age, date);
+  response.status(200).json(crushEditadoOk);
 }));
 
 app.use((err, __request, response, __next) => {
