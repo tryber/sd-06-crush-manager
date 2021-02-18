@@ -10,10 +10,16 @@ const lerArquivo = async () => {
   return JSON.parse(contatinhos);
 };
 
+// cria função writeFile
+const escreverArquivo = async (novoContatinho) => {
+  await fs.writeFile('./crush.json', novoContatinho, 'utf-8');
+  return true;
+};
+
 // vai rotear os endpoints que se quer acessar
 // POST, GET, PUT, DELETE
 
-// cria enpoint GET /crush (req1)
+// cria endpoint GET /crush (req1)
 routes.get('/crush', async (_request, response) => {
   const crushes = await lerArquivo();
   response.status(200).send(crushes);
@@ -73,7 +79,7 @@ routes.post('/login', (request, response) => {
 });
 
 // cria endpoint POST /crush (req4)
-routes.post('/crush', (request, response) => {
+routes.post('/crush', async (request, response) => {
   const { authorization } = request.headers;
   const { name, age, date } = request.body;
 
@@ -145,6 +151,12 @@ routes.post('/crush', (request, response) => {
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
+  // caso o name, age, date e token sejam válidos, é necessário acrescentar o
+  // contatinho criado ao crush.json através do writeFile
+  const listaContatinhos = await lerArquivo();
+  const contatinhoCriado = { id: listaContatinhos.length + 1, name, age, date };
+  await escreverArquivo(contatinhoCriado);
+  return response.status(201).send(contatinhoCriado);
 });
 
 module.exports = routes;
