@@ -17,6 +17,22 @@ crushRouter.get('/crush', async (_req, res) => {
   res.status(SUCCESS).json(crushData);
 });
 
+crushRouter.get('/crush/search', auth, async (req, res) => {
+  const { q } = req.query;
+
+  const crushData = await readData();
+
+  const searchCrush = crushData.filter((crush) => crush.name.includes(q));
+
+  if (!q) {
+    return res.status(SUCCESS).json(crushData);
+  }
+
+  if (searchCrush) {
+    return res.status(SUCCESS).json(searchCrush);
+  }
+});
+
 crushRouter.get('/crush/:id', async (req, res) => {
   const { id: stringId } = req.params;
   const id = parseInt(stringId, 10);
