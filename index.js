@@ -81,13 +81,14 @@ const verificaData = (date) => {
 
 const verificaNota = (date) => {
   if (!date) return false;
-  const nota = Number.isInteger(date.rate) && date.rate > 0 && date.rate < 6;
+  if (date.rate === 0) return 0;
+  const nota = Number.isInteger(date.rate) && date.rate >= 1 && date.rate <= 5;
   return nota;
 };
 
 const verificaDate = (date) => {
-  if (!date) return null;
-  return !date.datedAt || !date.rate;
+  if (date && date.datedAt && date.rate === 0) return 0;
+  if (!date || !date.datedAt || !date.rate) return null;
 };
 
 const adicionaCrush = async (id, name, age, date) => {
@@ -172,9 +173,9 @@ app.post('/crush', rescue(async (request, response) => {
   if (nomeVerificado === false) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (idadeVerificada === null) return response.status(400).json({ message: 'O campo "age" é obrigatório' });
   if (idadeVerificada === false) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
-  if (dateVerificada === null || dateVerificada) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (dateVerificada === null) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   if (!dataVerificada) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (!notaVerificada) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (!notaVerificada || notaVerificada === 0) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   const crushAdicionado = await adicionaCrush(id, name, age, date);
   response.status(201).json(crushAdicionado);
 }));
@@ -197,9 +198,9 @@ app.put('/crush/:id', rescue(async (request, response) => {
   if (nomeVerificado === false) return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (idadeVerificada === null) return response.status(400).json({ message: 'O campo "age" é obrigatório' });
   if (idadeVerificada === false) return response.status(400).json({ message: 'O crush deve ser maior de idade' });
-  if (dateVerificada === null || dateVerificada) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (dateVerificada === null) return response.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   if (!dataVerificada) return response.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (!notaVerificada) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (!notaVerificada || notaVerificada === 0) return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   const crushEditadoOk = await editaCrush(parseId, name, age, date);
   response.status(200).json(crushEditadoOk);
 }));
