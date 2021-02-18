@@ -24,7 +24,6 @@ app.get('/crush', (_req, res) => {
 app.get('/crush/:id', (req, res) => {
   const { id } = req.params;
   const existCrushId = crushList.find((crush) => crush.id === parseInt(id, 10));
-  console.log(existCrushId);
   if (!existCrushId) {
     return res.status(NOT_FOUND).send({ message: 'Crush não encontrado' });
   }
@@ -58,12 +57,10 @@ app.post('/crush', (req, res) => {
   const { name, age, date } = req.body;
   const id = crushList.length + 1;
   const authCrush = validateCrush(name, age, date);
-  console.log(authCrush);
   if (authCrush !== true) {
     return res.status(BAD_REQUEST).send(authCrush);
   }
   crushList.push({ name, age, id, date });
-  console.log(crushList);
   return res.status(CREATED).send(req.body);
 });
 
@@ -71,7 +68,6 @@ app.put('/crush/:id', (req, res) => {
   const { id } = req.params;
   const { name, age, date } = req.body;
   const authCrush = validateCrush(name, age, date);
-  console.log(authCrush);
   if (authCrush !== true) {
     return res.status(BAD_REQUEST).send(authCrush);
   }
