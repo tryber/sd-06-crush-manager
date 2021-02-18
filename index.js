@@ -120,12 +120,30 @@ const deletaCrush = async (id) => {
   await escreverArquivo('/crush.json', JSON.stringify(crushDeletado));
 };
 
+const queryProcuraCrush = (nomeCrush, crushes) => {
+  const crushesEncontrados = crushes
+    .filter((cadaCrush) => cadaCrush.name.toUpperCase()
+      .includes(nomeCrush.toUpperCase()));
+  return crushesEncontrados;
+};
+
 app.use(express.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.get('/crush/search', rescue(async (request, response) => {
+  const nomeCrush = request.query.nome;
+  const { authorization } = request.headers;
+  const crushes = await lerArquivo('/crush.json');
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== TAMANHO_TOKEN) return response.status(401).json({ message: 'Token inválido' });
+  if (!nomeCrush) return response.status(200).json(crushes);
+  const resultado = queryProcuraCrush(nomeCrush, crushes);
+  return response.status(200).json(resultado);
+}));
 
 app.get('/crush', async (__request, response) => {
   const data = await lerArquivo('/crush.json');
