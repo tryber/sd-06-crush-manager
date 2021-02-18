@@ -124,24 +124,32 @@ app.post('/crush', authenticate, checkNewCrush, async (request, response) => {
   }
 });
 
-app.put(
-  '/crush/:id',
-  authenticate,
-  checkNewCrush,
-  async (request, response) => {
-    try {
-      const data = await getCrushes();
-      const { id } = request.params;
-      const newCrush = { ...request.body };
-      newCrush.id = +id;
-      const oldCrushIndex = data.findIndex((crush) => crush.id === +id);
-      data[oldCrushIndex] = newCrush;
-      fs.writeFile('./crush.json', JSON.stringify(data));
-      response.status(200).json(newCrush);
-    } catch (error) {
-      throw new Error(error);
-    }
-  },
-);
+app.put('/crush/:id', authenticate, checkNewCrush, async (request, response) => {
+  try {
+    const data = await getCrushes();
+    const { id } = request.params;
+    const newCrush = { ...request.body };
+    newCrush.id = +id;
+    const oldCrushIndex = data.findIndex((crush) => crush.id === +id);
+    data[oldCrushIndex] = newCrush;
+    fs.writeFile('./crush.json', JSON.stringify(data));
+    response.status(200).json(newCrush);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+app.delete('/crush/:id', authenticate, async (request, response) => {
+  try {
+    const data = await getCrushes();
+    const { id } = request.params;
+    const crushIndex = data.findIndex((crush) => crush.id === +id);
+    const newData = data.slice(crushIndex, 1);
+    fs.writeFile('./crush.json', JSON.stringify(newData));
+    response.status(200).json({ message: 'Crush deletado com sucesso' });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 
 app.listen(port, () => console.log(`Listening to port ${port}!`));
