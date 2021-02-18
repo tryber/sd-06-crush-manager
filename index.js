@@ -42,30 +42,30 @@ function checkNewCrush(request, response, next) {
   const msgs = {
     noName: { message: 'O campo "name" é obrigatório' },
     noAge: { message: 'O campo "age" é obrigatório' },
-    noDate:
-      { message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' },
+    noDate: {
+      message:
+        'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    },
     invalidName: { message: 'O "name" deve ter pelo menos 3 caracteres' },
     invalidAge: { message: 'O crush deve ser maior de idade' },
-    invalidDated: { message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' },
+    invalidDated: {
+      message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+    },
     invalidRate: { message: 'O campo "rate" deve ser um inteiro de 1 à 5' },
   };
 
-  const {
-    name,
-    age,
-    date,
-  } = request.body;
+  const { name, age, date } = request.body;
 
   const regEx = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
   const validDate = date && regEx.test(date.datedAt);
 
   if (!name) return response.status(400).json(msgs.noName);
   if (!age) return response.status(400).json(msgs.noAge);
+  if (date && (date.rate < 1 || date.rate > 5)) return response.status(400).json(msgs.invalidRate);
   if (!date || !date.datedAt || !date.rate) return response.status(400).json(msgs.noDate);
   if (name.length < 3) return response.status(400).json(msgs.invalidName);
   if (age < 18) return response.status(400).json(msgs.invalidAge);
   if (!validDate) return response.status(400).json(msgs.invalidDated);
-  if (date.rate < 1 || date.rate > 5) return response.status(400).json(msgs.invalidRate);
 
   next();
 }
@@ -123,5 +123,25 @@ app.post('/crush', authenticate, checkNewCrush, async (request, response) => {
     throw new Error(error);
   }
 });
+
+app.put(
+  '/crush/:id',
+  authenticate,
+  checkNewCrush,
+  async (request, response) => {
+    try {
+      const data = await getCrushes();
+      const { id } = request.params;
+      const newCrush = { ...request.body };
+      newCrush.id = +id;
+      const oldCrushIndex = data.findIndex((crush) => crush.id === +id);
+      data[oldCrushIndex] = newCrush;
+      fs.writeFile('./crush.json', JSON.stringify(data));
+      response.status(200).json(newCrush);
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+);
 
 app.listen(port, () => console.log(`Listening to port ${port}!`));
