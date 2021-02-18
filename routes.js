@@ -235,11 +235,40 @@ routes.put('/crush/:id', async (request, response) => {
   // caso o name, age, date e token sejam válidos, é necessário alterar o contato
   // para isso 1) ler o arquivo e encontrar o contato pelo id; 2) "remover" o contato e
   // 3) inserir os novos dados do contato no index daquele id
+  // referência do splice [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice]
   const listaContatinhos = await lerArquivo();
   const novosDadosContatinho = { id: idPut, name, age, date };
   listaContatinhos.splice(idPut, 1, novosDadosContatinho);
   await escreverArquivo(JSON.stringify([...listaContatinhos], 0, 2));
   return response.status(200).send(novosDadosContatinho);
+});
+
+// cria DELETE /crush/:id
+routes.delete('/crush/:id', async (request, response) => {
+  const { id } = request.params;
+  const idPut = parseInt(id, 10);
+  const { authorization } = request.headers;
+  // validações de token
+  if (authorization === '' || !authorization) {
+    return response.status(401).send({
+      message: 'Token não encontrado',
+    });
+  }
+  // testa se o token é válido (como o token é válido? Se tiver length === 16)
+  if (authorization.length !== 16) {
+    return response.status(401).send({
+      message: 'Token inválido',
+    });
+  }
+
+  // caso o token seja válido, o próximo passo é deletar o contato
+  // para isso 1)ler o arquivo ; 2) utilizar o id para comparação
+  // 3) remover e 4) retornar o arquivo sem esse contatinho
+  // referência do splice [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice]
+  const listaContatinhos = await lerArquivo();
+  listaContatinhos.splice(idPut, 1);
+  await escreverArquivo(JSON.stringify([...listaContatinhos], 0, 2));
+  return response.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
 module.exports = routes;
