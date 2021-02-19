@@ -117,13 +117,13 @@ crushRouter.use((req, res, next) => {
 crushRouter.post('/', async (req, res) => {
   const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
   const { body } = req;
-  const seila = [body, ...crushArray];
-  const seilamap = seila.map((crush, index) => ({
-    ...crush,
-    id: index + 1,
-  }));
-  await writeFile('crush', seilamap);
-  return res.status(201).json(seilamap[0]);
+  const seila = [...crushArray, { ...body, id: crushArray.length + 1 }];
+  // const seilamap = seila.map((crush, index) => ({
+  //   ...crush,
+  //   id: index + 1,
+  // }));
+  await writeFile('crush', seila);
+  return res.status(201).json(seila[seila.length - 1]);
 });
 
 crushRouter.put('/:id', async (req, res) => {
