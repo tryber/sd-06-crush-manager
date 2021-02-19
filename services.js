@@ -18,7 +18,6 @@ const authToken = (req, res, next) => {
   if (!authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
-  console.log(authorization);
   if (authorization !== token.token) {
     return res.status(401).send({ message: 'Token inválido' });
   }
