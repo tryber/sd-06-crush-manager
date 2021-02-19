@@ -92,7 +92,7 @@ crushRouter.use((req, res, next) => {
     400,
   )
   && resError(
-    !date || !date.datedAt || !date.rate,
+    !date || !date.datedAt || (date.rate !== 0 && !date.rate),
     res,
     'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
     // e não pode ter mes ou dia impossíveis
