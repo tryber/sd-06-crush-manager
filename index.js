@@ -1,6 +1,5 @@
 const express = require('express');
 const fs = require('fs');
-const request = require('request');
 
 const app = express();
 const SUCCESS = 200;
@@ -80,5 +79,11 @@ app.post('/login', (req, res) => {
     },
   );
 });
+
+// Requisito 4
+
+app.post('/', async (req, res) => {
+  const {name, age, }
+})
 
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
