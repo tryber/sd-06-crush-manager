@@ -41,6 +41,16 @@ crushRouter.use((req, res, next) => {
   next();
 });
 
+crushRouter.delete('/:id', async (req, res) => {
+  const id = +req.params.id;
+  const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
+  const seilamap = crushArray.filter((crush) => crush.id !== id);
+  await writeFile('crush', seilamap);
+  return res.status(200).json({
+    message: 'Crush deletado com sucesso',
+  });
+});
+
 crushRouter.use((req, res, next) => {
   const {
     name,
@@ -120,7 +130,7 @@ crushRouter.put('/:id', async (req, res) => {
     return crush;
   });
   await writeFile('crush', seilamap);
-  return res.status(201).json({
+  return res.status(200).json({
     ...body,
     id,
   });
