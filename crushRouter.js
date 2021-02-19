@@ -1,7 +1,5 @@
 const express = require('express');
 
-const crushRouter = express.Router();
-
 const { readFile, writeFile } = require('./useful/readAndWriteFiles');
 const {
   characterCount,
@@ -9,21 +7,9 @@ const {
 } = require('./useful/verifications');
 const resError = require('./useful/resError');
 
-crushRouter.get('/', async (_req, res) => {
-  const crushTxt = await readFile('crush');
-  return res.status(200).send(crushTxt);
-});
+const crushRouter = express.Router();
 
-crushRouter.get('/:id', async (req, res) => {
-  const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
-  const { id } = req.params;
-  const crushObj = crushArray.find((objCrush) => objCrush.id === +id);
-  const boolError = resError(!crushObj, res, 'Crush não encontrado', 404);
-  if (!boolError) return;
-  return res.status(200).send(crushObj);
-});
-
-crushRouter.use((req, res, next) => {
+const tokenAuthenticator = (req, res, next) => {
   const { authorization } = req.headers;
   const boolError = resError(
     !authorization,
@@ -39,13 +25,37 @@ crushRouter.use((req, res, next) => {
   );
   if (!boolError) return;
   next();
+};
+
+crushRouter.get('/', async (_req, res) => {
+  const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
+  return res.status(200).json(crushArray);
 });
+
+crushRouter.get('/search', tokenAuthenticator, async (req, res) => {
+  const termSearch = req.query.q;
+  const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
+  if (!termSearch) return res.status(200).json(crushArray);
+  const seilafilter = crushArray.filter((crush) => crush.name.indexOf(termSearch) !== -1);
+  res.status(200).json(seilafilter);
+});
+
+crushRouter.get('/:id', async (req, res) => {
+  const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
+  const { id } = req.params;
+  const crushObj = crushArray.find((objCrush) => objCrush.id === +id);
+  const boolError = resError(!crushObj, res, 'Crush não encontrado', 404);
+  if (!boolError) return;
+  return res.status(200).json(crushObj);
+});
+
+crushRouter.use(tokenAuthenticator);
 
 crushRouter.delete('/:id', async (req, res) => {
   const id = +req.params.id;
   const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
-  const seilamap = crushArray.filter((crush) => crush.id !== id);
-  await writeFile('crush', seilamap);
+  const seilafilter = crushArray.filter((crush) => crush.id !== id);
+  await writeFile('crush', seilafilter);
   return res.status(200).json({
     message: 'Crush deletado com sucesso',
   });
