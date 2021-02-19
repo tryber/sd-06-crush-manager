@@ -24,6 +24,24 @@ crushRouter.get('/:id', async (req, res) => {
 });
 
 crushRouter.use((req, res, next) => {
+  const { authorization } = req.headers;
+  const boolError = resError(
+    !authorization,
+    res,
+    'Token não encontrado',
+    401,
+  )
+  && resError(
+    authorization.length !== 16,
+    res,
+    'Token inválido',
+    401,
+  );
+  if (!boolError) return;
+  next();
+});
+
+crushRouter.use((req, res, next) => {
   const {
     name,
     age,
