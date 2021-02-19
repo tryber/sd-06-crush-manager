@@ -4,6 +4,8 @@ const fs = require('fs');
 const app = express();
 const SUCCESS = 200;
 
+// const auth = {};
+
 app.use(express.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -12,7 +14,7 @@ app.get('/', (_request, response) => {
 });
 
 // requisito 1
-app.get('/crush', (_req, res) => {
+app.get('/crush', (req, res) => {
   const content = fs.readFileSync('./crush.json', 'utf-8');
   if (!content) {
     return res.status(200).json([]);
@@ -31,7 +33,7 @@ app.get('/crush/:id', (req, res) => {
   return res.status(200).json(filteredCrushes);
 });
 
-// requisito 3
+/// / requisito 3
 function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
@@ -50,7 +52,7 @@ app.post('/login', (req, res) => {
     );
   }
 
-  if (!validateEmail) {
+  if (!validateEmail(email)) {
     return res.status(400).json(
       {
         message: 'O "email" deve ter o formato "email@email.com"',
@@ -81,4 +83,10 @@ app.post('/login', (req, res) => {
 });
 
 // Requisito 4
+
+// app.post ('/crush', async (req, res) => {
+//  const { name, age, date } = req.body;
+//  const crushArray = await readFileSync()
+//  }
+// })
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
