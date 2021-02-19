@@ -106,4 +106,24 @@ crushRouter.post('/', async (req, res) => {
   return res.status(201).json(seilamap[0]);
 });
 
+crushRouter.put('/:id', async (req, res) => {
+  const id = +req.params.id;
+  const crushArray = await readFile('crush').then((chushTxt) => JSON.parse(chushTxt));
+  const { body } = req;
+  const seilamap = crushArray.map((crush) => {
+    if (crush.id === id) {
+      return {
+        ...body,
+        id,
+      };
+    }
+    return crush;
+  });
+  await writeFile('crush', seilamap);
+  return res.status(201).json({
+    ...body,
+    id,
+  });
+});
+
 module.exports = crushRouter;
