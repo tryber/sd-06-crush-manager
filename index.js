@@ -80,6 +80,15 @@ app.get('/crush', async (_request, response) => {
   response.status(SUCCESS).json(crushes);
 });
 
+app.get('/crush/search', authenticate, async (request, response) => {
+  const crushes = await getCrushes();
+  const { q } = request.query;
+  const searchRegEx = new RegExp(q, 'i');
+  if (!q || q === '') return response.status(SUCCESS).json(crushes);
+  const crushIndex = crushes.filter((crush) => crush.name.match(searchRegEx));
+  response.status(200).json(crushIndex);
+});
+
 app.get('/crush/:id', async (request, response) => {
   const crushes = await getCrushes();
   const msg = { message: 'Crush não encontrado' };
