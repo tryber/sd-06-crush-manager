@@ -109,8 +109,58 @@ app.post('/crush', rescue(async (req, res) => {
 
   arrayData.push(newCrush);
   await writingFile(dataCrush, JSON.stringify(arrayData));
+
   return res.status(CREATED).json(newCrush);
 }));
+
+// Challenge 5 - editCrush
+app.put('/crush/:id', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+  const { name, age, date } = req.body;
+  const { id } = req.params;
+
+  const crushs = await readFile(dataCrush);
+  const arrayData = JSON.parse(crushs);
+
+  const regexDate = /^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
+
+  if (!authorization) return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+
+  if (!name) return res.status(BADREQUEST).json({ message: 'O campo "name" é obrigatório' });
+  if (name.length < 3) return res.status(BADREQUEST).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+
+  if (!age) return res.status(BADREQUEST).json({ message: 'O campo "age" é obrigatório' });
+  if (age < 18) res.status(BADREQUEST).json({ message: 'O crush deve ser maior de idade' });
+
+  if (date === undefined || date.datedAt === undefined || date.rate === undefined) return res.status(BADREQUEST).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (date && !regexDate.test(date.datedAt)) return res.status(BADREQUEST).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (date.rate < 1 || date.rate > 5) return res.status(BADREQUEST).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+
+  const dataEdit = { name, age, id: Number(id), date };
+  const editCrush = arrayData.map((crush) =>
+    ((crush.id === dataEdit.id) ? dataEdit : crush));
+  await writingFile(dataCrush, JSON.stringify(editCrush));
+
+  return res.status(SUCCESS).json(dataEdit);
+}));
+
+// Challenge 6 - deleteCrush
+app.delete('/crush/:id', async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  const crushs = await readFile(dataCrush);
+  const arrayData = JSON.parse(crushs);
+
+  if (!authorization) return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+
+  const deleteCrush = arrayData.filter((crush) => crush.id !== parseInt(id, 10));
+  await writingFile(dataCrush, JSON.stringify(deleteCrush));
+
+  return res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
 
 // Listen to port 3000
 app.listen(PORT);
