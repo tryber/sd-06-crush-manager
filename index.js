@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises; // why "promises"!?
 // const path = require('path');
-// const crypto = require('crypto');
+const crypto = require('crypto');
 // const router = express.Router();
 
 const app = express();
@@ -10,7 +10,7 @@ const SUCCESS = 200;
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 
-// FUNCTIONS -------------------------------------------------------
+// MIDDLEWARES -------------------------------------------------------
 
 // const getRead = async (fileName) => {
 const getRead = async () => {
@@ -32,17 +32,19 @@ const getRead = async () => {
 //   return true;
 // };
 
-// const verifyEmail = (email) => {
-//   const regex = /^[^@]+@[^@]+\.[^@]+$/;
-//   return regex.test(String(email).toLowerCase());
-// };
+const verifyEmail = (email) => {
+  const regex = /^[^@]+@[^@]+\.[^@]+$/;
+  return regex.test(String(email).toLowerCase());
+};
 
-// const verifyPassword = (password) => {
-//   if (password.length > 5) {
-//     return true;
-//   }
-//   return false;
-// };
+const verifyPassword = (password) => {
+  if (password.length > 5) {
+    return true;
+  }
+  return false;
+};
+
+// const token = crypto.randomBytes(8).toString('hex');
 
 // -----------------------------------------------------------------------------
 
@@ -85,7 +87,25 @@ app.get('/crush/:id', async (request, response) => {
   return response.status(200).json(crushById);
 });
 
-// app.post('/login', async (request, response) => {});
+// - 03 - npm test tests/login.test.js
+app.post('/login', async (request, response) => {
+  const token = await crypto.randomBytes(8).toString('hex');
+  const { email, password } = request.body;
+
+  if (!email) {
+    return response.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  if (!verifyEmail(email)) {
+    return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  if (!password) {
+    return response.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (!verifyPassword(password)) {
+    return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+  }
+  return response.status(200).json({ token });
+});
 
 // app.post('/crush', async (request, response) => {});
 // app.put('/crush/:id', async (request, response) => {});
@@ -119,4 +139,5 @@ app.listen(3000, () => console.log('running'));
 // https://stackoverflow.com/questions/39110801/path-join-vs-path-resolve-with-dirname
 // https://www.digitalocean.com/community/tutorials/js-json-parse-stringify-pt
 // https://stackoverflow.com/questions/51150956/how-to-fix-this-error-typeerror-err-invalid-callback-callback-must-be-a-funct/51151244
+// https://www.geeksforgeeks.org/node-js-crypto-randombytes-method/
 //
