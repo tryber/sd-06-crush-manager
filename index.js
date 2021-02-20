@@ -1,10 +1,12 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
+const { fileURLToPath } = require('url');
 
 const app = express();
 const SUCCESS = 200;
 
-// const auth = {};
+const token = { authorization: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
@@ -13,7 +15,6 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-// requisito 1
 app.get('/crush', (req, res) => {
   const content = fs.readFileSync('./crush.json', 'utf-8');
   if (!content) {
@@ -22,7 +23,6 @@ app.get('/crush', (req, res) => {
   return res.status(200).json(JSON.parse(content));
 });
 
-// requisito 2
 app.get('/crush/:id', (req, res) => {
   const content = fs.readFileSync('./crush.json', 'utf-8');
   const { id } = req.params;
@@ -33,7 +33,6 @@ app.get('/crush/:id', (req, res) => {
   return res.status(200).json(filteredCrushes);
 });
 
-/// / requisito 3
 function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
@@ -82,11 +81,96 @@ app.post('/login', (req, res) => {
   );
 });
 
-// Requisito 4
+// '7mqaVRXJSp886CGr'
 
-// app.post ('/crush', async (req, res) => {
-//  const { name, age, date } = req.body;
-//  const crushArray = await readFileSync()
-//  }
-// })
+function validateDate(date) {
+  const dateRegex = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/;
+  return dateRegex.test(date);
+}
+
+app.post('/crush', (req, res) => {
+  const { authorization } = req.headers;
+  const addToArray = 1;
+
+  const crushArray = JSON.parse(fs.readFileSync('./crush.json'));
+  const newCrushId = crushArray.length + addToArray;
+  const addedCrush = { ...req.body, id: newCrushId };
+  const { name, age, date } = addedCrush;
+
+  if (authorization === undefined || !authorization || authorization === '') {
+    return res.status(401).json(
+      {
+        message: 'Token não encontrado',
+      },
+    );
+  }
+
+  if (authorization.length !== 16) {
+    return res.status(401).json(
+      {
+        message: 'Token inválido',
+      },
+    );
+  }
+
+  if (name === '' || !name) {
+    return res.status(400).json(
+      {
+        message: 'O campo "name" é obrigatório',
+      },
+    );
+  }
+
+  if (name.length < 3) {
+    return res.status(400).json(
+      {
+        message: 'O "name" deve ter pelo menos 3 caracteres',
+      },
+    );
+  }
+
+  if (age === '' || !age) {
+    return res.status(400).json(
+      {
+        message: 'O campo "age" é obrigatório',
+      },
+    );
+  }
+
+  if (age < 18) {
+    return res.status(400).json(
+      {
+        message: 'O crush deve ser maior de idade',
+      },
+    );
+  }
+
+  if (!date || date.datedAt === '' || date.datedAt === undefined || date.rate === '' || date.rate === undefined) {
+    return res.status(400).json(
+      {
+        message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+      },
+    );
+  }
+
+  if (!validateDate(date.datedAt)) {
+    return res.status(400).json(
+      {
+        message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+      },
+    );
+  }
+
+  if (date.rate < 1 || date.rate > 5) {
+    return res.status(400).json(
+      {
+        message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+      },
+    );
+  }
+
+  crushArray.push(addedCrush);
+  fs.writeFileSync('crush.json', JSON.stringify(crushArray));
+  return res.status(201).json(addedCrush);
+});
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
