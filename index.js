@@ -59,13 +59,4 @@ app.post('/login', (req, res) => {
   res.status(200).json({ token: randomToken });
 });
 
-// app.post('/login', (req, res) => {
-
-// });
-
-// Requisito 4
-
-// app.post('/crush', (req, res) => {
-// });
-
 app.listen(3000, () => console.log('aqui'));
