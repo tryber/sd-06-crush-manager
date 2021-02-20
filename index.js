@@ -44,10 +44,10 @@ app.get('/crush/:id', async (req, res) => {
 const isValid = (email, password) => {
   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
 
-  if (!email) return 'O campo \"email\" é obrigatório';
-  if (!regexEmail.test(email)) return 'O \"email\" deve ter o formato \"email@email.com\"';
-  if (!password) return 'O campo \"password\" é obrigatório';
-  if (password.length < 6) return 'A \"senha\" deve ter pelo menos 6 caracteres';
+  if (!email) return 'O campo "email" é obrigatório';
+  if (!regexEmail.test(email)) return 'O "email" deve ter o formato "email@email.com"';
+  if (!password) return 'O campo "password" é obrigatório';
+  if (password.length < 6) return 'A "senha" deve ter pelo menos 6 caracteres';
   return false;
 };
 
