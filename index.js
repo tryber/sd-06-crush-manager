@@ -10,10 +10,26 @@ const token = { authorization: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
+function validatePassword(password) {
+  return password.toLowerCase().toString();
+}
+
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
+function validateDate(date) {
+  const dateRegex = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/;
+  return dateRegex.test(date);
+}
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+// Req1 -*-*-*-*-*--**-*--*-*-*-*-*-*-*-*-*-*-*-*-*
 
 app.get('/crush', (req, res) => {
   const content = fs.readFileSync('./crush.json', 'utf-8');
@@ -22,6 +38,8 @@ app.get('/crush', (req, res) => {
   }
   return res.status(200).json(JSON.parse(content));
 });
+
+// Req2 -*-*-*-*-*--**-*--*-*-*-*-*-*-*-*-*-*-*-*-*
 
 app.get('/crush/:id', (req, res) => {
   const content = fs.readFileSync('./crush.json', 'utf-8');
@@ -33,14 +51,8 @@ app.get('/crush/:id', (req, res) => {
   return res.status(200).json(filteredCrushes);
 });
 
-function validateEmail(email) {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
+// Req3 -*-*-*-*-*--**-*--*-*-*-*-*-*-*-*-*-*-*-*-*
 
-function validatePassword(password) {
-  return password.toLowerCase().toString();
-}
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || email === '') {
@@ -81,12 +93,7 @@ app.post('/login', (req, res) => {
   );
 });
 
-// '7mqaVRXJSp886CGr'
-
-function validateDate(date) {
-  const dateRegex = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/;
-  return dateRegex.test(date);
-}
+// Req4 -*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*
 
 app.post('/crush', (req, res) => {
   const { authorization } = req.headers;
