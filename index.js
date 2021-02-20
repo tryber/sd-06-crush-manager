@@ -1,7 +1,6 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
-// const rescue = require('express-rescue');
 const middleware = require('./middleware');
 const controllers = require('./controllers');
 
@@ -9,7 +8,6 @@ const app = express();
 const SUCCESS = 200;
 
 app.use(bodyParser.json());
-// app.use(express.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -18,10 +16,10 @@ app.get('/', (_request, response) => {
 
 app.post('/login', middleware.login, controllers.login);
 
-app.get('/crush/:id', (request, response) => {
+app.get('/crush/:id', async (request, response) => {
   const id = request.params.id - 1;
 
-  fs.readFile('./crush.json', (err, data) => {
+  await fs.readFile('./crush.json', (err, data) => {
     if (err) throw new Error('Error');
 
     if (!JSON.parse(data)[id]) {
@@ -32,8 +30,8 @@ app.get('/crush/:id', (request, response) => {
   });
 });
 
-app.get('/crush', (_request, response) => {
-  fs.readFile('./crush.json', (err, data) => {
+app.get('/crush', async (_request, response) => {
+  await fs.readFile('./crush.json', (err, data) => {
     if (err) throw new Error('Error');
     response.status(SUCCESS).send(JSON.parse(data));
   });
