@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const middleware = require('./middleware');
@@ -23,17 +23,17 @@ app.get('/crush/:id', async (request, response) => {
     if (err) throw new Error('Error');
 
     if (!JSON.parse(data)[id]) {
-      response.status(404).send({ message: 'Crush não encontrado' });
+      return response.status(404).send({ message: 'Crush não encontrado' });
     }
 
-    response.status(SUCCESS).send(JSON.parse(data)[id]);
+    return response.status(SUCCESS).send(JSON.parse(data)[id]);
   });
 });
 
-app.get('/crush', async (_request, response) => {
-  await fs.readFile('./crush.json', (err, data) => {
+app.get('/crush', (_request, response) => {
+  fs.readFile('./crush.json', (err, data) => {
     if (err) throw new Error('Error');
-    response.status(SUCCESS).send(JSON.parse(data));
+    return response.status(SUCCESS).send(JSON.parse(data));
   });
 });
 
@@ -43,10 +43,10 @@ app.put('/crush/:id', middleware.auth, controllers.editCrush);
 
 app.delete('/crush/:id', (request, response, next) => {
   if (!request.headers.authorization) {
-    response.status(401).send({ message: 'Token não encontrado' });
+    return response.status(401).send({ message: 'Token não encontrado' });
   }
-  if (request.headers.authorization.length !== 16) {
-    response.status(401).send({ message: 'Token inválido' });
+  if (request.headers.authorization && request.headers.authorization.length !== 16) {
+    return response.status(401).send({ message: 'Token inválido' });
   }
   next();
 }, controllers.deleteCrush);
