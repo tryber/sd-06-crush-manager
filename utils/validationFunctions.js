@@ -70,9 +70,9 @@ const validateDateFormat = (date) => {
 
 const validateDate = (req, res, next) => {
   const emptyKeyMessage = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
-  const { date: { datedAt } } = req.body;
-  req.datedAtValidation = datedAt && datedAt !== ''
-    ? validateDateFormat(datedAt)
+  const crushDate = req.body.date ? req.body.date.datedAt : '';
+  req.datedAtValidation = crushDate && crushDate !== ''
+    ? validateDateFormat(crushDate)
     : '';
   if (req.datedAtValidation === '' || req.datedAtValidation === undefined) {
     return res.status(400)
