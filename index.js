@@ -34,7 +34,7 @@ app.get('/crush/:id', (req, res) => {
 
 // REQ-3
 const tokenAuthentication = { authorization: '7mqaVRXJSp886CGr' };
-const validPassword = (password) => password.toString();
+const validPassword = (password) => password.toLowercase().toString();
 const validEmail = (email) => /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/.test(email);
 
 app.post('/login', (req, res) => {
