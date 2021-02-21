@@ -23,7 +23,6 @@ const validatePassword = (req, res, next) => {
 
 const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log('validateToken: ', authorization);
   req.tokenValidation = authorization && authorization !== '' ? authorization.length >= 16 : '';
   if (req.tokenValidation === '' || req.tokenValidation === undefined) return res.status(401).json({ message: 'Token não encontrado' });
   if (req.tokenValidation === false) return res.status(401).json({ message: 'Token inválido' });
@@ -57,18 +56,15 @@ const validateDateFormat = (date) => {
   const day = dateObj.getDate();
   const month = dateObj.getMonth();
   const year = dateObj.getFullYear();
-  console.log(dateObj, day, month, year);
   if (month < 9) {
     const compareDate = day < 10
       ? `0${day}/0${month + 1}/${year}`
       : `${day}/0${month + 1}/${year}`;
-    console.log(compareDate);
     return compareDate === date;
   }
   const compareDate = day < 10
     ? `0${day}/${month + 1}/${year}`
     : `${day}/${month + 1}/${year}`;
-  console.log(compareDate);
   return compareDate === date;
 };
 
