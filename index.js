@@ -16,6 +16,33 @@ app.get('/', (_request, response) => {
 
 app.post('/login', middleware.login, controllers.login);
 
+app.get('/crush/search', async (request, response) => {
+  if (!request.headers.authorization) {
+    return response.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (request.headers.authorization && request.headers.authorization.length !== 16) {
+    return response.status(401).send({ message: 'Token inválido' });
+  }
+
+  if (!request.query.q) {
+    return response.status(401).send([]);
+  }
+
+  const name = request.query.q;
+  fs.readFile('./crush.json', 'utf8', (err, data) => {
+    if (err) throw new Error('Error');
+
+    const crushs = JSON.parse(data);
+
+    if (name.length === 0) {
+      return response.status(401).send(crushs);
+    }
+
+    const filteredCrushs = crushs.filter((crush) => crush.name.includes(name));
+    return response.status(SUCCESS).json(filteredCrushs);
+  });
+});
+
 app.get('/crush/:id', async (request, response) => {
   const id = request.params.id - 1;
 
