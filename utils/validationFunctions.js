@@ -22,8 +22,9 @@ const validatePassword = (req, res, next) => {
 };
 
 const validateToken = (req, res, next) => {
-  const { Authorization } = req.headers;
-  req.tokenValidation = Authorization && Authorization !== '' ? Authorization.length >= 16 : '';
+  const { authorization } = req.headers;
+  console.log('validateToken: ', authorization);
+  req.tokenValidation = authorization && authorization !== '' ? authorization.length >= 16 : '';
   if (req.tokenValidation === '' || req.tokenValidation === undefined) return res.status(401).json({ message: 'Token não encontrado' });
   if (req.tokenValidation === false) return res.status(401).json({ message: 'Token inválido' });
   next();
