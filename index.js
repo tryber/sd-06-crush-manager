@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+
 const app = express();
 const SUCCESS = 200;
 
@@ -45,14 +46,12 @@ app.post('/login', (req, res) => {
 
   if (!email || email === '') {
     return res.status(400).json({
-      message: 'O campo "email" é obrigatório'
-    });
+      message: 'O campo "email" é obrigatório' });
   }
 
   if (!password) {
     return res.status(400).json({
-      message: 'O campo "password" é obrigatório'
-    });
+      message: 'O campo "password" é obrigatório' });
   }
 
   if (validPassword(password).length < 6) {
