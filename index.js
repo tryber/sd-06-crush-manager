@@ -40,13 +40,12 @@ const validEmail = (email) => /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/.test(email);
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  if (!validEmail(email)) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  if (!email || email === '') {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 
-  if (!email || email === '') {
-    return res.status(400).json({
-      message: 'O campo "email" é obrigatório' });
+  if (!validEmail(email)) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
 
   if (!password) {
