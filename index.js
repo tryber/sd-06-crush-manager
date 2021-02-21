@@ -15,4 +15,9 @@ app.use(bodyParser.json());
 
 app.use('/', routes);
 
+app.use((err, req, res, _next) => {
+  console.log('erro pego pelo rescue');
+  res.status(500).json({ error: `Erro: ${err.message}` });
+});
+
 app.listen(port, () => console.log(`listening to port ${port}`));

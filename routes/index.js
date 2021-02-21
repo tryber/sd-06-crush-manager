@@ -1,41 +1,51 @@
+const rescue = require('express-rescue');
+
 const routes = require('express').Router();
 const crypto = require('crypto');
-const { readFile } = require('../utils/fileFunctions');
-const { validateEmail, validatePassword } = require('../utils/loginFunctions');
+const { readFile, addCrushToFile } = require('../utils/fileFunctions');
+const {
+  validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateDate,
+  validateRate,
+} = require('../utils/validationFunctions');
 
-routes.get('/crush/:id', async (req, res) => {
+routes.get('/crush/:id', rescue(async (req, res) => {
   const crushId = parseInt(req.params.id, 10);
   const fullFile = await readFile('crush');
   const idFile = JSON.parse(fullFile).find((crush) => crush.id === crushId);
-  if (idFile === undefined) res.status(404).json({ message: 'Crush não encontrado' });
+  if (idFile === undefined) return res.status(404).json({ message: 'Crush não encontrado' });
   res.status(200).json(idFile);
-});
+}));
 
-routes.get('/crush', async (req, res) => {
-  const file = await readFile('crush');
-  res.status(200).json(JSON.parse(file));
-});
+routes.route('/crush')
+  .get(rescue(async (req, res) => {
+    const file = await readFile('crush');
+    console.log(typeof file);
+    return res.status(200).json(JSON.parse(file));
+  }))
+  .post(
+    validateToken,
+    validateName,
+    validateAge,
+    validateDate,
+    validateRate,
+    rescue(async (req, res) => {
+      const newCrush = req.body;
+      const newId = await addCrushToFile('crush', newCrush);
+      const file = await readFile('crush');
+      const readNewCrush = JSON.parse(file).find(({ id }) => id === newId);
+      res.status(201).send(readNewCrush);
+    }),
+  );
 
-const validatingEmail = (req, res, next) => {
-  const { email } = req.body;
-  req.emailValidation = email && email !== '' ? validateEmail(email) : '';
-  if (req.emailValidation === '' || req.emailValidation === undefined) res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  if (req.emailValidation === false) res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  next();
-};
-
-const validatingPassword = (req, res, next) => {
-  const { password } = req.body;
-  req.passwordValidation = password && password !== '' ? validatePassword(password) : '';
-  if (req.passwordValidation === '' || req.passwordValidation === undefined) res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  if (req.passwordValidation === false) res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
-  next();
-};
-
-routes.post('/login', validatingEmail, validatingPassword, (req, res) => {
+routes.post('/login', validateEmail, validatePassword, rescue((req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   const { emailValidation, passwordValidation } = req;
   if (emailValidation && passwordValidation) res.status(200).send({ token });
-});
+}));
 
 module.exports = routes;

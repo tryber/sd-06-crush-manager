@@ -6,12 +6,21 @@ const readFile = async (fileName) => {
   return fileRead;
 };
 
-const writeFile = async (fileName, content) => {
-  await fs.writeFile(path(__dirname, '..', `${fileName}.json`), content, 'utf-8');
-  return true;
+const addCrushToFile = async (fileName, content) => {
+  const fileRead = await fs.readFile(path(__dirname, '..', `${fileName}.json`), 'utf-8');
+  const parsedFile = await JSON.parse(fileRead);
+  const contentToAdd = {
+    ...content,
+    id: parsedFile.length + 1,
+  };
+  await parsedFile.push(contentToAdd);
+  const writeToFile = JSON.stringify(parsedFile);
+  await fs.writeFile(path(__dirname, '..', `${fileName}.json`), writeToFile, 'utf-8');
+  console.log(parsedFile);
+  return contentToAdd.id;
 };
 
 module.exports = {
   readFile,
-  writeFile,
+  addCrushToFile,
 };
