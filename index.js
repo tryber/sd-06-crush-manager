@@ -13,14 +13,14 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-// app.use((req, _res, next) => {
-//   console.log({
-//     data: new Date(),
-//     method: req.method,
-//     router: req.originalUrl,
-//   });
-//   next();
-// });
+app.use((req, _res, next) => {
+  console.log({
+    data: new Date(),
+    method: req.method,
+    router: req.originalUrl,
+  });
+  next();
+});
 
 app.use(bodyParser.json());
 

@@ -8,31 +8,29 @@ const loginRouter = express.Router();
 
 loginRouter.use((req, res, next) => {
   const { email, password } = req.body;
-  const boolError = resError(
-    !email,
-    res,
-    'O campo "email" é obrigatório',
-    400,
-  )
-  && resError(
-    checkEmail(email),
-    res,
-    'O "email" deve ter o formato "email@email.com"',
-    400,
-  )
-  && resError(
-    !password,
-    res,
-    'O campo "password" é obrigatório',
-    400,
-  )
-  && resError(
-    characterCount(password) < 6,
-    res,
-    'A "senha" deve ter pelo menos 6 caracteres',
-    400,
-  );
-  if (!boolError) return;
+  const { boolSaida } = resError(res)
+    .resError2(
+      !email,
+      'O campo "email" é obrigatório',
+      400,
+    )
+    .resError2(
+      checkEmail(email),
+      'O "email" deve ter o formato "email@email.com"',
+      400,
+    )
+    .resError2(
+      !password,
+      'O campo "password" é obrigatório',
+      400,
+    )
+    .resError2(
+      characterCount(password) < 6,
+      'A "senha" deve ter pelo menos 6 caracteres',
+      400,
+    );
+  if (boolSaida) return;
+  // console.log('token foi feito: passou do return');
   next();
 });
 
