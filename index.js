@@ -37,7 +37,7 @@ const tokenAuthentication = { authorization: '7mqaVRXJSp886CGr' };
 const validPassword = (password) => password.toLowerCase().toString();
 const validEmail = (email) => /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/.test(email);
 
-app.post('/login', (req, res) => {
+app.get('/login', (req, res) => {
   const { email, password } = req.body;
 
   if (!email || email === '') {
