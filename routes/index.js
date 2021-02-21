@@ -24,7 +24,6 @@ routes.get('/crush/:id', rescue(async (req, res) => {
 routes.route('/crush')
   .get(rescue(async (req, res) => {
     const file = await readFile('crush');
-    console.log(typeof file);
     return res.status(200).json(JSON.parse(file));
   }))
   .post(

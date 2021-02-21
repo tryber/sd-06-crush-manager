@@ -16,7 +16,6 @@ const addCrushToFile = async (fileName, content) => {
   await parsedFile.push(contentToAdd);
   const writeToFile = JSON.stringify(parsedFile);
   await fs.writeFile(path(__dirname, '..', `${fileName}.json`), writeToFile, 'utf-8');
-  console.log(parsedFile);
   return contentToAdd.id;
 };
 
