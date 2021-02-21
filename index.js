@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const crush = require('./crush.json');
 
 const app = express();
@@ -13,10 +14,10 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/crush', (_req, res) => {
-  const crushFile = fs.readFileSync(crush, 'utf-8');
+  const crushFile = fs.readFileSync(path.join(__dirname, 'crush.json'), 'utf-8');
   if (!crushFile) {
     return res.status(200).json([]);
   }
   return res.status(200).json(JSON.parse(crushFile));
 });
-app.listen(3000);
+app.listen(3000, () => console.log('rodando'));
