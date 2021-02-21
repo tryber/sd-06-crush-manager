@@ -60,14 +60,14 @@ const validateDateFormat = (date) => {
   console.log(dateObj, day, month, year);
   if (month < 9) {
     const compareDate = day < 10
-      ? `0${day + 1}/0${month + 1}/${year}`
-      : `${day + 1}/0${month + 1}/${year}`;
+      ? `0${day}/0${month + 1}/${year}`
+      : `${day}/0${month + 1}/${year}`;
     console.log(compareDate);
     return compareDate === date;
   }
   const compareDate = day < 10
-    ? `0${day + 1}/${month + 1}/${year}`
-    : `${day + 1}/${month + 1}/${year}`;
+    ? `0${day}/${month + 1}/${year}`
+    : `${day}/${month + 1}/${year}`;
   console.log(compareDate);
   return compareDate === date;
 };
