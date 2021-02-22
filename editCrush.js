@@ -2,7 +2,8 @@ const fs = require('fs').promises;
 const { getData } = require('./getData');
 
 const updateCrush = async (crush, id) => {
-  const editData = await JSON.parse(getData());
+  const data = await getData();
+  const editData = JSON.parse(data);
   editData.forEach((element, index) => {
     if (element.id === id) {
       editData.splice(index, 1);
