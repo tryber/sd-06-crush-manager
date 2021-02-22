@@ -1,59 +1,43 @@
 const express = require('express');
 const fs = require('fs');
+const bodyParser = require('body-parser');
+const rescue = require('express-rescue');
+const path = require('path');
 
-const dataCrush = 'crush.json';
+const dataCrush = path.resolve(__dirname, 'crush.json');
 
 const SUCCESS = 200;
 const PORT = 3000;
 
 const app = express();
 app.use(express.json());
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-// Challenge 1
+// ReadFile
 
 function readFile(fileName) {
   return new Promise((resolve, reject) => {
     fs.readFile(fileName, 'utf8', (err, content) => {
-      if (err) return reject(err);
+      if (err) return reject(new Error(err));
       resolve(content);
     });
   });
 }
 
-const data = readFile(dataCrush);
+// Challenge 1
 
-app.get('/crush', (_req, res) => {
-  if (data.length === 0) return res.status(200).json([]);
+app.get(
+  '/crush',
+  rescue(async (_req, res, _next) => {
+    const crushs = await readFile(dataCrush);
 
-  data
-    .then((content) => {
-      res.status(200).json(JSON.parse(content));
-    })
-    .catch((err) => {
-      res.status(500).json({ Error: err.message });
-    });
-});
-
-// Challenge 2
-
-app.get('/crush/:id', (req, res) => {
-  const { id } = req.params;
-
-  data
-    .then((content) => {
-      const arrayData = JSON.parse(content);
-      const crushId = arrayData.find((obj) => obj.id === parseInt(id, 10));
-      if (!crushId) return res.status(404).json({ message: 'Crush não encontrado' });
-      res.status(200).json(crushId);
-    })
-    .catch((err) => {
-      res.status(500).json({ Error: err.message });
-    });
-});
+    res.status(SUCCESS).json(JSON.parse(crushs));
+  }),
+);
 
 app.listen(PORT, () => console.log(`Rodando servidor na porta: ${PORT}`));
