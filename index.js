@@ -7,6 +7,8 @@ const SUCCESS = 200;
 
 app.use(express.json());
 
+const tokenAuthentication = { authorization: '7mqaVRXJSp886CGr' };
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
@@ -33,11 +35,10 @@ app.get('/crush/:id', (req, res) => {
 });
 
 // REQ-3
-const tokenAuthentication = { authorization: '7mqaVRXJSp886CGr' };
 const validPassword = (password) => password.toLowerCase().toString();
 const validEmail = (email) => /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/.test(email);
 
-app.get('/login', (req, res) => {
+app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   if (!email || email === '') {
@@ -57,6 +58,7 @@ app.get('/login', (req, res) => {
     return res.status(400).json({
       message: 'A "senha" deve ter pelo menos 6 caracteres' });
   }
+
   return res.status(200).json({ token: tokenAuthentication.authorization });
 });
 
