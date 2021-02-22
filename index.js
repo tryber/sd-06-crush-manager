@@ -125,7 +125,7 @@ app.put('/crush/:id', async (req, res) => {
   const index = JSON.parse(prevData).findIndex((el) => el.id === +id);
   prevData[index] = { ...prevData[index], name, age, date };
   await editCrush(prevData);
-  res.status(200).send(prevData[index]);
+  // res.status(200).send(prevData[index]);
 });
 
 app.listen(3000, () => console.log('aqui'));
