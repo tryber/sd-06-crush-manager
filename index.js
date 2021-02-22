@@ -90,8 +90,7 @@ app.post('/crush', (req, res) => {
     return res.status(400).json({ message: 'O crush deve ser maior de idade' });
   }
   if (!date || date.datedAt === '' || date.rate === '' || date === undefined || date.datedAt === undefined || date.rate === undefined) {
-    return res.status(400).json(
-  { message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
   if (!validDate(date.datedAt)) {
     return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -131,9 +130,8 @@ app.put('/crush/:id', (req, res) => {
   if (age < 18) {
     return res.status(400).json({ message: 'O crush deve ser maior de idade' });
   }
-  if (!date || date.datedAt === '' || date.rate === '' || date === undefined || 
-date.datedAt === undefined || date.rate === undefined) {
-    return res.status(400).json({ 
+  if (!date || date.datedAt === '' || date.rate === '' || date === undefined || date.datedAt === undefined || date.rate === undefined) {
+    return res.status(400).json({
       message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
   if (!validDate(date.datedAt)) {
