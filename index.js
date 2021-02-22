@@ -1,7 +1,5 @@
 const express = require('express');
 const fs = require('fs');
-// const path = require('path');
-// const { fileURLToPath } = require('url');
 
 const app = express();
 const SUCCESS = 200;
@@ -276,10 +274,35 @@ app.put('/crush/:id', (req, res) => {
 
 // Req6 -*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*
 
-// app.delete('/crush/:id', (req, res) => {
-//  const {id} = req.params;
-//  const{authorization} = req.headers;
+app.delete('/crush/:id', (req, res) => {
+  const { id } = req.params;
+  const { authorization } = req.headers;
 
-// }
+  const crushArray = JSON.parse(fs.readFileSync('./crush.json'));
+
+  if (!authorization || authorization === '' || authorization === undefined) {
+    return res.status(401).json(
+      {
+        message: 'Token não encontrado',
+      },
+    );
+  }
+
+  if (authorization.length !== 16) {
+    return res.status(401).json(
+      {
+        message: 'Token inválido',
+      },
+    );
+  }
+
+  const filteredCrushArray = crushArray.find((crush) => crush.id !== Number(id));
+  fs.writeFileSync('crush.json', JSON.stringify(filteredCrushArray));
+  return res.status(200).json(
+    {
+      message: 'Crush deletado com sucesso',
+    },
+  );
+});
 
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
