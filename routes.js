@@ -4,7 +4,6 @@ const routes = express.Router();
 const { login } = require('./login');
 const { getAllCrushes, getCrushById, addCrush, editCrush } = require('./crush');
 
-
 routes.get('/', (_request, response) => {
   response.status(200).send('Crush Manager - Rota /');
 });

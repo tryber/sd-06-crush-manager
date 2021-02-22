@@ -87,8 +87,9 @@ const editCrush = async (req, res) => {
   if (!date) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
   const { datedAt, rate } = date;
+  const rateInvalid = rate === undefined && rate !== 0;
 
-  if (!datedAt || !rate && rate !== 0) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (!datedAt || rateInvalid) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
   const dateFormatRegEx = /^[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]/;
   const tokenIsValid = authorization.length === 16;
