@@ -1,11 +1,14 @@
 const { readFile, writeFile } = require('../utils/managefile');
 const { dateValidation } = require('../utils/validator');
 
-// Requisito 5
+// Função responsável por editar um crush existente.
 const editCrush = async (req, res) => {
+  // Função que busca o token vindo da autorização de acesso, de acordo com os testes.
   const token = req.headers.authorization;
   console.log(token);
+  // Descontrução que capta o nome, age, e date do body da requisição.
   const { name, age, date } = req.body;
+  // Validações de token, name, age e date de acordo com os requisitos.
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
@@ -47,6 +50,9 @@ const editCrush = async (req, res) => {
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
+  // Conjunto de funções responsável por fazer a edição de crush existente,
+  // captando o id, e fazendo um filter no array de crushes, buscando o crush pelas suas chaves,
+  // finalizando com um writeFile para editar o dado no json.
   const crushes = await readFile('crush');
   const crushesParsed = JSON.parse(crushes);
   const crushToBeEditedId = parseInt(req.params.id, 10);
@@ -61,6 +67,7 @@ const editCrush = async (req, res) => {
   crushesWithoutCrushId.push(crushEdited);
   writeFile('crush', JSON.stringify(crushesWithoutCrushId));
   console.log(crushesWithoutCrushId);
+  // Retornando um res 200 com o dado editado.
   res.status(200).send(crushEdited);
 };
 
