@@ -10,7 +10,7 @@ const addCrush = async (crush, crushList) => {
 
 const createCrush = async (req, res) => {
   const crushData = await getData();
-  const id = crushData.length + 1;
+  const id = JSON.parse(crushData).length + 1;
   const newCrush = { id, ...req.body };
   addCrush(newCrush, JSON.parse(crushData));
   res.status(201).json(newCrush);
