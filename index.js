@@ -29,7 +29,7 @@ app.get('/crush', async (req, res) => {
   res.status(200).json(file);
 });
 
-// Requisito 2
+// Requisito 21
 
 app.get('/crush/:id', async (req, res) => {
   const file = await readFile(path.join(__dirname, '.', 'crush.json'));
