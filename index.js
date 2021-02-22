@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 // const getRead = async (fileName) => {
 const getRead = async () => {
   const file = await fs.readFile('./crush.json', 'utf-8', (err, data) => {
-  // const file = await fs.readFile(path.resolve(__dirname, `${fileName}.json`), '(err, data) => {
+    // const file = await fs.readFile(path.resolve(__dirname, `${fileName}.json`), '(err, data) => {
     if (err) {
       return err;
     }
@@ -25,7 +25,7 @@ const getRead = async () => {
 };
 
 const getWrite = async (data) => {
-// await fs.writeFile(path.resolve(__dirname, `${fileName}.json`), data, 'utf-8', (err) => {
+  // await fs.writeFile(path.resolve(__dirname, `${fileName}.json`), data, 'utf-8', (err) => {
   await fs.writeFile('./crush.json', data, 'utf-8', (err) => {
     if (err) return console.log(err);
   });
@@ -204,7 +204,7 @@ app.put('/crush/:id', async (request, response) => {
   }
   if (verifyDate(date.datedAt) === false) {
     return response.status(400)
-    .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+      .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   }
 
   // const allCrushs = await fs.readFile('crush.json');
@@ -219,13 +219,34 @@ app.put('/crush/:id', async (request, response) => {
   response.status(200).send(newCrush);
 });
 
-// app.delete('/crush/:id', async (request, response) => {});
+// // - req 06 -
+// app.delete('/crush/:id', async (request, response) => {
+//   const token = request.headers.authorization;
+
+//   if (!token) {
+//     return response.status(401).json({ message: 'Token não encontrado' });
+//   }
+//   if (token.length !== 16) {
+//     return response.status(401).json({ message: 'Token inválido' });
+//   }
+
+//   const allCrushs = await getRead();
+//   const allCrushsJson = JSON.parse(allCrushs);
+//   const crushById = parseInt(request.params.id, 10);
+//   const crushToDeleted = allCrushsJson.find((crush) => crush.id === crushById);
+//   const allCrushsNew = allCrushsJson.filter((crush) => crush !== crushToDeleted);
+
+// await writeFile('crush', JSON.stringify(allCrushsNew));
+
+//   response.status(200).json({ message: 'Crush deletado com sucesso' });
+// });
+
 // app.get('/crush/search?q=searchTerm', async (request, response) => {});
 
 // app.listen(3000);
 app.listen(3000, () => console.log('running'));
 
-// referencia 
+// referencia
 // Apoio de Andersson Stuber e Paulo Lins
 // YOUTUBE = "tantaum" de videos(maioria ROCKETSEAT)
 // npm install
