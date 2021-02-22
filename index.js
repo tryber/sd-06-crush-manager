@@ -296,8 +296,9 @@ app.delete('/crush/:id', (req, res) => {
     );
   }
 
-  const filteredCrushArray = crushArray.find((crush) => crush.id !== Number(id));
-  fs.writeFileSync('crush.json', JSON.stringify(filteredCrushArray));
+  const deletedCrush = crushArray.find((crush) => crush.id === Number(id));
+  crushArray.pop(deletedCrush);
+  fs.writeFileSync('crush.json', JSON.stringify(crushArray));
   return res.status(200).json(
     {
       message: 'Crush deletado com sucesso',
