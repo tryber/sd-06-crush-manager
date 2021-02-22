@@ -105,4 +105,27 @@ app.post('/crush', async (req, res) => {
   res.status(201).send(newCrushList[newCrushList.length - 1]);
 });
 
+// Requisito 5
+const editCrush = async (content) => {
+  fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
+    if (err) throw err;
+    return JSON.stringify(content);
+  });
+};
+
+app.put('/crush/:id', async (req, res) => {
+  const auth = req.headers.authorization;
+  const token = validateToken(auth);
+  if (token) res.status(401).json({ message: token });
+  const { name, age, date } = req.body;
+  const data = validateData(name, age, date);
+  if (data) return res.status(400).json({ message: data });
+  const prevData = await readFile(path.join(__dirname, '.', 'crush.json'));
+  const { id } = req.params;
+  const index = JSON.parse(prevData).findIndex((el) => el.id === +id);
+  prevData[index] = { ...prevData[index], name, age, date };
+  await editCrush(prevData);
+  res.status(200).send(prevData[index]);
+});
+
 app.listen(3000, () => console.log('aqui'));
