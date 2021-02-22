@@ -64,8 +64,7 @@ app.get('/login', (req, res) => {
 const validDate = (data) => /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(data);
 app.post('/crush', (req, res) => {
   const { authorization } = req.headers;
-
-  const file = JSON.parse(fs.readFileSync(path.join(__dirname, 'crush.json'), 'utf-8'));
+  const file = JSON.parse(fs.readFileSync('./crush.json'));
   const newID = file.length + 1;
   const newCrush = { ...req.body, id: newID };
   const { name, age, date } = newCrush;
