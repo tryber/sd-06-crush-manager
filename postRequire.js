@@ -9,7 +9,6 @@ function login(request, response) {
 
 // create crush
 async function createCrush(request, response) {
-  console.log('AQUI');
   const crushes = await readJson();
   const crushesNew = { id: crushes.length + 1, ...request.body };
   crushes.push({
@@ -27,18 +26,18 @@ async function editCrushes(request, response) {
   const crushes = await readJson();
   const { id } = request.params;
   const crushIndex = crushes.find((objCrush) => objCrush.id === Number(id));
-
+  console.log(crushIndex);
   if (!crushIndex) return response.status(404).json({ message: 'Crush não encontrado' });
-  response.status(200).json(crushIndex);
 
   const { name, age, date } = request.body;
-  const editNewCrush = { ...crushIndex, name, age, date };
+
+  const editNewCrush = crushes.filter((crush) => crush.id !== Number(id));
+  const crushUpdate = { id: +id, name, age, date };
+  editNewCrush.push(crushUpdate);
 
   await writeJson(editNewCrush);
-  const crushes2 = await readJson();
-  console.log('resultado ', crushes2);
   if (!crushes) return response.status(404).json({ message: 'erro writeJson' });
-  return response.status(200).json({ editNewCrush });
+  return response.status(200).json(crushUpdate);
 }
 // delete crush
 async function deleteCrush(request, response) {
