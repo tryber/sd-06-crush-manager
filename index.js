@@ -1,12 +1,12 @@
 const express = require('express');
 const fs = require('fs');
-const path = require('path');
-const { fileURLToPath } = require('url');
+// const path = require('path');
+// const { fileURLToPath } = require('url');
 
 const app = express();
 const SUCCESS = 200;
 
-const token = { authorization: '7mqaVRXJSp886CGr' };
+const auth = { authorization: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
@@ -180,4 +180,5 @@ app.post('/crush', (req, res) => {
   fs.writeFileSync('crush.json', JSON.stringify(crushArray));
   return res.status(201).json(addedCrush);
 });
+
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
