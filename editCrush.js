@@ -9,7 +9,7 @@ const updateCrush = async (crush, id) => {
     }
   });
   const updateList = [...data, crush];
-  fs.writeFile('./crush.json', JSON.stringify(updateList), (err) => {
+  await fs.writeFile('./crush.json', JSON.stringify(updateList), (err) => {
     if (err) throw new Error(err);
   });
 };
