@@ -27,6 +27,6 @@ app.get('/crush/:id', getCrushById);
 
 app.post('/crush', checkToken, validateCrush, createCrush);
 
-app.put('/crush/:id', checkToken, validateCrush, editCrush);
+// app.put('/crush/:id', checkToken, validateCrush, editCrush);
 
 app.listen(3000);
