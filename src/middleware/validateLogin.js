@@ -20,7 +20,7 @@ const validateLogin = (req, res) => {
   }
   if (emailValidation(email)) {
     return res.status(400).json({
-      message: 'O "email" dev// Função que busca o token vindo da autorização de acesso, de acordo com os testes.e ter o formato "email@email.com"',
+      message: 'O "email" deve ter o formato "email@email.com"',
     });
   }
   if (passwordValidation(password)) {
