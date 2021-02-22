@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const getAllCrushes = require('./services/getAllCrushes');
 const getCrushById = require('./services/getCrushById');
+const login = require('./services/login');
 
 const app = express();
 const SUCCESS = 200;
@@ -17,5 +18,7 @@ app.get('/', (_request, response) => {
 app.get('/crush', getAllCrushes);
 
 app.get('/crush/:id', getCrushById);
+
+app.post('/login', login);
 
 app.listen(PORT, () => console.log('Server rolando na porta %s', PORT));
