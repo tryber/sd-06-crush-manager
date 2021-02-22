@@ -271,6 +271,15 @@ app.put('/crush/:id', (req, res) => {
   });
 
   fs.writeFileSync('crush.json', JSON.stringify(newCrushArray));
-  return res.status(201).json(editedCrush);
+  return res.status(200).json(editedCrush);
 });
+
+// Req6 -*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*
+
+// app.delete('/crush/:id', (req, res) => {
+//  const {id} = req.params;
+//  const{authorization} = req.headers;
+
+// }
+
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
