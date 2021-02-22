@@ -9,7 +9,7 @@ const getData = async () => {
     }
     return data;
   });
-  return newData;
+  return JSON.parse(newData);
 };
 
 module.exports = { getData };
