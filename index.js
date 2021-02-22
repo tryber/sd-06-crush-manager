@@ -23,6 +23,29 @@ app.get('/crush', async (_req, res) => {
   return res.status(200).json(JSON.parse(crushes));
 });
 
+// Requisito-7
+// res com o um array de crushs que contenham em seu nome o termo pesquisado e o status 200;
+app.get('/crush/search', async (req, res) => {
+  const { authorization } = req.headers;
+  const crushes = await fs.readFile(crushArray);
+  const crushesJson = JSON.parse(crushes);
+  const { searchTerm } = req.query;
+
+  // token
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  if (!searchTerm) {
+    return res.status(200).json(crushesJson);
+  }
+  const crush = crushesJson.find((crushJson) => crushJson.name.includes(searchTerm));
+  return res.status(200).json(crush);
+});
+
 // Requisito-2         obs: id da url vem formato string, por isso o Number(id)
 // res com o crush doo id da rota ou { "message": "Crush não encontrado" } e o status 404;
 app.get('/crush/:id', async (req, res) => {
