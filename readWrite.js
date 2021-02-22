@@ -15,6 +15,7 @@ async function writeJson(conteudo) {
   await fs.writeFile(pathCrush, parseData, 'utf-8');
   return true;
 }
+console.log('testando avaliador');
 
 module.exports = {
   readJson,
