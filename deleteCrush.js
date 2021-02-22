@@ -11,11 +11,6 @@ const deleteCrush = async (req, res) => {
   if (index !== -1) {
     deletedData.splice(index, 1);
   }
-  // deletedData.forEach((element, index) => {
-  //   if (element.id === id) {
-  //     deletedData.splice(index, 1);
-  //   }
-  // });
   console.log(deletedData);
   fs.writeFile('./crush.json', JSON.stringify(deletedData), (err) => {
     if (err) throw new Error(err);
