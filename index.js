@@ -58,7 +58,7 @@ app.post('/login', (req, res) => {
   return res.status(200).json({ token: randomToken });
 });
 
-// Requisito 4
+// Requisito 42
 
 const addNewCrush = async (content) => {
   fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
