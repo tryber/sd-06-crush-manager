@@ -60,6 +60,12 @@ app.post('/login', (req, res) => {
 
 // Requisito 4
 
+const addNewCrush = async (content) => {
+  fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
+    if (err) throw err;
+    return JSON.stringify(content);
+  });
+};
 const validateToken = (auth) => {
   if (!auth) return 'Token não encontrado';
   if (auth.length < 16) return 'Token inválido';
@@ -72,17 +78,10 @@ const validateData = (name, age, date) => {
   if (name.length < 3) return 'O "name" deve ter pelo menos 3 caracteres';
   if (!age) return 'O campo "age" é obrigatório';
   if (age < 18) return 'O crush deve ser maior de idade';
-  if ((!date || !date.rate || !date.datedAt) && date.rate !== 0) return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
+  if (!date || date === '' || !date.datedAt || date.rate === undefined) return 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
   if (!regexDate.test(date.datedAt) && date.datedAt.length) return 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
-  if (date.rate.length >= 1 || date.rate === 0 || !Number.isInteger(date.rate) || date.rate > 5 || date.rate < 1) return 'O campo "rate" deve ser um inteiro de 1 à 5';
+  if (!Number.isInteger(date.rate) || date.rate > 5 || date.rate < 1) return 'O campo "rate" deve ser um inteiro de 1 à 5';
   return false;
-};
-
-const addNewCrush = async (content) => {
-  fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
-    if (err) throw err;
-    return JSON.stringify(content);
-  });
 };
 
 app.post('/crush', async (req, res) => {
@@ -93,6 +92,7 @@ app.post('/crush', async (req, res) => {
   const resultData = validateData(name, age, date);
   if (resultData) return res.status(400).json({ message: resultData });
   const prevList = await readFile(path.join(__dirname, '.', 'crush.json'));
+  // console.log('passou por aqui');
   const id = prevList.length + 1;
   const newCrushList = [...prevList, { id, name, age, date }];
   await addNewCrush(newCrushList);
