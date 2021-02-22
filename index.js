@@ -15,12 +15,14 @@ app.get('/crush', (req, res) => {
 
 app.get('/crush/:id', (req, res) => {
   const { id } = req.params;
-  const crush = crushs.find((e) => e.id == id);
+
+  const crush = crushs.find((e) => e.id === +id);
+
   if (crush) {
-    return res.status(200).json(crush)
-  } else {
-    return res.status(404).json({ message: "Crush não encontrado" });
+    return res.status(SUCCESS).json(crush);
   }
+
+  res.status(404).json({ message: 'Crush não encontrado' });
 });
 
 app.listen(3000);
