@@ -88,7 +88,7 @@ app.post('/login', (req, res) => {
   }
   return res.status(200).json(
     {
-      token: '7mqaVRXJSp886CGr',
+      token: auth.authorization,
     },
   );
 });
@@ -181,4 +181,96 @@ app.post('/crush', (req, res) => {
   return res.status(201).json(addedCrush);
 });
 
+// Req5 -*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*
+
+app.put('/crush/:id', (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+  const { name, age, date } = req.body;
+
+  const crushArray = JSON.parse(fs.readFileSync('./crush.json'));
+  const editedCrush = { name, age, date, id: Number(id) };
+
+  if (authorization === undefined || !authorization || authorization === '') {
+    return res.status(401).json(
+      {
+        message: 'Token não encontrado',
+      },
+    );
+  }
+
+  if (authorization.length !== 16) {
+    return res.status(401).json(
+      {
+        message: 'Token inválido',
+      },
+    );
+  }
+
+  if (name === '' || !name) {
+    return res.status(400).json(
+      {
+        message: 'O campo "name" é obrigatório',
+      },
+    );
+  }
+
+  if (name.length < 3) {
+    return res.status(400).json(
+      {
+        message: 'O "name" deve ter pelo menos 3 caracteres',
+      },
+    );
+  }
+
+  if (age === '' || !age) {
+    return res.status(400).json(
+      {
+        message: 'O campo "age" é obrigatório',
+      },
+    );
+  }
+
+  if (age < 18) {
+    return res.status(400).json(
+      {
+        message: 'O crush deve ser maior de idade',
+      },
+    );
+  }
+
+  if (!date || date.datedAt === '' || date.datedAt === undefined || date.rate === '' || date.rate === undefined) {
+    return res.status(400).json(
+      {
+        message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+      },
+    );
+  }
+
+  if (!validateDate(date.datedAt)) {
+    return res.status(400).json(
+      {
+        message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+      },
+    );
+  }
+
+  if (date.rate < 1 || date.rate > 5) {
+    return res.status(400).json(
+      {
+        message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+      },
+    );
+  }
+
+  const newCrushArray = crushArray.map((newCrush) => {
+    if (newCrush.id === editedCrush.id) {
+      return editedCrush;
+    }
+    return newCrush;
+  });
+
+  fs.writeFileSync('crush.json', JSON.stringify(newCrushArray));
+  return res.status(201).json(editedCrush);
+});
 app.listen(3000, () => console.log('ouvindo na porta 3000'));
