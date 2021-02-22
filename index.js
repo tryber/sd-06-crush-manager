@@ -58,7 +58,7 @@ app.post('/login', (req, res) => {
   return res.status(200).json({ token: randomToken });
 });
 
-// Requisito 42
+// Requisito 4
 
 const addNewCrush = async (content) => {
   fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
@@ -97,6 +97,51 @@ app.post('/crush', async (req, res) => {
   const newCrushList = [...prevList, { id, name, age, date }];
   await addNewCrush(newCrushList);
   res.status(201).send(newCrushList[newCrushList.length - 1]);
+});
+
+// Requisito 5
+
+// const editCrush = async (content) => {
+//   fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
+//     if (err) throw err;
+//     return JSON.stringify(content);
+//   });
+// };
+
+// app.put('/crush/:id', async (req, res) => {
+//   const auth = req.headers.authorization;
+//   const token = validateToken(auth);
+//   if (token) res.status(401).json({ message: token });
+//   const { name, age, date } = req.body;
+//   const data = validateData(name, age, date);
+//   if (data) return res.status(400).json({ message: data });
+//   const prevData = await readFile(path.join(__dirname, '.', 'crush.json'));
+//   const { id } = req.params;
+//   const index = prevData.findIndex((el) => el.id === +id);
+//   prevData[index] = { ...prevData[index], name, age, date };
+//   await editCrush(prevData);
+//   res.status(200).send({id, name, age, date});
+// });
+
+// Requisito 6
+
+const deleteCrush = async (content) => {
+  fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
+    if (err) throw err;
+    return JSON.stringify(content);
+  });
+};
+
+app.delete('/crush/:id', async (req, res) => {
+  const auth = req.headers.authorization;
+  const token = validateToken(auth);
+  if (token) res.status(401).json({ message: token });
+  const prevData = await readFile(path.join(__dirname, '.', 'crush.json'));
+  const { id } = req.params;
+  const index = prevData.findIndex((el) => el.id === +id);
+  prevData.splice(index, 1);
+  await deleteCrush(prevData);
+  res.status(200).send({ message: 'Crush deletado com sucesso' });
 });
 
 app.listen(3000, () => console.log('aqui'));
