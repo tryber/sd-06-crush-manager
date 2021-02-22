@@ -1,28 +1,32 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const data = require('./crush.json');
-
-const port = 3000;
+const { getCrushes, getCrushById, getBySearchTerm } = require('./src/endpoints/get');
+const { handleLogin, addCrush } = require('./src/endpoints/post');
+const { editCrush } = require('./src/endpoints/put');
+const { deleteCrush } = require('./src/endpoints/delete');
+const { loginValidator, alterCrushValidator } = require('./src/middlewares/dataValid');
+const { tokenAuthenticator } = require('./src/middlewares/tokenAuth');
 
 const app = express();
 const SUCCESS = 200;
-
-app.use(bodyParser.json());
+const PORT = 3000;
 
 // não remova esse endpoint, e para o avaliador funcionar
+app.use(express.json());
+
+// não remover esse endpoint
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', (_req, res, _next) => {
-  if (data.length) return res.status(SUCCESS).send(data);
-  return res.status(SUCCESS).send([]);
-});
+app.get('/crush', getCrushes);
+app.get('/crush/search', tokenAuthenticator, getBySearchTerm);
+app.get('/crush/:id', getCrushById);
 
-app.get('/crush/:id', (req, res, _next) => {
-  const { id } = req.params;
-  if (!data[id]) return res.json({ message: 'Crush não encontrado' });
-  return res.status(SUCCESS).json(data[id]);
-});
+app.post('/login', loginValidator, handleLogin);
+app.post('/crush', tokenAuthenticator, alterCrushValidator, addCrush);
 
-app.listen(port);
+app.put('/crush/:id', tokenAuthenticator, alterCrushValidator, editCrush);
+
+app.delete('/crush/:id', tokenAuthenticator, deleteCrush);
+
+app.listen(PORT, () => console.log(`port: ${PORT}`));
