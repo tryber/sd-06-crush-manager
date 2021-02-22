@@ -24,13 +24,13 @@ const getRead = async () => {
   return file;
 };
 
-const getWrite = async (data) => {
-  // await fs.writeFile(path.resolve(__dirname, `${fileName}.json`), data, 'utf-8', (err) => {
-  await fs.writeFile('./crush.json', data, 'utf-8', (err) => {
-    if (err) return console.log(err);
-  });
-  return true;
-};
+// const getWrite = async (data) => {
+// await fs.writeFile(path.resolve(__dirname, `${fileName}.json`), data, 'utf-8', (err) => {
+//   await fs.writeFile('./crush.json', data, 'utf-8', (err) => {
+//     if (err) return console.log(err);
+//   });
+//   return true;
+// };
 
 const verifyEmail = (email) => {
   const regex = /^[^@]+@[^@]+\.[^@]+$/;
@@ -44,10 +44,10 @@ const verifyPassword = (password) => {
   return false;
 };
 
-const verifyDate = (date) => {
-  const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-  return regex.test(date);
-};
+// const verifyDate = (date) => {
+//   const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
+//   return regex.test(date);
+// };
 
 // const token = crypto.randomBytes(8).toString('hex');
 
@@ -117,10 +117,9 @@ app.post('/crush', async (request, response) => {
   const allCrushs = await fs.readFile('crush.json');
   const tokenHeader = request.headers.authorization;
   const allCrushsJson = JSON.parse(allCrushs);
-  // await getWrite(JSON.stringify(allCrushsJson));
   const { name, age, date } = request.body;
   const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-  
+
   if (!tokenHeader) {
     return response.status(401).json({ message: 'Token não encontrado' });
   }
@@ -144,8 +143,8 @@ app.post('/crush', async (request, response) => {
 
   // if (!date || !date.datedAt || date.rate === undefined) {
   // if (date === undefinied || !date || !date.datedAt || date.rate === undefined) {
-  // if (!date.rate || !date.dateAt || date === '' || !date || date.datedAt === '' || date.rate === '') {
-  if (!date || !date.datedAt || !date.rate || date === '' || date.datedAt === '' || date.rate === '') {
+  if (!date || !date.datedAt || !date.rate || date === ''
+    || date.datedAt === '' || date.rate === '') {
     return response
       .status(400)
       .json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
@@ -159,9 +158,9 @@ app.post('/crush', async (request, response) => {
 
   const newCrush = { id: allCrushsJson.length + 1, ...request.body };
   allCrushsJson.push(newCrush);
+  // await getWrite(JSON.stringify(allCrushsJson));
   const crushJson = JSON.stringify(allCrushsJson);
   await fs.writeFile('crush.json', crushJson);
-
   return response.status(201).json(newCrush);
 });
 
