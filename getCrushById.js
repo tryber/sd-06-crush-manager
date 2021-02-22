@@ -7,7 +7,7 @@ const getCrushById = async (req, res) => {
   if (!selectedCrush) {
     return res.status(404).json({ message: 'Crush não encontrado' });
   }
-  res.send(selectedCrush);
+  res.status(200).send(selectedCrush);
 };
 
 module.exports = { getCrushById };

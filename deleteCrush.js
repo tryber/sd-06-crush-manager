@@ -7,11 +7,15 @@ const deleteCrush = async (req, res) => {
   const delData = await getData();
   const deletedData = JSON.parse(delData);
   console.log(deletedData);
-  deletedData.forEach((element, index) => {
-    if (element.id === id) {
-      deletedData.splice(index, 1);
-    }
-  });
+  const index = deletedData.findIndex((element) => element.id === id);
+  if (index !== -1) {
+    deletedData.splice(index, 1);
+  }
+  // deletedData.forEach((element, index) => {
+  //   if (element.id === id) {
+  //     deletedData.splice(index, 1);
+  //   }
+  // });
   console.log(deletedData);
   fs.writeFile('./crush.json', JSON.stringify(deletedData), (err) => {
     if (err) throw new Error(err);
