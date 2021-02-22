@@ -10,4 +10,4 @@ const getCrushById = async (req, res) => {
   res.send(selectedCrush);
 };
 
-module.exports = getCrushById;
+module.exports = { getCrushById };

@@ -13,8 +13,8 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-const getAllCrush = require('./getAllCrushes');
-const getCrushById = require('./getCrushById');
+const { getAllCrush } = require('./getAllCrushes');
+const { getCrushById } = require('./getCrushById');
 const { login } = require('./getToken');
 const { checkToken } = require('./services');
 const { validateCrush } = require('./validateCrush');

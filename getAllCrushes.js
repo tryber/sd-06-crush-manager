@@ -5,4 +5,4 @@ const getAllCrush = async (req, res) => {
   res.send(JSON.parse(response));
 };
 
-module.exports = getAllCrush;
+module.exports = { getAllCrush };
