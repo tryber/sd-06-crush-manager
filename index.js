@@ -30,6 +30,6 @@ app.post('/crush', checkToken, validateCrush, createCrush);
 
 app.put('/crush/:id', checkToken, validateCrush, editCrush);
 
-app.delete('/crush/:id', validateCrush, deleteCrush);
+app.delete('/crush/:id', checkToken, deleteCrush);
 
 app.listen(3000);

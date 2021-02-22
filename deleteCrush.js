@@ -9,10 +9,10 @@ const deleteCrush = async (req, res) => {
   if (index !== -1) {
     deletedData.splice(index, 1);
   }
-  fs.writeFile('./crush.json', JSON.stringify(deletedData), (err) => {
+  await fs.writeFile('./crush.json', JSON.stringify(deletedData), (err) => {
     if (err) throw new Error(err);
   });
-  res.status(200).json({ message: 'Crush deletado com sucesso' });
+  return res.status(200).json({ message: 'Crush deletado com sucesso' });
 };
 
 module.exports = { deleteCrush };
