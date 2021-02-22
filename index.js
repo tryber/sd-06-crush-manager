@@ -1,10 +1,13 @@
 const express = require('express');
+
 const app = express();
 const SUCCESS = 200;
 const fs = require('fs').promises;
 const randtoken = require('rand-token');
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
+
 const storage = 'crush.json';
 
 app.get('/', (_request, response) => {
