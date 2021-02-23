@@ -1,4 +1,4 @@
-const { pegandoTodosOsCrushs } = require('../servicos');
+const { pegandoTodosOsCrushs } = require('./pegandoTodosOsCrushs');
 
 const pegandoCrushId = async (_req, res) => {
   const id = parseInt(_req.params.id, 10);
