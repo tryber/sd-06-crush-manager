@@ -167,4 +167,4 @@ app.delete('/crush/:id', (req, res) => {
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
-app.listen(3000, () => console.log('rodando..'));
+app.listen(3000, () => console.log('rodando.'));
