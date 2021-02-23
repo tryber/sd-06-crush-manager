@@ -1,45 +1,46 @@
 const express = require('express');
+const crypto = require('crypto');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
-app.use(bodyParser.json());
-
-const crushList = require('./middlewares/crushList');
-const crushId = require('./middlewares/crushId');
-const validarData = require('./uteis/validarData');
-const validarEmail = require('./uteis/validarEmail')
-const validarPassword = require('./uteis/validarPassword')
-const readFile = require('./uteis/readFile');
-const writeFile = require('./uteis/writeFile');
-
 const SUCCESS = 200;
-
-app.use((req, res, next) => {
-  console.log({
-    date: new Date(),
-    method: req.method,
-    endPoint: req.originalUrl,
-  });
-  res.on('finish', () => {
-    console.log({
-      date: new Date(),
-      method: req.method,
-      endPoint: req.originalUrl,
-    });
-  });
-  next();
-});
+app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', crushList);
-app.get('/crush/:id', crushId);
+app.listen(3000, () => console.log('running'));
 
-// ------- Requisito 3 --------
+const readFile = require('./uteis/readFile');
+const writeFile = require('./uteis/writeFile');
+const validarEmail = require('./uteis/validarEmail');
+const validarPassword = require('./uteis/validarPassword');
+const validarData = require('./uteis/validarData');
+
+app.get('/crush', async (_request, response) => {
+  const crushes = await readFile('crush');
+
+  try {
+    response.status(200).json(JSON.parse(crushes));
+  } catch (error) {
+    console.log(error);
+    response.status(200).json([]);
+  }
+});
+
+app.get('/crush/:id', async (request, response) => {
+  const { id } = request.params;
+  const myCrushes = await readFile('crush');
+  const element = JSON.parse(myCrushes).find((e) => e.id === parseInt(id, 10));
+
+  if (element) {
+    response.status(200).json(element);
+  } else {
+    response.status(404).json({ message: 'Crush não encontrado' });
+  }
+});
 
 app.post('/login', (request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
@@ -103,8 +104,8 @@ app.put('/crush/:id', async (request, response) => {
 
   const crushes = await readFile('crush');
   const parsedCrushes = JSON.parse(crushes);
-  const id = parseInt(request.params.id, 10);
-  const crushesWithoutId = parsedCrushes.filter((crush) => crush.id !== id);
+  const crushId = parseInt(request.params.id, 10);
+  const crushesWithoutId = parsedCrushes.filter((crush) => crush.id !== crushId);
   const crushEdited = ({ name, age, id: crushId, date });
   crushesWithoutId.push(crushEdited);
 
@@ -121,13 +122,11 @@ app.delete('/crush/:id', async (request, response) => {
 
   const crushes = await readFile('crush');
   const parsedCrushes = JSON.parse(crushes);
-  const id = parseInt(request.params.id, 10);
-  const crushToDelete = parsedCrushes.find((crush) => crush.id === id);
+  const crushId = parseInt(request.params.id, 10);
+  const crushToDelete = parsedCrushes.find((crush) => crush.id === crushId);
   const newCrushesArray = parsedCrushes.filter((crush) => crush !== crushToDelete);
 
   await writeFile('crush', JSON.stringify(newCrushesArray));
 
   response.status(200).json({ message: 'Crush deletado com sucesso' });
 });
-
-app.listen(port, () => console.log(`Serviço rodando na porta ${port}`));
