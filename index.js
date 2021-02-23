@@ -12,20 +12,16 @@ const SUCCESS = 200;
 
 app.use(bodyParser.json());
 
-// req 3
 app.post('/login', middlleware.validaEmail, middlleware.validaSenha, async (_req, res) => {
   const token = await geradorToken();
   return res.status(200).json({ token });
 });
 
-
-// req 1
 app.get('/crush', async (_req, res) => {
   const crushs = await readCrush();
   res.status(200).send(crushs);
 });
 
-// req 2
 app.get('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const crushs = await readCrush();
