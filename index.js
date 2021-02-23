@@ -9,13 +9,12 @@ const PORT = 3000;
 
 app.use(express.json());
 
-const getArrayOfCrushes = (response) => {
+const getArrayOfCrushes = () => {
   const crushesContent = fs.readFileSync('./crush.json', 'utf8');
-  const allCrushesInArray = JSON.parse(crushesContent);
-  return response.status(SUCCESS).send(allCrushesInArray);
+  return JSON.parse(crushesContent);
 };
 
-const getCrushById = (id, response) => {
+const crushById = (id, response) => {
   function compareCrushIdWithParams(crush) {
     if (crush.id === parseInt(id, 10)) {
       return response.status(SUCCESS).send(crush);
@@ -68,19 +67,20 @@ app.get('/', (_request, response) => {
 
 // get all crushes
 app.get('/crush', (_request, response) => {
-  getArrayOfCrushes(response);
+  response.status(SUCCESS).send(getArrayOfCrushes());
 });
 
 // get crush by id
 app.get('/crush/:id', (request, response) => {
   const { id } = request.params;
-  getCrushById(id, response);
+  crushById(id, response);
   responseError(NOTFOUND, 'Crush não encontrado', response);
 });
 
 // send requisition to receive token
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
+  // console.log(password.length);
 
   verifyEmail(email, response);
   verifyPassword(password, response);
