@@ -21,6 +21,7 @@ async function createCrush(request, response) {
   if (!crushes) return response.status(404).json({ message: 'erro writeJson' });
   return response.status(201).json(crushesNew);
 }
+
 // edit crush
 async function editCrushes(request, response) {
   const crushes = await readJson();
@@ -39,6 +40,7 @@ async function editCrushes(request, response) {
   if (!crushes) return response.status(404).json({ message: 'erro writeJson' });
   return response.status(200).json(crushUpdate);
 }
+
 // delete crush
 async function deleteCrush(request, response) {
   const crushes = await readJson();
@@ -48,11 +50,12 @@ async function deleteCrush(request, response) {
   crushes.splice(crushIndex, 1);
   return response.json({ message: 'Crush deletado com sucesso' });
 }
+
 // pesquisa crush
 async function searchCrush(request, response) {
   const crushes = await readJson();
-  const { name } = request.query;
-  const crushesSearch = crushes.find((objCrush) => objCrush.name === name);
+  const { searchTerm } = request.query;
+  const crushesSearch = crushes.find((objCrush) => objCrush.name.includes(searchTerm));
   if (!crushesSearch) return response.status(500).json({ message: 'Crush não encontrado !!' });
   return response.json({ message: 'crush encontrado  com sucesso', crushesSearch });
 }
