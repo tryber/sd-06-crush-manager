@@ -58,13 +58,13 @@ const validateDateFormat = (date) => {
   const year = dateObj.getFullYear();
   if (month < 9) {
     const compareDate = day < 10
-      ? `0${day}/0${month + 1}/${year}`
-      : `${day}/0${month + 1}/${year}`;
+      ? `0${day + 1}/0${month + 1}/${year}`
+      : `${day + 1}/0${month + 1}/${year}`;
     return compareDate === date;
   }
   const compareDate = day < 10
-    ? `0${day}/${month + 1}/${year}`
-    : `${day}/${month + 1}/${year}`;
+    ? `0${day + 1}/${month + 1}/${year}`
+    : `${day + 1}/${month + 1}/${year}`;
   return compareDate === date;
 };
 
@@ -87,16 +87,15 @@ const validateDate = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const emptyKeyMessage = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
   const { date: { rate } } = req.body;
-  req.rateValidation = rate && rate !== ''
-    ? rate >= 1 && rate <= 5
-    : '';
-  if (req.rateValidation === '' || req.rateValidation === undefined) {
+  console.log(typeof rate);
+  console.log(rate >= 1 && rate <= 5);
+  if ((rate === '' && typeof rate !== 'number') || (rate === undefined && typeof rate !== 'number')) {
     return res.status(400)
       .json({
         message: emptyKeyMessage,
       });
   }
-  if (req.rateValidation === false) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (!(rate >= 1 && rate <= 5)) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   next();
 };
 
