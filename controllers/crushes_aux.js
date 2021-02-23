@@ -24,12 +24,11 @@ const validateName = (name) => {
     isValid = false;
   }
   if (name && name.length < 3) {
-    console.log(`${name}, ${typeof(name)}`)
     message = 'O "name" deve ter pelo menos 3 caracteres';
     isValid = false;
   }
 
-  return { message, isValid }
+  return { message, isValid };
 };
 
 const validateAge = (age) => Number.isInteger(age) && age >= 18;
