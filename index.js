@@ -4,6 +4,14 @@ const getAllCrushes = require('./services/getAllCrushes');
 const getCrushById = require('./services/getCrushById');
 const login = require('./services/login');
 const createCrush = require('./services/createCrush');
+const editCrush = require('./services/editCrush');
+const {
+  validateToken,
+  validateName,
+  validateAge,
+  valiDate,
+  validateRate,
+} = require('./utils/validations');
 
 const app = express();
 const SUCCESS = 200;
@@ -22,6 +30,8 @@ app.get('/crush/:id', getCrushById);
 
 app.post('/login', login);
 
-app.post('/crush', createCrush);
+app.post('/crush', validateToken, validateName, validateAge, valiDate, validateRate, createCrush);
+
+app.put('/crush/:id', validateToken, validateName, validateAge, valiDate, validateRate, editCrush);
 
 app.listen(PORT, () => console.log('Server rolando na porta %s', PORT));

@@ -11,11 +11,6 @@ const writeFile = async (content) => {
   return true;
 };
 
-// const writeFile = async (fileName, content) => {
-//   await fs.writeFile(path(__dirname, '..', 'files', fileName+'.txt'), content, 'utf-8');
-//   return true;
-// }
-
 module.exports = {
   readFile,
   writeFile,
