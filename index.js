@@ -24,7 +24,7 @@ const readFile = (file) => new Promise((resolve, reject) => {
 
 app.get('/crush', async (req, res) => {
   const file = await readFile(path.join(__dirname, '.', 'crush.json'));
-  console.log(file);
+  // console.log(file);
   if (file.length === 0) return res.status(200).send([]);
   return res.status(200).json(file);
 });
@@ -45,7 +45,7 @@ app.get('/crush/search', async (req, res) => {
   const data = await readFile(path.join(__dirname, '.', 'crush.json'));
   if (!q) return res.status(200).json(data);
   const result = data.filter((crush) => crush.name.includes(q));
-  console.log(result);
+  // console.log(result);
   if (result.length === 0) return res.status(200).send([]);
   res.status(200).send(result);
 });
