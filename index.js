@@ -5,6 +5,7 @@ const readCrush = require('./service/crush');
 const deletaCrush = require('./service/deleta');
 const geradorToken = require('./service/token');
 const writeCrush = require('./service/writeCrush');
+const updateCrush = require('./service/update');
 
 const app = express();
 const PORT = 3000;
@@ -58,6 +59,22 @@ app.delete('/crush/:id', middlleware.validaToken, async (req, res) => {
 
   res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
+
+app.put(
+  '/crush/:id',
+  middlleware.validaToken,
+  middlleware.validaNome,
+  middlleware.validaIdade,
+  middlleware.validaData,
+  async (req, res) => {
+    const { id } = req.params;
+    const id2 = parseInt(id, 10);
+    const { name, age, date } = req.body;
+    await updateCrush(name, age, id2, date);
+
+    res.status(200).json({ name, age, id: id2, date });
+  },
+);
 
 app.listen(PORT, () => {
   console.log(`Hashirama protegendo a vila oculta da porta ${PORT}`);
