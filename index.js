@@ -21,7 +21,7 @@ app.get('/crush', findAll);
 app.get('/crush/:id', findById);
 app.post('/login', login);
 app.post('/crush', token, addCrush);
-app.post('/crush', token, update);
-app.post('/crush', token, deleteCrush);
+app.put('/crush/:id', token, update);
+app.delete('/crush/:id', token, deleteCrush);
 
 app.listen(3000, () => console.log('ta workando'));
