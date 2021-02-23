@@ -45,10 +45,10 @@ const validateEmail = (request, response, next) => {
 
 const validatePassword = (request, response, next) => {
   const { password } = request.body;
-  console.log(password.length);
+
   if (!password) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
-  console.log(password.length);
-  if (password.length < 6) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+
+  if (password && password.length < 6) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 
   console.log(password.length);
   next();
