@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
@@ -15,8 +15,8 @@ app.get('/', (_request, response) => {
 });
 
 // REQ-1
-app.get('/crush', (_req, res) => {
-  const crushFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'crush.json'), 'utf-8'));
+app.get('/crush', async (_req, res) => {
+  const crushFile = await JSON.parse(fs.readFile(path.join(__dirname, 'crush.json'), 'utf-8'));
   if (!crushFile || !crushFile.length) {
     return res.status(200).json([]);
   }
@@ -24,8 +24,8 @@ app.get('/crush', (_req, res) => {
 });
 
 // REQ-2
-app.get('/crush/:id', (req, res) => {
-  const crushFile = fs.readFileSync(path.join(__dirname, 'crush.json'), 'utf-8');
+app.get('/crush/:id', async (req, res) => {
+  const crushFile = await fs.readFile(path.join(__dirname, 'crush.json'), 'utf-8');
   const { id } = req.params;
   const getCrush = JSON.parse(crushFile).find((crush) => crush.id === Number(id));
   if (!getCrush) {
@@ -65,9 +65,9 @@ app.post('/login', (req, res) => {
 // REQ-4
 const validDate = (data) =>
   /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(data);
-app.post('/crush', (req, res) => {
+app.post('/crush', async (req, res) => {
   const { authorization } = req.headers;
-  const file = JSON.parse(fs.readFileSync('./crush.json'));
+  const file = await JSON.parse(fs.readFile('./crush.json'));
   const newID = file.length + 1;
   const newCrush = { ...req.body, id: newID };
   const { name, age, date } = newCrush;
@@ -99,14 +99,14 @@ app.post('/crush', (req, res) => {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   file.push(newCrush);
-  fs.writeFileSync('crush.json', JSON.stringify(file));
+  fs.writeFile('crush.json', JSON.stringify(file));
   return res.status(201).json(newCrush);
 });
 
 // REQ-5
-app.put('/crush/:id', (req, res) => {
+app.put('/crush/:id', async (req, res) => {
   const { authorization } = req.headers;
-  const file = JSON.parse(fs.readFileSync('./crush.json'));
+  const file = await JSON.parse(fs.readFile('./crush.json'));
 
   const { id } = req.params;
   const { name, age, date } = req.body;
@@ -146,15 +146,15 @@ app.put('/crush/:id', (req, res) => {
     }
     return addedCrush;
   });
-  fs.writeFileSync('crush.json', JSON.stringify(newFile));
+  fs.writeFile('crush.json', JSON.stringify(newFile));
   return res.status(200).json(newCrush);
 });
 
 // REQ-6
-app.delete('/crush/:id', (req, res) => {
+app.delete('/crush/:id', async (req, res) => {
   const { authorization } = req.headers;
   const { id } = req.params;
-  const file = JSON.parse(fs.readFileSync('./crush.json'));
+  const file = await JSON.parse(fs.readFile('./crush.json'));
 
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
@@ -163,7 +163,7 @@ app.delete('/crush/:id', (req, res) => {
     return res.status(401).json({ message: 'Token inválido' });
   }
   const newFile = file.filter((crush) => crush.id !== Number(id));
-  fs.writeFileSync('crush.json', JSON.stringify(newFile));
+  fs.writeFile('crush.json', JSON.stringify(newFile));
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
