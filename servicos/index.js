@@ -12,4 +12,13 @@ const validandoEmail = (email) => {
   return validacao.test(email);
 };
 
-module.exports = { pegandoCrushs };
+const validandoPassword = (password) => {
+  const validacao = /^.{6,}$/;
+  return validacao.test(password);
+};
+
+module.exports = {
+  pegandoCrushs,
+  validandoEmail,
+  validandoPassword,
+};
