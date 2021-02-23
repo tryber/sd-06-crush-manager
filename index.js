@@ -87,7 +87,7 @@ app.post('/crush', validaToken, async (req, res) => {
 
   const corpoValidate = { name, age, id, date };
 
-  const novoCrush = JSON.stringify(dataJson.push(corpoValidate));
+  const novoCrush = JSON.stringify(dataJson.concat(corpoValidate));
 
   await fs.writeFile('./crush.json', novoCrush, 'utf-8');
 
