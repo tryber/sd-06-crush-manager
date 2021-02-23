@@ -8,7 +8,9 @@ const path = require('path');
 const dataCrush = path.resolve(__dirname, 'crush.json');
 
 const SUCCESS = 200;
+const CREATED = 201;
 const BADREQUEST = 400;
+const UNAUTHORIZED = 401;
 const NOTFOUND = 404;
 const INTERNALERROR = 500;
 const PORT = 3000;
@@ -29,6 +31,16 @@ function readFile(fileName) {
     fs.readFile(fileName, 'utf8', (err, content) => {
       if (err) return reject(new Error(err));
       resolve(content);
+    });
+  });
+}
+
+// WriteFile
+function writingFile(fileName, crush) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(fileName, crush, (err) => {
+      if (err) return reject(new Error(err));
+      resolve(crush);
     });
   });
 }
@@ -85,6 +97,73 @@ app.post('/login', (req, res) => {
 
   res.status(SUCCESS).json({ token: authentication });
 });
+
+// Challenge 4
+
+app.post('/crush', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+  const { name, age, date } = req.body;
+
+  const crushs = await readFile(dataCrush);
+  const arrayData = JSON.parse(crushs);
+
+  const newCrush = { name, age, id: arrayData.length + 1, date };
+
+  const regexDate = /^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
+
+  if (!authorization) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+  if (!name) {
+    return res
+      .status(BADREQUEST)
+      .json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name.length < 3) {
+    return res
+      .status(BADREQUEST)
+      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  if (!age) {
+    return res
+      .status(BADREQUEST)
+      .json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    res
+      .status(BADREQUEST)
+      .json({ message: 'O crush deve ser maior de idade' });
+  }
+  if (
+    date === undefined
+      || date.datedAt === undefined
+      || date.rate === undefined
+  ) {
+    return res.status(BADREQUEST).json({
+      message:
+          'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (date && !regexDate.test(date.datedAt)) {
+    return res
+      .status(BADREQUEST)
+      .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (date.rate < 1 || date.rate > 5) {
+    return res
+      .status(BADREQUEST)
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  arrayData.push(newCrush);
+
+  await writingFile(dataCrush, JSON.stringify(arrayData));
+
+  return res.status(CREATED).json(newCrush);
+}));
 
 // midlewares error
 
