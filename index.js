@@ -201,7 +201,7 @@ app.put('/crush/:id', async (request, response) => {
   }
   if (verifyDate(date.datedAt) === false) {
     return response.status(400)
-    .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+      .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   if (date.rate < 1 || date.rate > 5) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
