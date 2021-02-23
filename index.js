@@ -72,11 +72,11 @@ const isValid = (email, password) => {
 };
 
 app.post('/login', (req, res) => {
-  const randomToken = crypto.randomBytes(8).toString('hex');
+  const randomToken = { token: crypto.randomBytes(8).toString('hex') };
   const { email, password } = req.body;
   const result = isValid(email, password);
   if (result) return res.status(400).json({ message: result });
-  return res.status(200).json({ token: randomToken });
+  return res.status(200).json(randomToken);
 });
 
 // Requisito 4
