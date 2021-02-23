@@ -1,4 +1,36 @@
-const validateName = (name) => String(name).length >= 3;
+const validateToken = (token) => {
+  const tokenRegex = /^(\d|\w){16}$/gm;
+  let message = '';
+  let isValid = true;
+
+  if (!token) {
+    message = 'Token não encontrado';
+    isValid = false;
+  }
+  if (token && !tokenRegex.test(token)) {
+    message = 'Token inválido';
+    isValid = false;
+  }
+
+  return { message, isValid };
+};
+
+const validateName = (name) => {
+  let message = '';
+  let isValid = true;
+
+  if (!name || name === '') {
+    message = 'O campo "name" é obrigatório';
+    isValid = false;
+  }
+  if (name && name.length < 3) {
+    console.log(`${name}, ${typeof(name)}`)
+    message = 'O "name" deve ter pelo menos 3 caracteres';
+    isValid = false;
+  }
+
+  return { message, isValid }
+};
 
 const validateAge = (age) => Number.isInteger(age) && age >= 18;
 
@@ -15,4 +47,5 @@ module.exports = {
   validateAge,
   validateDate,
   validateRate,
+  validateToken,
 };

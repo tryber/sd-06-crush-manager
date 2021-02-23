@@ -5,6 +5,7 @@ const {
   validateAge,
   validateDate,
   validateRate,
+  validateToken,
 } = require('./crushes_aux');
 
 const getCrushes = async (_req, res) => {
@@ -30,8 +31,8 @@ const createCrush = async (req, res) => {
   const { name, age, date } = req.body;
   const { authorization: token } = req.headers;
 
-  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (token && token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  const vToken = validateToken(token);
+  if (!vToken.isValid) return res.status(401).json({ message: vToken.message });
 
   if (!date || !date.datedAt || !date.rate) {
     return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
@@ -41,8 +42,8 @@ const createCrush = async (req, res) => {
   }
   if (date.rate && !validateRate(date.rate)) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
-  if (!name || name === '') return res.status(400).json({ message: 'O campo "name" é obrigatório' });
-  if (name && !validateName(name)) return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  const vName = validateName(name);
+  if (!vName.isValid) return res.status(400).json({ message: vName.message });
 
   if (!age || age === '') return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   if (age && !validateAge(age)) return res.status(400).json({ message: 'O crush deve ser maior de idade' });
@@ -64,16 +65,17 @@ const editCrush = async (req, res) => {
   const { authorization: token } = req.headers;
   const { id } = req.params;
 
-  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (token && token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  const vToken = validateToken(token);
+  if (!vToken.isValid) return res.status(401).json({ message: vToken.message });
 
+  // regex aqui pois não consegui lidar com o 0
   const rateFormat = /^[1-5]$/gm;
   if (date === undefined || date.datedAt === undefined || date.rate === undefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   if (!rateFormat.test(date.rate)) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   if (date.datedAt && !validateDate(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
 
-  if (!name || name === '') return res.status(400).json({ message: 'O campo "name" é obrigatório' });
-  if (name && !validateName(name)) return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  const vName = validateName(name);
+  if (!vName.isValid) return res.status(400).json({ message: vName.message });
 
   if (!age || age === '') return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   if (age && !validateAge(age)) return res.status(400).json({ message: 'O crush deve ser maior de idade' });
@@ -89,8 +91,8 @@ const deleteCrush = async (req, res) => {
   const { authorization: token } = req.headers;
   const { id } = req.params;
 
-  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (token && token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  const vToken = validateToken(token);
+  if (!vToken.isValid) return res.status(401).json({ message: vToken.message });
 
   const crush = crushes.filter((c) => c.id !== +id);
   if (crush) {
