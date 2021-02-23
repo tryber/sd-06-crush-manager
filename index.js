@@ -33,11 +33,12 @@ app.get('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const crushList = await read();
   const paramsId = crushList.filter((crush) => crush.id === parseInt(id, 10));
-  if (paramsId.length) {
+  if (paramsId.length > 0) {
     return res.status(200).json(paramsId[0]);
   }
   return res.status(404).json({ message: 'Crush não encontrado' });
 });
+
 app.listen(port, () => {
   console.log('Ouvindo na porta:', port);
 });
