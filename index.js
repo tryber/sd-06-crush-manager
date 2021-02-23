@@ -12,6 +12,7 @@ const {
   valiDate,
   validateRate,
 } = require('./utils/validations');
+const deleteCrush = require('./services/deleteCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -33,5 +34,7 @@ app.post('/login', login);
 app.post('/crush', validateToken, validateName, validateAge, valiDate, validateRate, createCrush);
 
 app.put('/crush/:id', validateToken, validateName, validateAge, valiDate, validateRate, editCrush);
+
+app.delete('/crush/:id', validateToken, deleteCrush);
 
 app.listen(PORT, () => console.log('Server rolando na porta %s', PORT));
