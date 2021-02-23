@@ -13,12 +13,12 @@ app.get('/', (_request, response) => {
 const read = async (arquivo) => {
   const response = await fs.readFile(path.resolve(path.join(__dirname, arquivo)), 'utf-8');
   console.log(response);
-  return response;
+  return JSON.parse(response);
 };
 
 app.get('/crush', async (_request, response) => {
   const fun = await read('./crush.json');
-  response.status(200).send(fun);
+  response.status(200).json(fun);
 });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
