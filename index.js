@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const authentication = require('./middlewares/authentication');
-
+// so pra testar
 const app = express();
 const port = 3000;
 
