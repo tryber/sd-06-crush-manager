@@ -13,12 +13,6 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-const validateToken = (auth) => {
-  if (!auth) return 'Token não encontrado';
-  if (auth.length < 16) return 'Token inválido';
-  return false;
-};
-
 // Requisito 1
 
 const readFile = (file) => new Promise((resolve, reject) => {
@@ -36,6 +30,12 @@ app.get('/crush', async (req, res) => {
 });
 
 // Requisito 7
+
+const validateToken = (auth) => {
+  if (!auth) return 'Token não encontrado';
+  if (auth.length < 16) return 'Token inválido';
+  return false;
+};
 
 app.get('/crush/search', async (req, res) => {
   const auth = req.headers.authorization;
