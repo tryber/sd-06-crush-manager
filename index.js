@@ -96,4 +96,17 @@ app.post('/crush', async (request, response) => {
   response.status(Success201).send(crush);
 });
 
+// 5 - Crie o endpoint PUT /crush/:id
+app.put('/crush/:id', async (request, response) => {
+  const { name, age, date } = request.body;
+  let { id } = request.params;
+  id = parseInt(id, 10);// Recebe ID string e retorna um inteiro para passar no teste.
+  const messageValuation = mandatoryValidation(name, age, date);
+  if (messageValuation !== '') return response.status(Erro400).json({ message: messageValuation });
+  const crushes = await readFile();
+  let crush = crushes.filter((e) => e.id === id);
+  crush = ({ age, date, id, name });
+  response.status(SUCCESS).send(crush);
+});
+
 app.listen(port, () => console.log(`Start http://localhost:${port}`));
