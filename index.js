@@ -3,6 +3,8 @@ const bodyParse = require('body-parser');
 const findAll = require('./findAll');
 const findById = require('./findById');
 const login = require('./login');
+const addCrush = require('./addCrush');
+const token = require('./token');
 
 const app = express();
 const SUCCESS = 200;
@@ -16,5 +18,6 @@ app.get('/', (_request, response) => {
 app.get('/crush', findAll);
 app.get('/crush/:id', findById);
 app.post('/login', login);
+app.post('/crush', token, addCrush);
 
 app.listen(3000, () => console.log('ta workando'));
