@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const crushes = require('./crush.json');
+const crushRoutes = require('./routes/crushRoutes');
 
 const app = express();
 const SUCCESS = 200;
@@ -8,6 +9,7 @@ const NOTFOUND = 404;
 const PORT = 3000;
 
 app.use(express.json());
+app.use(crushRoutes);
 
 const getArrayOfCrushes = () => {
   const crushesContent = fs.readFileSync('./crush.json', 'utf8');
@@ -66,26 +68,30 @@ app.get('/', (_request, response) => {
 });
 
 // get all crushes
-app.get('/crush', (_request, response) => {
-  response.status(SUCCESS).send(getArrayOfCrushes());
+app.get('/crush', async (_request, response) => {
+  response.status(SUCCESS).send(await getArrayOfCrushes());
 });
 
 // get crush by id
-app.get('/crush/:id', (request, response) => {
+app.get('/crush/:id', async (request, response) => {
   const { id } = request.params;
-  crushById(id, response);
+  await crushById(id, response);
   responseError(NOTFOUND, 'Crush não encontrado', response);
 });
 
 // send requisition to receive token
-app.post('/login', (request, response) => {
+app.post('/login', async (request, response) => {
   const { email, password } = request.body;
   // console.log(password.length);
 
   verifyEmail(email, response);
   verifyPassword(password, response);
 
-  response.status(200).json({ token: buildToken() });
+  response.status(200).json({ token: await buildToken() });
 });
+
+// app.post('/crush', (request, response) => {
+
+// });
 
 app.listen(PORT, console.log(`Server is running on port ${PORT}`));
