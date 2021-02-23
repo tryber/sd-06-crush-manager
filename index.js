@@ -13,6 +13,7 @@ const {
   validateRate,
 } = require('./utils/validations');
 const deleteCrush = require('./services/deleteCrush');
+const searchCrush = require('./services/searchCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -24,6 +25,8 @@ app.use(bodyParser.json());
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+app.get('/crush/search', validateToken, searchCrush);
 
 app.get('/crush', getAllCrushes);
 
