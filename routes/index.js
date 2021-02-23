@@ -2,7 +2,13 @@ const rescue = require('express-rescue');
 
 const routes = require('express').Router();
 const crypto = require('crypto');
-const { readFile, addCrushToFile, editCrushInFile } = require('../utils/fileFunctions');
+const {
+  readFile,
+  addCrushToFile,
+  editCrushInFile,
+  deleteCrushFromFile,
+} = require('../utils/fileFunctions');
+
 const {
   validateEmail,
   validatePassword,
@@ -34,6 +40,14 @@ routes.route('/crush/:id')
       const file = await readFile('crush');
       const readEditedCrush = JSON.parse(file).find(({ id }) => id === crushId);
       res.status(200).send(readEditedCrush);
+    }),
+  )
+  .delete(
+    validateToken,
+    rescue(async (req, res) => {
+      const crushId = parseInt(req.params.id, 10);
+      await deleteCrushFromFile('crush', crushId);
+      res.status(200).json({ message: 'Crush deletado com sucesso' });
     }),
   );
 

@@ -29,8 +29,17 @@ const editCrushInFile = async (fileName, content, id) => {
   await fs.writeFile(path(__dirname, '..', `${fileName}.json`), writeToFile, 'utf-8');
 };
 
+const deleteCrushFromFile = async (fileName, id) => {
+  const fileRead = await fs.readFile(path(__dirname, '..', `${fileName}.json`), 'utf-8');
+  const parsedFile = await JSON.parse(fileRead);
+  const newFile = parsedFile.filter((crush) => crush.id !== id);
+  const writeToFile = JSON.stringify(newFile);
+  await fs.writeFile(path(__dirname, '..', `${fileName}.json`), writeToFile, 'utf-8');
+};
+
 module.exports = {
   readFile,
   addCrushToFile,
   editCrushInFile,
+  deleteCrushFromFile,
 };
