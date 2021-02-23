@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 
 const app = express();
 const SUCCESS = 200;
-const port = 3456;
+const port = 3001;
 app.use(express.json()); // mesma funcionalidade que o bodyParser
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -14,10 +14,10 @@ app.get('/', (_request, response) => {
 // readFile
 const read = async () => {
   const crush = await fs.readFile('./crush.json', 'utf-8');
-  console.log(crush);
+  // console.log(crush);
   return JSON.parse(crush);
 };
-
+// read();
 // read rota crush
 app.get('/crush', async (_req, res) => {
   try {
