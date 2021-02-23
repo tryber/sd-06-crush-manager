@@ -68,26 +68,26 @@ app.get('/', (_request, response) => {
 });
 
 // get all crushes
-app.get('/crush', async (_request, response) => {
-  response.status(SUCCESS).send(await getArrayOfCrushes());
+app.get('/crush', (_request, response) => {
+  response.status(SUCCESS).send(getArrayOfCrushes());
 });
 
 // get crush by id
-app.get('/crush/:id', async (request, response) => {
+app.get('/crush/:id', (request, response) => {
   const { id } = request.params;
-  await crushById(id, response);
+  crushById(id, response);
   responseError(NOTFOUND, 'Crush não encontrado', response);
 });
 
 // send requisition to receive token
-app.post('/login', async (request, response) => {
+app.post('/login', (request, response) => {
   const { email, password } = request.body;
   // console.log(password.length);
 
   verifyEmail(email, response);
   verifyPassword(password, response);
 
-  response.status(200).json({ token: await buildToken() });
+  response.status(200).json({ token: buildToken() });
 });
 
 // app.post('/crush', (request, response) => {
