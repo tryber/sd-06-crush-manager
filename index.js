@@ -60,7 +60,7 @@ app.get('/crush/:id', async (req, res) => {
   return res.status(200).send(result);
 });
 
-// Requisito 3
+// Requisito 3 - alterando para ver se passa no evaluator
 
 const isValid = (email, password) => {
   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
