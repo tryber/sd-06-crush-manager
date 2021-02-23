@@ -37,9 +37,19 @@ const deleteCrushFromFile = async (fileName, id) => {
   await fs.writeFile(path(__dirname, '..', `${fileName}.json`), writeToFile, 'utf-8');
 };
 
+const findCrushInFile = async (fileName, searchTerm) => {
+  const fileRead = await fs.readFile(path(__dirname, '..', `${fileName}.json`), 'utf-8');
+  const parsedFile = await JSON.parse(fileRead);
+  const search = searchTerm.toLowerCase();
+  const filteredFile = parsedFile.filter((crush) =>
+    crush.name.toLowerCase().includes(`${search}`));
+  return filteredFile;
+};
+
 module.exports = {
   readFile,
   addCrushToFile,
   editCrushInFile,
   deleteCrushFromFile,
+  findCrushInFile,
 };

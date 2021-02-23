@@ -7,6 +7,7 @@ const {
   addCrushToFile,
   editCrushInFile,
   deleteCrushFromFile,
+  findCrushInFile,
 } = require('../utils/fileFunctions');
 
 const {
@@ -18,6 +19,12 @@ const {
   validateDate,
   validateRate,
 } = require('../utils/validationFunctions');
+
+routes.get('/crush/search', validateToken, rescue(async (req, res) => {
+  const searchTerm = req.query.q;
+  const searchedCrushes = await findCrushInFile('crush', searchTerm);
+  res.status(200).send(searchedCrushes);
+}));
 
 routes.route('/crush/:id')
   .get(rescue(async (req, res) => {
