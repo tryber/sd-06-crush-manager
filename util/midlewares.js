@@ -45,11 +45,12 @@ const validateEmail = (request, response, next) => {
 
 const validatePassword = (request, response, next) => {
   const { password } = request.body;
-
+  console.log(password.length);
   if (!password) return response.status(400).json({ message: 'O campo "password" é obrigatório' });
-
+  console.log(password.length);
   if (password.length < 6) return response.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
 
+  console.log(password.length);
   next();
 };
 
@@ -138,9 +139,9 @@ const deleteCrushById = async (request, response) => {
 const findCrush = async (request, response) => {
   const { q } = request.query;
   const { fileName } = request.params;
-  console.log(`entrou aqui ${q}`);
-  // const searchTerm = request.query;
+
   const myFile = await readFile(fileName);
+
   const crushesFound = myFile.filter((crush) => crush.name.indexOf(q) !== -1);
   response.status(200).json(crushesFound);
 };
