@@ -1,6 +1,6 @@
 const express = require('express');
-const fs = require('fs').promises;
 const bodyParser = require('body-parser');
+const fs = require('fs').promises;
 const crypto = require('crypto');
 
 const app = express();
@@ -20,6 +20,7 @@ const read = async () => {
   return JSON.parse(crush);
 };
 // read();
+
 // req 1 rota crush
 app.get('/crush', async (_req, res) => {
   try {
@@ -65,7 +66,7 @@ app.post('/login', (req, res) => {
       .status(400)
       .json({ message: 'O campo "password" é obrigatório' });
   }
-
+  // validate password
   const rgxPassword = /^\d{6,}$/gm;
   if (!rgxPassword.test(password)) {
     return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
@@ -75,14 +76,14 @@ app.post('/login', (req, res) => {
 });
 
 // req4
-app.post('/crush', (req, res) => {
-  const newCrush = req.body;
-  const crushList = read();
-  const newList = crushList.push(newCrush);
-  res.status(200).json(newList);
-});
+// app.post('/crush', (req, res) => {
+//   const newCrush = req.body;
+//   const crushList = read();
+//   const newList = crushList.push(newCrush);
+//   res.status(200).json(newList);
+// });
 
-const port = 3001;
+const port = 3000;
 app.listen(port, () => {
   console.log(`Executando na ${port}`);
 });
