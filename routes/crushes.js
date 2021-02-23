@@ -5,9 +5,13 @@ const {
   createCrush,
   editCrush,
   deleteCrush,
+  searchCrush,
 } = require('../controllers/crushes');
 
 const router = express.Router();
+
+// req7
+router.get('/search?', searchCrush);
 
 // req1
 router.get('/', getCrushes);

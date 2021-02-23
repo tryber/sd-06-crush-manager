@@ -31,7 +31,21 @@ const validateName = (name) => {
   return { message, isValid };
 };
 
-const validateAge = (age) => Number.isInteger(age) && age >= 18;
+const validateAge = (age) => {
+  let message = '';
+  let isValid = true;
+
+  if (!age || age === '') {
+    message = 'O campo "age" é obrigatório';
+    isValid = false;
+  }
+  if (age && Number.isInteger(age) && age < 18) {
+    message = 'O crush deve ser maior de idade';
+    isValid = false;
+  }
+
+  return { message, isValid };
+};
 
 const validateDate = (date) => {
   // https://stackoverflow.com/questions/7388001/javascript-regex-to-validate-date-format
