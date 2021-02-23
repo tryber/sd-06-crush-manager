@@ -154,16 +154,17 @@ app.get('/crush/:id', (request, response) => {
 // send requisition to receive token
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
+  const token = buildToken();
   // console.log(password.length);
 
   verifyEmail(email, response);
   verifyPassword(password, response);
 
-  response.status(200).json({ token: buildToken() });
+  response.status(200).json({ token });
 });
 
 app.post('/crush', (request, response) => {
-  const { authorization } = request.header;
+  const { authorization } = request.headers;
   const { name, age, date } = request.body;
   console.log(authorization);
 
