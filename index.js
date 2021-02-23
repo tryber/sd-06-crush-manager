@@ -15,6 +15,7 @@ const {
   validateDate,
   updateCrushById,
   deleteCrushById,
+  findCrush,
 } = require('./util/midlewares');
 
 const app = express();
@@ -29,10 +30,13 @@ app.get('/', (_request, response) => {
 app.use(parser);
 app.use(bodyParser.json());
 
-app.get('/:fileName', read);
+app.get('/:fileName/search', validateToken, findCrush);
 app.get('/:fileName/:id', getById);
+app.get('/:fileName', read);
+
 app.post('/login', validateEmail, validatePassword, tokenResponse);
 app.post('/:fileName', validateToken, validateName, validateAge, validateDate, updateCrushes);
+
 app.put('/:fileName/:id', validateToken, validateName, validateAge, validateDate, updateCrushById);
 app.delete('/:fileName/:id', validateToken, deleteCrushById);
 

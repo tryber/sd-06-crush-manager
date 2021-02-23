@@ -70,7 +70,6 @@ const validateToken = (request, response, next) => {
 
   if (authorization.length !== 16) return response.status(401).json({ message: 'Token inválido' });
 
-  // console.log(authorization.length);
   next();
 };
 
@@ -99,7 +98,6 @@ const validateAge = (request, response, next) => {
 const validateDate = (request, response, next) => {
   const newCrush = request.body;
   const { date } = newCrush;
-  // const path = request.params;
   const validDate = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26]))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
 
   if (date) {
@@ -137,6 +135,16 @@ const deleteCrushById = async (request, response) => {
   return response.status(200).json({ message: 'Crush deletado com sucesso' });
 };
 
+const findCrush = async (request, response) => {
+  const { q } = request.query;
+  const { fileName } = request.params;
+  console.log(`entrou aqui ${q}`);
+  // const searchTerm = request.query;
+  const myFile = await readFile(fileName);
+  const crushesFound = myFile.filter((crush) => crush.name.indexOf(q) !== -1);
+  response.status(200).json(crushesFound);
+};
+
 module.exports = {
   read,
   parser,
@@ -151,4 +159,5 @@ module.exports = {
   validateDate,
   updateCrushById,
   deleteCrushById,
+  findCrush,
 };
