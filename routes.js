@@ -8,16 +8,16 @@ routes.get('/', (_request, response) => {
   response.status(200).send('Crush Manager - Rota /');
 });
 
-routes.post('/login', login);
-
-routes.put('/crush/:id', editCrush);
-
 routes.get('/crush/:id', getCrushById);
 
-routes.delete('/crush/:id', deleteCrush);
+routes.get('/crush', getAllCrushes);
+
+routes.post('/login', login);
 
 routes.post('/crush', addCrush);
 
-routes.get('/crush', getAllCrushes);
+routes.put('/crush/:id', editCrush);
+
+routes.delete('/crush/:id', deleteCrush);
 
 module.exports = routes;
