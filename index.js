@@ -3,12 +3,12 @@ const bodyParser = require('body-parser');//
 const { readFile } = require('./utils/manageFiles');//
 
 const app = express();
-const SUCCESS = 200;
 const port = 3000;//
+const SUCCESS = 200;
+const Success201 = 201;
 const Erro404 = 404;//
 const Erro400 = 400;//
 const Erro401 = 401;//
-const Erro201 = 201;//
 
 app.use(bodyParser.json());//
 
@@ -60,8 +60,10 @@ const newCrushRequest = (request, response, next) => {
   next();
 };
 
-const mandatoryDate = /(\d{2})[/](\d{2})[/](\d{4})/;
 app.use(newCrushRequest);
+
+const mandatoryDate = /(\d{2})[/](\d{2})[/](\d{4})/;
+
 const mandatoryValidation = (name, age, date) => {
   let message = '';
   if (!name) {
@@ -84,14 +86,14 @@ const mandatoryValidation = (name, age, date) => {
   return message;
 };
 
-app.post('/crush', (request, response) => {
+app.post('/crush', async (request, response) => {
   const { name, age, date } = request.body;
   const messageValuation = mandatoryValidation(name, age, date);
   if (messageValuation !== '') return response.status(Erro400).json({ messageValuation });
-  const crushes = readFile();
+  const crushes = await readFile();
   const crush = { age, date, id: crushes.length + 1, name };
   crushes.push(crush);
-  response.status(Erro201).send(crush);
+  response.status(Success201).send(crush);
 });
 
 app.listen(port, () => console.log(`Start http://localhost:${port}`));
