@@ -3,7 +3,6 @@ const fs = require('fs').promises;
 
 const app = express();
 const SUCCESS = 200;
-const port = 3001;
 app.use(express.json()); // mesma funcionalidade que o bodyParser
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -32,13 +31,15 @@ app.get('/crush', async (_req, res) => {
 app.get('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const crushList = await read();
-  const paramsId = crushList.filter((crush) => crush.id === parseInt(id, 10));
-  if (paramsId.length > 0) {
+  // '+' antes de id, funciona como o parseInt
+  const paramsId = crushList.filter((crush) => crush.id === +(id));
+  if (paramsId.length) {
     return res.status(200).json(paramsId[0]);
   }
   return res.status(404).json({ message: 'Crush não encontrado' });
 });
 
+const port = 3001;
 app.listen(port, () => {
-  console.log('Ouvindo na porta:', port);
+  console.log(`Executando na ${port}`);
 });
