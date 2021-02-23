@@ -193,8 +193,9 @@ app.put('/crush/:id', async (request, response) => {
     return response.status(400).json({ message: 'O crush deve ser maior de idade' });
   }
 
-  if (!date || !date.datedAt || !date.rate || date === ' '
-    || date.datedAt === ' ' || date.rate === ' ') {
+  /* if (!date || !date.datedAt || !date.rate || date === ' ' */
+  if (date === undefined || date.datedAt === undefined || date.rate === undefined || date === ''
+    || date.datedAt === '' || date.rate === '') {
     return response
       .status(400)
       .json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
