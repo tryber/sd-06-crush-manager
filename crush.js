@@ -132,9 +132,32 @@ const editCrush = async (req, res) => {
   return res.status(200).send(crushToEdit);
 };
 
+const deleteCrush = async (req, res) => {
+  const { headers, params } = req;
+  const { authorization } = headers;
+  const { id: idToDelete } = params;
+
+  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
+
+  const tokenIsValid = authorization.length === 16;
+
+  if (!tokenIsValid) return res.status(401).send({ message: 'Token inválido' });
+
+  const crushesAfterDelete = await readFilePromise(file)
+    .then((content) => JSON.parse(content))
+    .then((crushes) => crushes.filter((crush) => crush.id !== Number(idToDelete)))
+    .then((crushes) => JSON.stringify(crushes))
+    .catch((error) => console.log(error));
+
+  await writeFilePromise(file, crushesAfterDelete, 'utf8');
+
+  return res.status(200).send({ message: 'Crush deletado com sucesso' });
+};
+
 module.exports = {
   getAllCrushes,
   getCrushById,
   addCrush,
   editCrush,
+  deleteCrush,
 };
