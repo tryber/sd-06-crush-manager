@@ -22,10 +22,10 @@ const read = async () => {
 app.get('/crush', async (_req, res) => {
   try {
     const crushes = await read();
-    return res.status(200).send(crushes);
+    res.status(200).send(crushes);
   } catch (error) {
-    console.error(error.message);
-    return res.status(200).json([]);
+    // console.error(error.message);
+    res.status(200).json([]);
   }
 });
 
