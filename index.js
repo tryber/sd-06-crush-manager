@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { pegandoTodosOsCrushs } = require('./controle/pegandoTodosOsCrushs');
+const { pegandoCrushs } = require('./servicos');
 const { pegandoCrushId } = require('./controle/pegandoPorId');
 const { login } = require('./controle/login');
 
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.post('/login', login);
 
 app.get('/crush', async (req, res) => {
-  const response = await pegandoTodosOsCrushs();
+  const response = await pegandoCrushs();
   res.status(200).send(response);
 });
 
