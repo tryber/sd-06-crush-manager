@@ -13,11 +13,11 @@ app.get('/', (_request, response) => {
 });
 // REQ-1
 app.get('/crush', (_req, res) => {
-  const crushFile = fs.readFileSync(path.join(__dirname, 'crush.json'), 'utf-8');
-  if (!crushFile) {
+  const crushFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'crush.json'), 'utf-8'));
+  if (!crushFile || !crushFile.length) {
     return res.status(200).json([]);
   }
-  return res.status(200).json(JSON.parse(crushFile));
+  return res.status(200).json(crushFile);
 });
 // REQ-2
 app.get('/crush/:id', (req, res) => {
@@ -137,10 +137,10 @@ app.put('/crush/:id', (req, res) => {
 });
 
 // REQ-6
-app.delete('/crush/:id', async (req, res) => {
+app.delete('/crush/:id', (req, res) => {
   const { authorization } = req.headers;
   const { id } = req.params;
-  const file = await JSON.parse(fs.readFile('./crush.json'));
+  const file = JSON.parse(fs.readFileSync('./crush.json'));
 
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
@@ -149,7 +149,7 @@ app.delete('/crush/:id', async (req, res) => {
     return res.status(401).json({ message: 'Token inválido' });
   }
   const newFile = file.filter((crush) => crush.id !== Number(id));
-  fs.writeFile('crush.json', JSON.stringify(newFile));
+  fs.writeFileSync('crush.json', JSON.stringify(newFile));
   return res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
