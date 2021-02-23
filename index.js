@@ -8,6 +8,24 @@ const app = express();
 app.use(bodyParser.json());
 const SUCCESS = 200;
 
+app.use((req, res, next) => {
+  // console.log({
+  //   date: new Date(),
+  //   method: req.method,
+  //   endpoint: req.originalUrl,
+  // });
+
+  res.on('finish', () => {
+    console.log({
+      date: new Date(),
+      method: req.method,
+      endpoint: req.originalUrl,
+      resStatus: res.statusCode,
+    });
+  })
+  next()
+})
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
@@ -27,6 +45,21 @@ app.get('/crush', async (req, res) => {
   console.log(file);
   if (file.length === 0) return res.status(200).send([]);
   return res.status(200).json(file);
+});
+
+// Requisito 7
+
+app.get('/crush/search', async (req, res) => {
+  const auth = req.headers.authorization;
+  const token = validateToken(auth);
+  if (token) return res.status(401).json({ message: token });
+  const { q } = req.query;
+  const data = await readFile(path.join(__dirname, '.', 'crush.json'));
+  if (!q) return res.status(200).json(data);
+  const result = data.filter((crush) => crush.name.includes(q));
+  console.log(result);
+  if (result.length === 0) return res.status(200).send([]);
+  res.status(200).send(result);
 });
 
 // Requisito 2
@@ -87,7 +120,7 @@ const validateData = (name, age, date) => {
 app.post('/crush', async (req, res) => {
   const auth = req.headers.authorization;
   const resultToken = validateToken(auth);
-  if (resultToken) res.status(401).json({ message: resultToken });
+  if (resultToken) return res.status(401).json({ message: resultToken });
   const { name, age, date } = req.body;
   const resultData = validateData(name, age, date);
   if (resultData) return res.status(400).json({ message: resultData });
@@ -101,27 +134,27 @@ app.post('/crush', async (req, res) => {
 
 // Requisito 5
 
-// const editCrush = async (content) => {
-//   fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
-//     if (err) throw err;
-//     return JSON.stringify(content);
-//   });
-// };
+const editCrush = async (content) => {
+  fs.writeFile(path.resolve(__dirname, '.', 'crush.json'), JSON.stringify(content), (err) => {
+    if (err) throw err;
+    return JSON.stringify(content);
+  });
+};
 
-// app.put('/crush/:id', async (req, res) => {
-//   const auth = req.headers.authorization;
-//   const token = validateToken(auth);
-//   if (token) res.status(401).json({ message: token });
-//   const { name, age, date } = req.body;
-//   const data = validateData(name, age, date);
-//   if (data) return res.status(400).json({ message: data });
-//   const prevData = await readFile(path.join(__dirname, '.', 'crush.json'));
-//   const { id } = req.params;
-//   const index = prevData.findIndex((el) => el.id === +id);
-//   prevData[index] = { ...prevData[index], name, age, date };
-//   await editCrush(prevData);
-//   res.status(200).send({id, name, age, date});
-// });
+app.put('/crush/:id', async (req, res) => {
+  const auth = req.headers.authorization;
+  const token = validateToken(auth);
+  if (token) return res.status(401).json({ message: token });
+  const { name, age, date } = req.body;
+  const data = validateData(name, age, date);
+  if (data) return res.status(400).json({ message: data });
+  const prevData = await readFile(path.join(__dirname, '.', 'crush.json'));
+  const { id } = req.params;
+  const index = prevData.findIndex((el) => el.id === +id);
+  prevData[index] = { ...prevData[index], name, age, date };
+  await editCrush(prevData);
+  res.status(200).send(prevData[index]);
+});
 
 // Requisito 6
 
@@ -135,7 +168,7 @@ const deleteCrush = async (content) => {
 app.delete('/crush/:id', async (req, res) => {
   const auth = req.headers.authorization;
   const token = validateToken(auth);
-  if (token) res.status(401).json({ message: token });
+  if (token) return res.status(401).json({ message: token });
   const prevData = await readFile(path.join(__dirname, '.', 'crush.json'));
   const { id } = req.params;
   const index = prevData.findIndex((el) => el.id === +id);
