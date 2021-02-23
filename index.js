@@ -8,6 +8,7 @@ const { validandoCrush } = require('./controle/validandoCrush');
 const { criandoCrush } = require('./controle/criandoCrush');
 const { checandoToken } = require('./servicos');
 const { editandoCrush } = require('./controle/editandoCrush');
+// terminado
 const { deletandoCrush } = require('./controle/deletandoCrush');
 const { procurandoCrush } = require('./controle/procurandoCrush');
 
