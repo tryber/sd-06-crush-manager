@@ -11,13 +11,13 @@ const PORT = 3000;
 app.use(express.json());
 // app.use(crushRoutes);
 
-const getArrayOfCrushes = async () => {
-  const crushesContent = await fs.readFile('./crush.json', 'utf8');
+const getArrayOfCrushes = () => {
+  const crushesContent = fs.readFile('./crush.json', 'utf8');
   return JSON.parse(crushesContent);
 };
 
-const writeInFile = async (crush) => {
-  await fs.writeFile('./crush.json', crush, 'utf-8');
+const writeInFile = (crush) => {
+  fs.writeFileSync('./crush.json', crush, 'utf-8');
   return true;
 };
 
@@ -98,7 +98,7 @@ const nameLength = (name, response) => {
 };
 
 const ageExists = (age, response) => {
-  const ageNotExists = !age || age === ''; 
+  const ageNotExists = !age || age === '';
   if (ageNotExists) {
     return responseError(400, 'O campo "age" é obrigatório', response);
   }
@@ -162,9 +162,10 @@ app.post('/login', (request, response) => {
   response.status(200).json({ token: buildToken() });
 });
 
-app.post('/crush', async (request, response) => {
-  const { authorization } = request.headers;
+app.post('/crush', (request, response) => {
+  const { authorization } = request.header;
   const { name, age, date } = request.body;
+  console.log(authorization);
 
   tokenExists(authorization, response);
   validToken(authorization, response);
@@ -179,9 +180,9 @@ app.post('/crush', async (request, response) => {
   dateRateWithinRange(date.rate, response);
   formatDatedAt(date.datedAt, response);
 
-  const allCrushes = await getArrayOfCrushes();
+  const allCrushes = getArrayOfCrushes();
   const createdCrush = { id: allCrushes.length + 1, name, age, date };
-  await writeInFile(JSON.stringify([...allCrushes, createdCrush], 0, 2));
+  writeInFile(JSON.stringify([...allCrushes, createdCrush], 0, 2));
   return response.status(201).send(createdCrush);
 });
 
