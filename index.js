@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const middlleware = require('./middleware');
 const readCrush = require('./service/crush');
+const deletaCrush = require('./service/deleta');
 const geradorToken = require('./service/token');
 const writeCrush = require('./service/writeCrush');
 
@@ -17,6 +18,7 @@ app.post('/login', middlleware.validaEmail, middlleware.validaSenha, async (_req
   return res.status(200).json({ token });
 });
 
+
 // req 1
 app.get('/crush', async (_req, res) => {
   const crushs = await readCrush();
@@ -26,8 +28,8 @@ app.get('/crush', async (_req, res) => {
 // req 2
 app.get('/crush/:id', async (req, res) => {
   const { id } = req.params;
-  const procurarId = await readCrush();
-  const crushId = procurarId.find((e) => e.id === Number(id));
+  const crushs = await readCrush();
+  const crushId = crushs.find((e) => e.id === Number(id));
   if (!crushId) {
     return res.status(404).send({ message: 'Crush não encontrado' });
   }
@@ -51,6 +53,15 @@ app.post(
     return res.status(201).json(novoCrush);
   },
 );
+
+app.delete('/crush/:id', middlleware.validaToken, async (req, res) => {
+  const { id } = req.params;
+  const deletar = await deletaCrush(id);
+
+  await writeCrush(deletar);
+
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
 
 app.listen(PORT, () => {
   console.log(`Hashirama protegendo a vila oculta da porta ${PORT}`);

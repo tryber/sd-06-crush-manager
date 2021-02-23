@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const writeCrush = async (file) => {
-  fs.writeFile(
+  await fs.writeFile(
     path.resolve(__dirname, '..', 'crush.json'),
     JSON.stringify(file),
     (err) => {
