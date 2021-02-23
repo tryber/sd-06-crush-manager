@@ -7,8 +7,8 @@ const { login } = require('./controle/login');
 const { validandoCrush } = require('./controle/validandoCrush');
 const { criandoCrush } = require('./controle/criandoCrush');
 const { checandoToken } = require('./servicos');
-const { editandoCrush } = require('./controle/editandoCrush');
-const { deletandoCrush } = require('./controle/deletandoCrush');
+// const { editandoCrush } = require('./controle/editandoCrush');
+// const { deletandoCrush } = require('./controle/deletandoCrush');
 const { procurandoCrush } = require('./controle/procurandoCrush');
 
 const app = express();
@@ -27,8 +27,8 @@ app.get('/crush', pegandoTodosOsCrushs);
 app.get('/crush/search', checandoToken, procurandoCrush);
 app.get('/crush/:id', pegandoCrushId);
 app.post('/crush', checandoToken, validandoCrush, criandoCrush);
-app.put('/crush/:id', checandoToken, validandoCrush, editandoCrush);
-app.delete('/crush/:id', checandoToken, deletandoCrush);
+// app.put('/crush/:id', checandoToken, validandoCrush, editandoCrush);
+// app.delete('/crush/:id', checandoToken, deletandoCrush);
 
 app.listen(3000, () => {
   console.log('Working 3000');
