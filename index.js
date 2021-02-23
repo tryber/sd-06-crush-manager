@@ -6,6 +6,7 @@ const login = require('./login');
 const addCrush = require('./addCrush');
 const token = require('./token');
 const update = require('./update');
+const deleteCrush = require('./delete');
 
 const app = express();
 const SUCCESS = 200;
@@ -21,5 +22,6 @@ app.get('/crush/:id', findById);
 app.post('/login', login);
 app.post('/crush', token, addCrush);
 app.post('/crush', token, update);
+app.post('/crush', token, deleteCrush);
 
 app.listen(3000, () => console.log('ta workando'));
