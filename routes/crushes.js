@@ -3,7 +3,7 @@ const {
   getCrushes,
   getCrush,
   createCrush,
-  updateCrush,
+  editCrush,
   deleteCrush,
 } = require('../controllers/crushes');
 
@@ -19,7 +19,7 @@ router.get('/:id', getCrush);
 router.post('/', createCrush);
 
 // req5
-router.put('/:id', updateCrush);
+router.put('/:id', editCrush);
 
 // req6
 router.delete('/:id', deleteCrush);

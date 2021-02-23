@@ -8,7 +8,7 @@ const validateDate = (date) => {
   return dateRegex.test(date);
 };
 
-const validateRate = (rate) => Number.isInteger(rate) && rate >= 1 && rate <= 5;
+const validateRate = (rate) => Number.isInteger(rate) && rate > 0 && rate <= 5;
 
 module.exports = {
   validateName,
