@@ -54,8 +54,6 @@ app.post('/login', async (req, res) => {
   return res.send({ token });
 });
 
-
-
 // task 4
 app.post('/crush', async (req, res) => {
   const data = await fs.readFile('./crush.json', 'utf-8');
