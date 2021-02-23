@@ -193,25 +193,25 @@ app.put('/crush/:id', async (request, response) => {
     return response.status(400).json({ message: 'O crush deve ser maior de idade' });
   }
 
-  if (!date || !date.datedAt || !date.rate || date === ''
-    || date.datedAt === '' || date.rate === '') {
+  if (!date || !date.datedAt || !date.rate || date === ' '
+    || date.datedAt === ' ' || date.rate === ' ') {
     return response
       .status(400)
       .json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
   }
+  if (verifyDate(date.datedAt) === false) {
+    return response.status(400)
+    .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
   if (date.rate < 1 || date.rate > 5) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  if (verifyDate(date.datedAt) === false) {
-    return response.status(400)
-      .json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
 
-  // const allCrushs = await fs.readFile('crush.json');
   const allCrushsJson = JSON.parse(allCrushs);
   const crushById = parseInt(request.params.id, 10);
-  const crushFound = allCrushsJson.find((crush) => crush.id !== crushById);
+  const crushFound = allCrushsJson.filter((crush) => crush.id !== crushById);
   const newCrush = ({ name, age, id: crushById, date });
+
   crushFound.push(newCrush);
 
   await getWrite(JSON.stringify(crushFound));
@@ -219,27 +219,27 @@ app.put('/crush/:id', async (request, response) => {
   response.status(200).send(newCrush);
 });
 
-// // - req 06 -
-// app.delete('/crush/:id', async (request, response) => {
-//   const token = request.headers.authorization;
+// - req 06 - npm test tests/deleteCrush.test.js
+app.delete('/crush/:id', async (request, response) => {
+  const tokenHeader = request.headers.authorization;
 
-//   if (!token) {
-//     return response.status(401).json({ message: 'Token não encontrado' });
-//   }
-//   if (token.length !== 16) {
-//     return response.status(401).json({ message: 'Token inválido' });
-//   }
+  if (!tokenHeader) {
+    return response.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (tokenHeader.length !== 16) {
+    return response.status(401).json({ message: 'Token inválido' });
+  }
 
-//   const allCrushs = await getRead();
-//   const allCrushsJson = JSON.parse(allCrushs);
-//   const crushById = parseInt(request.params.id, 10);
-//   const crushToDeleted = allCrushsJson.find((crush) => crush.id === crushById);
-//   const allCrushsNew = allCrushsJson.filter((crush) => crush !== crushToDeleted);
+  const allCrushs = await getRead();
+  const allCrushsJson = JSON.parse(allCrushs);
+  const crushById = parseInt(request.params.id, 10);
+  const crushToDeleted = allCrushsJson.find((crush) => crush.id === crushById);
+  const allCrushsNew = allCrushsJson.filter((crush) => crush !== crushToDeleted);
 
-// await writeFile('crush', JSON.stringify(allCrushsNew));
+  await getWrite('crush', JSON.stringify(allCrushsNew));
 
-//   response.status(200).json({ message: 'Crush deletado com sucesso' });
-// });
+  response.status(200).json({ message: 'Crush deletado com sucesso' });
+});
 
 // app.get('/crush/search?q=searchTerm', async (request, response) => {});
 
