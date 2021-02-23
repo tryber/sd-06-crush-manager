@@ -31,5 +31,5 @@ app.put('/crush/:id', checandoToken, validandoCrush, editandoCrush);
 app.delete('/crush/:id', checandoToken, deletandoCrush);
 
 app.listen(3000, () => {
-  console.log('trabalhando');
+  console.log('Working 3000');
 });
