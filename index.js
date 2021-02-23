@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const authentication = require('./middlewares/authentication');
-// so pra testar
+
 const app = express();
 const port = 3000;
 
@@ -12,16 +12,16 @@ app.get('/', (_request, res) => {
   res.status(200).send();
 });
 
-const getAllCrushes = () => JSON.parse(fs.readFileSync('./crush.json', 'utf8'));
+const getAll = () => JSON.parse(fs.readFileSync('./crush.json', 'utf8'));
 const writeFile = async (content) => fs.writeFileSync('./crush.json', content);
 
 app.get('/crush', (req, res) => {
-  res.status(200).send(getAllCrushes());
+  res.status(200).send(getAll());
 });
 
 app.get('/crush/search', authentication, (req, res) => {
   const searchText = req.query.q;
-  const crushes = getAllCrushes();
+  const crushes = getAll();
   if (!searchText) res.status(200).json(crushes);
   console.log('query', searchText);
   console.log('test');
@@ -31,7 +31,7 @@ app.get('/crush/search', authentication, (req, res) => {
 
 app.get('/crush/:id', (req, res) => {
   const { id } = req.params;
-  const crushRequired = getAllCrushes().find((crush) => crush.id === +id);
+  const crushRequired = getAll().find((crush) => crush.id === +id);
   res.status(200).json(crushRequired);
 });
 
@@ -87,7 +87,7 @@ app.post('/crush', async (req, res) => {
     return res.status(400).json({ message });
   }
 
-  const crushes = getAllCrushes();
+  const crushes = getAll();
   const newCrush = { id: crushes.length + 1, ...req.body };
   const newCrushData = crushes.concat(newCrush);
 
@@ -104,7 +104,7 @@ app.put('/crush/:id', async (req, res) => {
   }
 
   const { id } = req.params;
-  const crushes = getAllCrushes();
+  const crushes = getAll();
   const crushNewInfo = ({ name, age, id: +id, date });
   crushes[id] = crushNewInfo;
   await writeFile(JSON.stringify(crushes));
@@ -114,7 +114,7 @@ app.put('/crush/:id', async (req, res) => {
 
 app.delete('/crush/:id', async (req, res) => {
   const { id } = req.params;
-  const filteredCrushes = getAllCrushes().filter((crush) => crush.id !== +id);
+  const filteredCrushes = getAll().filter((crush) => crush.id !== +id);
 
   await writeFile(JSON.stringify(filteredCrushes));
 
