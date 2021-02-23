@@ -26,6 +26,8 @@ app.get('/crush', getAllCrush);
 
 app.get('/crush/:id', getCrushById);
 
+// app.get('/crush/search', checkToken, searchCrush);
+
 app.post('/crush', checkToken, validateCrush, createCrush);
 
 app.put('/crush/:id', checkToken, validateCrush, editCrush);
