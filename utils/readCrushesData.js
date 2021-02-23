@@ -5,7 +5,7 @@ function readCrushes() {
     if (!err) {
       return data;
     }
-    process.exit(1);
+    return process.exit(1);
   });
 
   return crushes;
