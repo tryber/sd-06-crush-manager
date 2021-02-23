@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');//
+const fs = require('fs');
 const { readFile } = require('./utils/manageFiles');//
 
 const app = express();
@@ -107,6 +108,14 @@ app.put('/crush/:id', async (request, response) => {
   let crush = crushes.filter((e) => e.id === id);
   crush = ({ age, date, id, name });
   response.status(SUCCESS).send(crush);
+});
+
+// 6 - Crie o endpoint DELETE /crush/:id
+app.delete('/crush/:id', async (request, response) => {
+  let { id } = request.params;
+  const crushes = await readFile();
+  id = crushes.filter((e) => e.id !== id);
+  return response.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
 });
 
 app.listen(port, () => console.log(`Start http://localhost:${port}`));
