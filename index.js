@@ -23,8 +23,6 @@ app.get('/crush/search', authentication, (req, res) => {
   const searchText = req.query.q;
   const crushes = getAll();
   if (!searchText) res.status(200).json(crushes);
-  console.log('query', searchText);
-  console.log('test');
   const crushFound = crushes.filter((crush) => crush.name.includes(searchText));
   res.status(200).json(crushFound);
 });
