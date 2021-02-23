@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { pegandoTodosOsCrushs } = require('./servicos');
+const { pegandoTodosOsCrushs } = require('./controle/pegandoTodosOsCrushs');
 const { pegandoCrushId } = require('./controle/pegandoPorId');
 const { login } = require('./controle/login');
 
