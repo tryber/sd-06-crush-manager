@@ -7,6 +7,10 @@ const pegandoCrushs = async () => {
   return JSON.parse(listaDeCrush);
 };
 
+const gerandoToken = () => {
+  crypto.randomBytes(8).toString('hex');
+};
+
 const validandoEmail = (email) => {
   const validacao = /\S+@\S+\.\S+/;
   return validacao.test(email);
@@ -21,4 +25,5 @@ module.exports = {
   pegandoCrushs,
   validandoEmail,
   validandoPassword,
+  gerandoToken,
 };
