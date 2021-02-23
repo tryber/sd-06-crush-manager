@@ -89,7 +89,7 @@ const mandatoryValidation = (name, age, date) => {
 app.post('/crush', async (request, response) => {
   const { name, age, date } = request.body;
   const messageValuation = mandatoryValidation(name, age, date);
-  if (messageValuation !== '') return response.status(Erro400).json({ messageValuation });
+  if (messageValuation !== '') return response.status(Erro400).json({ message: messageValuation });
   const crushes = await readFile();
   const crush = { age, date, id: crushes.length + 1, name };
   crushes.push(crush);
