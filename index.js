@@ -8,28 +8,16 @@ const app = express();
 app.use(bodyParser.json());
 const SUCCESS = 200;
 
-app.use((req, res, next) => {
-  // console.log({
-  //   date: new Date(),
-  //   method: req.method,
-  //   endpoint: req.originalUrl,
-  // });
-
-  res.on('finish', () => {
-    console.log({
-      date: new Date(),
-      method: req.method,
-      endpoint: req.originalUrl,
-      resStatus: res.statusCode,
-    });
-  })
-  next()
-})
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
+
+const validateToken = (auth) => {
+  if (!auth) return 'Token não encontrado';
+  if (auth.length < 16) return 'Token inválido';
+  return false;
+};
 
 // Requisito 1
 
@@ -98,11 +86,6 @@ const addNewCrush = async (content) => {
     if (err) throw err;
     return JSON.stringify(content);
   });
-};
-const validateToken = (auth) => {
-  if (!auth) return 'Token não encontrado';
-  if (auth.length < 16) return 'Token inválido';
-  return false;
 };
 
 const validateData = (name, age, date) => {
