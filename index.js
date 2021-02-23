@@ -55,26 +55,22 @@ app.post('/login', async (req, res) => {
 });
 
 // task 4
-app.post('/crush', async (req, res) => {
-  const data = await fs.readFile('./crush.json', 'utf-8');
 
-  const { name, age, date } = req.body;
-
-  const dataJson = JSON.parse(data);
-
-  const id = dataJson.length + 1;
-
-  const corpoValidate = { name, age, id, date };
-
-  const novoCrush = JSON.stringify(dataJson.concat(corpoValidate));
-
+const validaToken = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
   if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  next();
+};
+
+app.post('/crush', validaToken, async (req, res) => {
+  const data = await fs.readFile('./crush.json', 'utf-8');
+
+  const { name, age, date } = req.body;
 
   if (!name || name === '') return res.status(400).json({ message: 'O campo "name" é obrigatório' });
-  if (name < 3) return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (name.length < 3) return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
 
   if (!age || age === '') return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   if (age < 18) return res.status(400).json({ message: 'O crush deve ser maior de idade' });
@@ -84,6 +80,14 @@ app.post('/crush', async (req, res) => {
   if (date.rate < 1 || date.rate > 5) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
   if (validDate(date.datedAt) === false) return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+
+  const dataJson = JSON.parse(data);
+
+  const id = dataJson.length + 1;
+
+  const corpoValidate = { name, age, id, date };
+
+  const novoCrush = JSON.stringify(dataJson.push(corpoValidate));
 
   await fs.writeFile('./crush.json', novoCrush, 'utf-8');
 
