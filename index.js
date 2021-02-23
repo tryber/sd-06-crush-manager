@@ -1,16 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { pegandoTodosOsCrushs } = require('./controle/pegandoTodosOsCrushs');
 const { pegandoCrushId } = require('./controle/pegandoPorId');
+const { checandoToken } = require('./servicos');
+const { pegandoTodosOsCrushs } = require('./controle/pegandoTodosOsCrushs');
 const { login } = require('./controle/login');
 const { validandoCrush } = require('./controle/validandoCrush');
 const { criandoCrush } = require('./controle/criandoCrush');
-const { checandoToken } = require('./servicos');
-const { editandoCrush } = require('./controle/editandoCrush');
 // terminado
 const { deletandoCrush } = require('./controle/deletandoCrush');
 const { procurandoCrush } = require('./controle/procurandoCrush');
+const { editandoCrush } = require('./controle/editandoCrush');
 
 const app = express();
 const SUCCESS = 200;

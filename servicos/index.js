@@ -31,8 +31,8 @@ const checandoToken = (req, res, next) => {
 
 module.exports = {
   checandoToken,
-  pegandoCrushs,
-  validandoEmail,
   validandoPassword,
   gerandoToken,
+  validandoEmail,
+  pegandoCrushs,
 };
