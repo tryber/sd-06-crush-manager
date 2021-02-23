@@ -88,14 +88,6 @@ const isValid = (email, password) => {
   if (password.length < 6) return 'A "senha" deve ter pelo menos 6 caracteres';
   return false;
 };
-// const isValid = (email, password) => {
-//   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
-
-//   if (!email) return 'O campo "email" é obrigatório';
-//   if (!password) return 'O campo "password" é obrigatório';
-//   if (password.length < 6) return 'A "senha" deve ter pelo menos 6 caracteres';
-//   return false;
-// };
 
 app.post('/login', (req, res) => {
   const randomToken = crypto.randomBytes(8).toString('hex');
