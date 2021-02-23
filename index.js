@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParse = require('body-parser');
 const findAll = require('./findAll');
 const findById = require('./findById');
-
+const login = require('./login');
 const app = express();
 const SUCCESS = 200;
 
@@ -14,5 +14,6 @@ app.get('/', (_request, response) => {
 
 app.get('/crush', findAll);
 app.get('/crush/:id', findById);
+app.post('/login', login);
 
 app.listen(3000, () => console.log('ta workando'));
