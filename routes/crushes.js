@@ -1,11 +1,12 @@
+const express = require('express');
 const {
   getCrushes,
   getCrush,
   createCrush,
   updateCrush,
+  deleteCrush,
 } = require('../controllers/crushes');
 
-const express = require('express');
 const router = express.Router();
 
 // req1
@@ -19,5 +20,8 @@ router.post('/', createCrush);
 
 // req5
 router.put('/:id', updateCrush);
+
+// req6
+router.delete('/:id', deleteCrush);
 
 module.exports = router;
