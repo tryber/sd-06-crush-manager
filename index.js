@@ -234,6 +234,31 @@ app.put('/crush/:id', rescue(async (req, res) => {
   return res.status(SUCCESS).json(dataEdit);
 }));
 
+// Challenge 6
+
+app.delete('/crush/:id', async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  const crushs = await readFile(dataCrush);
+  const arrayData = JSON.parse(crushs);
+
+  if (!authorization) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(UNAUTHORIZED).json({ message: 'Token inválido' });
+  }
+
+  const deleteCrush = arrayData.filter(
+    (crush) => crush.id !== parseInt(id, 10),
+  );
+
+  await writingFile(dataCrush, JSON.stringify(deleteCrush));
+
+  return res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
+
 // midlewares error
 
 app.use((err, _req, res, _next) => {
