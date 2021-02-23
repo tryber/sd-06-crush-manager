@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const crushes = require('./crush.json');
-const crushRoutes = require('./routes/crushRoutes');
+// const crushRoutes = require('./routes/crushRoutes');
 
 const app = express();
 const SUCCESS = 200;
@@ -9,7 +9,7 @@ const NOTFOUND = 404;
 const PORT = 3000;
 
 app.use(express.json());
-app.use(crushRoutes);
+// app.use(crushRoutes);
 
 const getArrayOfCrushes = () => {
   const crushesContent = fs.readFileSync('./crush.json', 'utf8');
