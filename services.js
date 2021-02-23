@@ -13,12 +13,12 @@ const formatEmail = (email) => {
 };
 
 const authToken = (req, res, next) => {
-  const token = '7mqaVRXJSp886CGr';
+  const tokenKey = '7mqaVRXJSp886CGr';
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (authorization !== token) {
+  if (authorization !== tokenKey) {
     return res.status(401).send({ message: 'Token inválido' });
   }
   next();
