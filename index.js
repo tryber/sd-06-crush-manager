@@ -12,7 +12,7 @@ app.use(express.json());
 // app.use(crushRoutes);
 
 const getArrayOfCrushes = () => {
-  const crushesContent = fs.readFile('./crush.json', 'utf8');
+  const crushesContent = fs.readFileSync('./crush.json', 'utf8');
   return JSON.parse(crushesContent);
 };
 
