@@ -27,7 +27,7 @@ const updateCrush = async (request, response) => {
   id = parseInt(id, 10);
   const update = { id, ...request.body };
   updateList.push(update);
-  await writeFile('./crush.json', (updateList));
+  await writeFile('./crush.json', (JSON.stringify(updateList)));
   response.status(200).send(update);
 };
 
