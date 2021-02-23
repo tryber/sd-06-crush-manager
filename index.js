@@ -7,7 +7,7 @@ const { login } = require('./controle/login');
 const { validandoCrush } = require('./controle/validandoCrush');
 const { criandoCrush } = require('./controle/criandoCrush');
 const { checandoToken } = require('./servicos');
-// const { editandoCrush } = require('./controle/editandoCrush');
+const { editandoCrush } = require('./controle/editandoCrush');
 const { deletandoCrush } = require('./controle/deletandoCrush');
 const { procurandoCrush } = require('./controle/procurandoCrush');
 
@@ -27,7 +27,7 @@ app.get('/crush', pegandoTodosOsCrushs);
 app.get('/crush/search', checandoToken, procurandoCrush);
 app.get('/crush/:id', pegandoCrushId);
 app.post('/crush', checandoToken, validandoCrush, criandoCrush);
-// app.put('/crush/:id', checandoToken, validandoCrush, editandoCrush);
+app.put('/crush/:id', checandoToken, validandoCrush, editandoCrush);
 app.delete('/crush/:id', checandoToken, deletandoCrush);
 
 app.listen(3000, () => {
