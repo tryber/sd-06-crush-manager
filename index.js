@@ -7,6 +7,8 @@ const SUCCESS = 200;
 const port = 3000;//
 const Erro404 = 404;//
 const Erro400 = 400;//
+const Erro401 = 401;//
+const Erro201 = 201;//
 
 app.use(bodyParser.json());//
 
@@ -48,6 +50,48 @@ app.post('/login', (request, response) => {
     return response.status(Erro400).send(smsPasswordNull);
   }
   response.status(SUCCESS).send(token);
+});
+
+// 4 - Crie o endpoint POST /crush
+const newCrushRequest = (request, response, next) => {
+  const { authorization } = request.headers; // authorization localizado no teste
+  if (!authorization) return response.status(Erro401).json({ message: 'Token não encontrado' });
+  if (authorization !== token.token) return response.status(Erro401).json({ message: 'Token inválido' });
+  next();
+};
+
+const mandatoryDate = /(\d{2})[/](\d{2})[/](\d{4})/;
+app.use(newCrushRequest);
+const mandatoryValidation = (name, age, date) => {
+  let message = '';
+  if (!name) {
+    message = 'O campo "name" é obrigatório';
+  } else if (name.length < 3) {
+    message = 'O "name" deve ter pelo menos 3 caracteres';
+  }
+  if (!age) {
+    message = 'O campo "age" é obrigatório';
+  } else if (age < 18) {
+    message = 'O crush deve ser maior de idade';
+  }
+  if (!date || !date.datedAt || (!date.rate && date.rate !== 0)) {
+    message = 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios';
+  } else if (!mandatoryDate.test(date.datedAt)) {
+    message = 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
+  } else if (date.rate % 1 !== 0 || date.rate < 1 || date.rate > 5) {
+    message = 'O campo "rate" deve ser um inteiro de 1 à 5';
+  }
+  return message;
+};
+
+app.post('/crush', (request, response) => {
+  const { name, age, date } = request.body;
+  const messageValuation = mandatoryValidation(name, age, date);
+  if (messageValuation !== '') return response.status(Erro400).json({ messageValuation });
+  const crushes = readFile();
+  const crush = { age, date, id: crushes.length + 1, name };
+  crushes.push(crush);
+  response.status(Erro201).send(crush);
 });
 
 app.listen(port, () => console.log(`Start http://localhost:${port}`));
