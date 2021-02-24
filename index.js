@@ -89,6 +89,4 @@ app.post('/login', async (request, response) => {
   return response.status(200).json({ token: geradordeToken(16) });
 });
 
-app.post('/crush');
-
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
