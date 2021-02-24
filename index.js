@@ -57,7 +57,7 @@ const geradordeToken = (length) => {
 };
 
 const confereSenha = (senha) => {
-  if (senha.toString().length === 0) return null;
+  if (!senha) return null;
   if (senha.toString().length < 6) return false;
 };
 
@@ -87,29 +87,39 @@ app.post('/login', async (request, response) => {
   return response.status(200).json({ token: geradordeToken(16) });
 });
 
-app.post('/crush', async (request, response) => {
-  const { name, age, date } = request.body;
-  const { authorization } = request.headers;
+const validateLogin = (req, res, next) => {
+  const { authorization } = req.headers;
   if (!authorization) {
-    return response.status(401).json({
+    return res.status(401).json({
       message: 'Token não encontrado',
     });
   }
   if (authorization.length !== 16) {
-    return response.status(401).json({
+    return res.status(401).json({
       message: 'Token inválido',
     });
   }
+  next();
+  console.log('Entrou no post');
+};
+
+const validateName = (req, res, next) => {
+  const { name } = req.body;
   if (name.length === 0) {
-    return response.status(400).json({
+    return res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
   }
   if (name.length < 3) {
-    return response.status(400).json({
+    return res.status(400).json({
       message: 'O "name" deve ter pelo menos 3 caracteres',
     });
   }
+  next();
+};
+
+app.post('/crush', validateLogin, validateName, async (request, response) => {
+  const { age, date } = request.body;
   if (age.length === 0) {
     return response.status(400).json({
       message: 'O campo "age" é obrigatório',
