@@ -47,19 +47,19 @@ const confereEmail = (email) => {
   return regex.test(email);
 };
 
-const geradordeToken = () => {
-  const token = Math.random()
-    .toString(36).substring(2, 20);
-  return token;
+const geradordeToken = (length) => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let index = 0; index < length; index += 1) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 };
 
 const confereSenha = (senha) => {
-  if (senha.toString().length === 0) {
-    return null;
-  }
-  if (senha.toString().length < 6) {
-    return false;
-  }
+  if (senha.toString().length === 0) return null;
+  if (senha.toString().length < 6) return false;
 };
 
 app.post('/login', async (request, response) => {
@@ -86,7 +86,9 @@ app.post('/login', async (request, response) => {
       message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
   }
-  return response.status(200).json({ token: geradordeToken() });
+  return response.status(200).json({ token: geradordeToken(16) });
 });
+
+app.post('/crush');
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
