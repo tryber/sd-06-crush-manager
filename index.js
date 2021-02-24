@@ -230,7 +230,6 @@ app.delete('/crush/:id', (request, response) => {
   validToken(authorization, response);
 
   const allCrushes = getArrayOfCrushes();
-  allCrushes.splice(idNumber, 1);
   const removeCrush = (crush, index) => {
     if (crush.id === idNumber) {
       allCrushes.splice(index, 1);
@@ -238,7 +237,7 @@ app.delete('/crush/:id', (request, response) => {
   };
   allCrushes.map(removeCrush);
   writeInFile(JSON.stringify([...allCrushes], 0, 2));
-  return response.status(SUCCESS).send({ messsage: 'Crush deletado com sucesso' });
+  return response.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
 });
 
 app.listen(PORT, console.log(`Server is running on port ${PORT}`));
