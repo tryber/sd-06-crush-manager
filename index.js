@@ -63,7 +63,6 @@ const confereSenha = (senha) => {
 
 app.post('/login', async (request, response) => {
   const { email, password } = request.body;
-
   if (confereEmail(email) === false) {
     return response.status(400).json({
       message: 'O "email" deve ter o formato "email@email.com"',
@@ -100,12 +99,11 @@ const validateLogin = (req, res, next) => {
     });
   }
   next();
-  console.log('Entrou no post');
 };
 
 const validateName = (req, res, next) => {
   const { name } = req.body;
-  if (name.length === 0) {
+  if (!name) {
     return res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
@@ -118,24 +116,47 @@ const validateName = (req, res, next) => {
   next();
 };
 
-app.post('/crush', validateLogin, validateName, async (request, response) => {
-  const { age, date } = request.body;
-  if (age.length === 0) {
-    return response.status(400).json({
+const validateAge = (req, res, next) => {
+  const { age } = req.body;
+  if (!age) {
+    return res.status(400).json({
       message: 'O campo "age" é obrigatório',
     });
   }
   if (age < 18) {
-    return response.status(400).json({
+    return res.status(400).json({
       message: 'O crush deve ser maior de idade',
     });
   }
-  if (date.datedAt) {
-    return response.status(400).json({
+  next();
+};
+
+const validateDate = (req, res, next) => {
+  const { date } = req.body;
+  if (!date || !date.datedAt || !date.rate) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  const confereData = (data) => {
+    const regex = /\d{2}\/\d{2}\/\d{4}/g;
+    return regex.test(data);
+  };
+  if (confereData(date.datedAt) === false) {
+    return res.status(400).json({
       message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
-  return response.status(200).json(request.body);
+  if (date.rate > 5 || date.rate < 1) {
+    return res.status(400).json({
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+    });
+  }
+  next();
+};
+
+app.post('/crush', validateLogin, validateName, validateAge, validateDate, async (request, response) => {
+  response.status(201).json({ id: 5, ...request.body });
 });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
