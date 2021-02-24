@@ -7,7 +7,6 @@ const { pegandoTodosOsCrushs } = require('./controle/pegandoTodosOsCrushs');
 const { login } = require('./controle/login');
 const { validandoCrush } = require('./controle/validandoCrush');
 const { criandoCrush } = require('./controle/criandoCrush');
-// terminado
 const { deletandoCrush } = require('./controle/deletandoCrush');
 const { procurandoCrush } = require('./controle/procurandoCrush');
 const { editandoCrush } = require('./controle/editandoCrush');
