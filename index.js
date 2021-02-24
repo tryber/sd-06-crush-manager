@@ -15,7 +15,6 @@ app.get('/', (_request, response) => {
 
 const read = async (arquivo) => {
   const response = await fs.readFile(path.resolve(path.join(__dirname, arquivo)), 'utf-8');
-  console.log(response);
   return JSON.parse(response);
 };
 
@@ -25,14 +24,14 @@ const read = async (arquivo) => {
 // };
 
 app.get('/crush', async (_request, response) => {
-  const fun = await read('./crush.json');
-  response.status(200).json(fun);
+  const func = await read('./crush.json');
+  response.status(200).json(func);
 });
 
 app.get('/crush/:id', async (request, response) => {
   const { id } = request.params;
-  const fun = await read('./crush.json');
-  const ator = fun.find((el) => el.id === +id);
+  const func = await read('./crush.json');
+  const ator = func.find((el) => el.id === +id);
   if (!ator) {
     response.status(404).json({
       message: 'Crush não encontrado',
@@ -63,7 +62,6 @@ const confereSenha = (senha) => {
 };
 
 app.post('/login', async (request, response) => {
-  console.log(request.body);
   const { email, password } = request.body;
 
   if (confereEmail(email) === false) {
@@ -88,5 +86,9 @@ app.post('/login', async (request, response) => {
   }
   return response.status(200).json({ token: geradordeToken(16) });
 });
+
+// app.post('/crush', async (request, response) => {
+
+// });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
