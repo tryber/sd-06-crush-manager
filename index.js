@@ -7,7 +7,6 @@ const app = express();
 const SUCCESS = 200;
 
 app.use(bodyParser.json());
-app.post('/teste', (req, res) => res.status(200).json(req.body));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -21,8 +20,8 @@ const read = async (arquivo) => {
 };
 
 // const write = async (arquivo, obj) => {
-//  await fs.writeFile(path.resolve(path.join(__dirname, arquivo)), obj, 'utf-8');
-//  return true;
+//   await fs.writeFile(path.resolve(path.join(__dirname, arquivo)), obj, 'utf-8');
+//   return true;
 // };
 
 app.get('/crush', async (_request, response) => {
@@ -58,13 +57,12 @@ const confereSenha = (senha) => {
   if (senha.toString().length === 0) {
     return null;
   }
-  if (senha.toString().length >= 6) {
-    return true;
+  if (senha.toString().length < 6) {
+    return false;
   }
 };
 
 app.post('/login', async (request, response) => {
-  console.log(request);
   console.log(request.body);
   const { email, password } = request.body;
 
@@ -78,12 +76,12 @@ app.post('/login', async (request, response) => {
       message: 'O campo "email" é obrigatório',
     });
   }
-  if (confereSenha(password) === false) {
+  if (confereSenha(password) === null) {
     response.status(400).json({
       message: 'O campo "password" é obrigatório',
     });
   }
-  if (confereSenha(password) === null) {
+  if (confereSenha(password) === false) {
     response.status(400).json({
       message: 'A "senha" deve ter pelo menos 6 caracteres',
     });
