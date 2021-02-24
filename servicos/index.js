@@ -8,13 +8,10 @@ const pegandoCrushs = async () => {
     return data;
   });
   const crushs = JSON.parse(listaDeCrush);
-  console.log(crushs);
   return crushs;
 };
 
-const gerandoToken = () => {
-  crypto.randomBytes(8).toString('hex');
-};
+const gerandoToken = () => crypto.randomBytes(8).toString('hex');
 
 const validandoEmail = (email) => {
   const validacao = /\S+@\S+\.\S+/;
