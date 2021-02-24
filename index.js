@@ -192,6 +192,29 @@ app.put('/crush/:id', async (req, res) => {
   return res.status(200).json(newCrush);
 });
 
+app.delete('/crush/:id', async (req, res) => {
+  const { id } = req.params;
+  const idInt = parseInt(id, 10);
+  const { authorization } = req.headers;
+  // validações
+  if (authorization === '' || !authorization) {
+    return res.status(401).send({
+      message: 'Token não encontrado',
+    });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).send({
+      message: 'Token inválido',
+    });
+  }
+
+  const crushList = await read();
+  // console.log(crushList);
+  crushList.splice(idInt, 1);
+  await write(JSON.stringify([...crushList], 0, 2));
+  return res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Executando na ${port}`);
