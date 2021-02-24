@@ -4,6 +4,40 @@ const readFilePromise = fs.readFile;
 const writeFilePromise = fs.writeFile;
 const file = 'crush.json';
 
+const tokenValidation = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
+
+  next();
+};
+
+const crushInfoValidation = (req, res, next) => {
+  const { name, age, date } = req.body;
+
+  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (!date) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+
+  const rateInvalid = date.rate === undefined && date.rate !== 0;
+
+  if (!date.datedAt || rateInvalid) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+
+  const dateFormatRegEx = /^[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]/;
+  const nameIsValid = name.length >= 3;
+  const ageIsValid = age >= 18;
+  const datedAtFormatIsValid = dateFormatRegEx.test(date.datedAt);
+  const rateIsValid = date.rate >= 1 && date.rate <= 5;
+
+  if (!nameIsValid) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!ageIsValid) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+  if (!datedAtFormatIsValid) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (!rateIsValid) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+
+  next();
+};
+
 const getAllCrushes = async (_req, res) => {
   readFilePromise(file)
     .then((content) => res.status(200).send(JSON.parse(content)))
@@ -29,31 +63,7 @@ const getCrushById = async (req, res) => {
 };
 
 const addCrush = async (req, res) => {
-  const { headers, body } = req;
-  const { authorization } = headers;
-  const { name, age, date } = body;
-
-  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
-  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
-  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
-  if (!date) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-
-  const { datedAt, rate } = date;
-
-  if (!datedAt || !rate) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-
-  const dateFormatRegEx = /^[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]/;
-  const tokenIsValid = authorization.length === 16;
-  const nameIsValid = name.length >= 3;
-  const ageIsValid = age >= 18;
-  const datedAtFormatIsValid = dateFormatRegEx.test(datedAt);
-  const rateIsValid = rate >= 1 && rate <= 5;
-
-  if (!tokenIsValid) return res.status(401).send({ message: 'Token inválido' });
-  if (!nameIsValid) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  if (!ageIsValid) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!datedAtFormatIsValid) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (!rateIsValid) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  const { name, age, date } = req.body;
 
   let allCrushes = await readFilePromise(file)
     .then((content) => JSON.parse(content))
@@ -76,33 +86,8 @@ const addCrush = async (req, res) => {
 };
 
 const editCrush = async (req, res) => {
-  const { headers, body, params } = req;
-  const { authorization } = headers;
-  const { name, age, date } = body;
-  const { id: idToEdit } = params;
-
-  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
-  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
-  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
-  if (!date) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-
-  const { datedAt, rate } = date;
-  const rateInvalid = rate === undefined && rate !== 0;
-
-  if (!datedAt || rateInvalid) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
-
-  const dateFormatRegEx = /^[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]/;
-  const tokenIsValid = authorization.length === 16;
-  const nameIsValid = name.length >= 3;
-  const ageIsValid = age >= 18;
-  const datedAtFormatIsValid = dateFormatRegEx.test(datedAt);
-  const rateIsValid = rate >= 1 && rate <= 5;
-
-  if (!tokenIsValid) return res.status(401).send({ message: 'Token inválido' });
-  if (!nameIsValid) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
-  if (!ageIsValid) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!datedAtFormatIsValid) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (!rateIsValid) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  const { name, age, date } = req.body;
+  const { id: idToEdit } = req.params;
 
   let allCrushes = await readFilePromise(file)
     .then((content) => JSON.parse(content))
@@ -133,15 +118,7 @@ const editCrush = async (req, res) => {
 };
 
 const deleteCrush = async (req, res) => {
-  const { headers, params } = req;
-  const { authorization } = headers;
-  const { id: idToDelete } = params;
-
-  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
-
-  const tokenIsValid = authorization.length === 16;
-
-  if (!tokenIsValid) return res.status(401).send({ message: 'Token inválido' });
+  const { id: idToDelete } = req.params;
 
   const crushesAfterDelete = await readFilePromise(file)
     .then((content) => JSON.parse(content))
@@ -155,6 +132,8 @@ const deleteCrush = async (req, res) => {
 };
 
 module.exports = {
+  tokenValidation,
+  crushInfoValidation,
   getAllCrushes,
   getCrushById,
   addCrush,
