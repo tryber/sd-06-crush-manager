@@ -18,10 +18,10 @@ const read = async (arquivo) => {
   return JSON.parse(response);
 };
 
-const write = async (arquivo, obj) => {
-  await fs.writeFile(path.resolve(path.join(__dirname, arquivo)), obj, 'utf-8');
-  return true;
-};
+// const write = async (arquivo, obj) => {
+//   await fs.writeFile(path.resolve(path.join(__dirname, arquivo)), obj, 'utf-8');
+//   return true;
+// };
 
 app.get('/crush', async (_request, response) => {
   const func = await read('./crush.json');
