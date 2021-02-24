@@ -190,4 +190,10 @@ app.put('/crush/:id', validateLogin, validateName, validateAge, validateDate2, a
   res.status(200).json({ id: 5, ...req.body });
 });
 
+app.delete('/crush/:id', validateLogin, async (req, res) => {
+  const { id } = req.params;
+  write('./crush.json', { id });
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
