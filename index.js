@@ -19,14 +19,15 @@ const { validateCrush } = require('./validateCrush');
 const { createCrush } = require('./createCrush');
 const { editCrush } = require('./editCrush');
 const { deleteCrush } = require('./deleteCrush');
+const { searchCrush } = require('./searchCrush');
 
 app.post('/login', login);
 
 app.get('/crush', getAllCrush);
 
-app.get('/crush/:id', getCrushById);
+app.get('/crush/search', checkToken, searchCrush);
 
-// app.get('/crush/search', checkToken, searchCrush);
+app.get('/crush/:id', getCrushById);
 
 app.post('/crush', checkToken, validateCrush, createCrush);
 
