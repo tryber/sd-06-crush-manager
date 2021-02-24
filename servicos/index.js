@@ -2,10 +2,14 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 const pegandoCrushs = async () => {
-  const listaDeCrush = await fs.readFileSync('./crush.json', 'utf8', (err) => {
+  const listaDeCrush = await fs.readFileSync('./crush.json', 'utf8', (err, data) => {
+    console.log('chegando aqui');
     if (err) throw new Error(err);
+    return data;
   });
-  return JSON.parse(listaDeCrush);
+  const crushs = JSON.parse(listaDeCrush);
+  console.log(crushs);
+  return crushs;
 };
 
 const gerandoToken = () => {
