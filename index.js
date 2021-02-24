@@ -221,4 +221,24 @@ app.put('/crush/:id', (request, response) => {
   return response.status(SUCCESS).send(updatedCrush);
 });
 
+app.delete('/crush/:id', (request, response) => {
+  const { authorization } = request.headers;
+  const { id } = request.params;
+  const idNumber = Number(id);
+
+  tokenExists(authorization, response);
+  validToken(authorization, response);
+
+  const allCrushes = getArrayOfCrushes();
+  allCrushes.splice(idNumber, 1);
+  const removeCrush = (crush, index) => {
+    if (crush.id === idNumber) {
+      allCrushes.splice(index, 1);
+    }
+  };
+  allCrushes.map(removeCrush);
+  writeInFile(JSON.stringify([...allCrushes], 0, 2));
+  return response.status(SUCCESS).send({ messsage: 'Crush deletado com sucesso' });
+});
+
 app.listen(PORT, console.log(`Server is running on port ${PORT}`));
