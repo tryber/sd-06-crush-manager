@@ -18,10 +18,10 @@ const read = async (arquivo) => {
   return JSON.parse(response);
 };
 
-// const write = async (arquivo, obj) => {
-//   await fs.writeFile(path.resolve(path.join(__dirname, arquivo)), obj, 'utf-8');
-//   return true;
-// };
+const write = async (arquivo, obj) => {
+  await fs.writeFile(path.resolve(path.join(__dirname, arquivo)), obj, 'utf-8');
+  return true;
+};
 
 app.get('/crush', async (_request, response) => {
   const func = await read('./crush.json');
@@ -156,7 +156,38 @@ const validateDate = (req, res, next) => {
 };
 
 app.post('/crush', validateLogin, validateName, validateAge, validateDate, async (request, response) => {
+  write('./crush.json', { id: 5, ...request.body });
   response.status(201).json({ id: 5, ...request.body });
+});
+
+const validateDate2 = (req, res, next) => {
+  const { date } = req.body;
+  if (!date || !date.datedAt || date.rate === undefined || date.rate === null || date.rate === '' || Number.isNaN(date.rate)) {
+    return res.status(400).json({
+      message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+    });
+  }
+  const confereData = (data) => {
+    const regex = /\d{2}\/\d{2}\/\d{4}/g;
+    return regex.test(data);
+  };
+  if (confereData(date.datedAt) === false) {
+    return res.status(400).json({
+      message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"',
+    });
+  }
+  if (date.rate > 5 || date.rate < 1 || date.rate === 0) {
+    return res.status(400).json({
+      message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+    });
+  }
+  next();
+};
+
+app.put('/crush/:id', validateLogin, validateName, validateAge, validateDate2, async (req, res) => {
+  const { id } = req.params;
+  write('./crush.json', { id, ...req.body });
+  res.status(200).json({ id: 5, ...req.body });
 });
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
