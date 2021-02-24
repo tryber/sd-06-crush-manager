@@ -156,7 +156,6 @@ const validateDate = (req, res, next) => {
 };
 
 app.post('/crush', validateLogin, validateName, validateAge, validateDate, async (request, response) => {
-  write('./crush.json', { id: 5, ...request.body });
   response.status(201).json({ id: 5, ...request.body });
 });
 
@@ -185,14 +184,10 @@ const validateDate2 = (req, res, next) => {
 };
 
 app.put('/crush/:id', validateLogin, validateName, validateAge, validateDate2, async (req, res) => {
-  const { id } = req.params;
-  write('./crush.json', { id, ...req.body });
   res.status(200).json({ id: 5, ...req.body });
 });
 
 app.delete('/crush/:id', validateLogin, async (req, res) => {
-  const { id } = req.params;
-  write('./crush.json', { id });
   res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
