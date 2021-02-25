@@ -20,9 +20,9 @@ const crushInfoValidation = (req, res, next) => {
   if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (!date) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
-  const rateInvalid = date.rate === undefined && date.rate !== 0;
+  const rateNotDefined = date.rate === undefined && date.rate !== 0;
 
-  if (!date.datedAt || rateInvalid) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+  if (!date.datedAt || rateNotDefined) return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
 
   const dateFormatRegEx = /^[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]/;
   const nameIsValid = name.length >= 3;
