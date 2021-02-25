@@ -16,16 +16,17 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', (_req, res) => {
-  const crushList = readCrush();
-  if (crushList < 1) {
-    return res.status(NOT_FOUND).send(crushList);
+app.get('/crush', async (_req, res, next) => {
+  try {
+    const crushList = await readCrush();
+    return res.status(SUCCESS).send(crushList);
+  } catch (err) {
+    next(err);
   }
-  return res.status(SUCCESS).send(crushList);
 });
 
-app.get('/crush/:id', (req, res) => {
-  const crushList = readCrush();
+app.get('/crush/:id', async (req, res) => {
+  const crushList = await readCrush();
   const { id } = req.params;
   const existCrushId = crushList.find((crush) => crush.id === parseInt(id, 10));
   if (!existCrushId) {
@@ -57,8 +58,8 @@ app.post('/login', (req, res) => {
 
 app.use(authToken);
 
-app.post('/crush', (req, res) => {
-  const crushList = readCrush();
+app.post('/crush', async (req, res) => {
+  const crushList = await readCrush();
   const { name, age, date } = req.body;
   const id = crushList.length + 1;
   const authCrush = validateCrush(name, age, date);
@@ -70,8 +71,8 @@ app.post('/crush', (req, res) => {
   return res.status(CREATED).send(newCrush);
 });
 
-app.put('/crush/:id', (req, res) => {
-  const crushList = readCrush();
+app.put('/crush/:id', async (req, res) => {
+  const crushList = await readCrush();
   const { id } = req.params;
   const { name, age, date } = req.body;
   const authCrush = validateCrush(name, age, date);
@@ -83,13 +84,15 @@ app.put('/crush/:id', (req, res) => {
   return res.status(SUCCESS).send(crushList[crushIndex]);
 });
 
-app.delete('/crush/:id', (req, res) => {
-  const crushList = readCrush();
+app.delete('/crush/:id', async (req, res) => {
+  const crushList = await readCrush();
   const { id } = req.params;
   const crushIndex = crushList.findIndex((crush) => crush.id === parseInt(id, 10));
   crushList.splice(crushIndex, 1);
   return res.status(SUCCESS)
     .send({ message: 'Crush deletado com sucesso' });
 });
+
+app.use((err, _req, _res, _next) => console.log(err));
 
 app.listen(3000, () => console.log('Executando na 3000'));

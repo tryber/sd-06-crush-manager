@@ -1,9 +1,9 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const crushData = 'crush.json';
 
-const readCrush = () => {
-  const file = JSON.parse(fs.readFileSync(crushData, 'utf8'));
+const readCrush = async () => {
+  const file = JSON.parse(await fs.readFile(crushData, 'utf8'));
   return file;
 };
 
