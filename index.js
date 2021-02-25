@@ -94,4 +94,24 @@ app.post('/crush', validaToken, async (req, res) => {
   res.status(201).send(corpoValidate);
 });
 
-app.listen(port, () => console.log('Server On'));
+// task 6
+
+app.delete('/crush/:id', async (req, res) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  
+  const data = JSON.parse(await fs.readFile('./crush.json'));
+  const { id } = req.params;
+
+  const deleted = data.filter((el) => el.id !== Number(id));
+
+  const newFile = JSON.stringify(deleted);
+
+  await fs.writeFile('./crush.json', newFile, 'utf-8');
+
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
+});
+
+app.listen(port, () => console.log('working...'));
