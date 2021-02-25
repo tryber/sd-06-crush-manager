@@ -33,6 +33,22 @@ app.get('/crush', async (_req, res) => {
   res.status(SUCCESS).send(JSON.parse(data));
 });
 
+// task 7
+app.get('/crush/search', async (req, res) => {
+  const { authorization } = req.headers;
+  const { nick } = req.query;
+
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+
+  const data = JSON.parse(await fs.readFile('./crush.json', 'utf-8'));
+  if (!nick || nick === '') return res.status(200).json(data);
+
+  const CrushFinded = data.filter((el) => el.name.includes(nick));
+  if (CrushFinded === false) return res.status(200).json([]);
+  res.status(200).json(CrushFinded);
+});
+
 // task 2
 app.get('/crush/:id', async (req, res) => {
   const data = JSON.parse(await fs.readFile('./crush.json', 'utf-8'));
@@ -114,4 +130,4 @@ app.delete('/crush/:id', async (req, res) => {
   res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
-app.listen(port, () => console.log('working...'));
+app.listen(port, () => console.log('Server On'));
