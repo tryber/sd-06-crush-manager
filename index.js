@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const getAllCrushes = require('./services/getAllCrushes');
-const getCrushById = require('./services/getCrushById');
-const login = require('./services/login');
-const createCrush = require('./services/createCrush');
-const editCrush = require('./services/editCrush');
+const getAllCrushes = require('./controllers/getAllCrushesController');
+const getCrushById = require('./controllers/getCrushByIdController');
+const login = require('./controllers/login');
+const createCrush = require('./controllers/createCrushController');
+const editCrush = require('./controllers/editCrushController');
+const deleteCrush = require('./controllers/deleteCrushController');
+const searchCrush = require('./controllers/searchCrushControler');
 const {
   validateToken,
   validateName,
@@ -12,8 +14,6 @@ const {
   valiDate,
   validateRate,
 } = require('./utils/validations');
-const deleteCrush = require('./services/deleteCrush');
-const searchCrush = require('./services/searchCrush');
 
 const app = express();
 const SUCCESS = 200;

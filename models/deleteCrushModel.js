@@ -1,7 +1,6 @@
 const { readFile, writeFile } = require('../utils/manageFiles');
 
-const deleteCrush = async (req, res) => {
-  const { id } = req.params;
+const deleteCrush = async (id) => {
   const result = await readFile();
 
   result.forEach((element, index) => {
@@ -11,10 +10,6 @@ const deleteCrush = async (req, res) => {
   });
 
   await writeFile(JSON.stringify(result));
-
-  res
-    .status(200)
-    .json({ message: 'Crush deletado com sucesso' });
 };
 
-module.exports = deleteCrush;
+module.exports = { deleteCrush };

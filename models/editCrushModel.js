@@ -1,10 +1,7 @@
 const { readFile, writeFile } = require('../utils/manageFiles');
 
-const editCrush = async (req, res) => {
-  const { name, age, date } = req.body;
-  const { id } = req.params;
+const editCrush = async (id, name, age, date) => {
   const result = await readFile();
-
   const newCrush = { name, age, id: parseInt(id, 10), date };
 
   result.forEach((element, index) => {
@@ -14,9 +11,8 @@ const editCrush = async (req, res) => {
   });
 
   await writeFile(JSON.stringify(result));
-  res
-    .status(200)
-    .json(newCrush);
+
+  return newCrush;
 };
 
-module.exports = editCrush;
+module.exports = { editCrush };

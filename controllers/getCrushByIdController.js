@@ -1,9 +1,9 @@
-const { readFile } = require('../utils/manageFiles');
+const Model = require('../models/getCrushByIdModel');
 
 const getCrushById = async (req, res) => {
   const { id } = req.params;
-  const result = await readFile();
-  const filteredID = await result.find((crush) => crush.id === parseInt(id, 10));
+  const filteredID = await Model.getCrushById(id);
+
   if (filteredID === undefined) return res.status(404).send({ message: 'Crush não encontrado' });
 
   res

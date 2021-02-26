@@ -1,7 +1,7 @@
-const { readFile } = require('../utils/manageFiles');
+const Model = require('../models/getAllCrushesModel');
 
 const getAllCrushes = async (req, res) => {
-  const dataFromJson = await readFile();
+  const dataFromJson = await Model.getAllCrushes();
   if (dataFromJson === []) {
     return res
       .status(200)
