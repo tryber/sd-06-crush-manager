@@ -12,7 +12,24 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (_, res, _next) => {
+app.get('/crush/:id', (req, res, next) => {
+  try {
+    const { id } = req.params;
+    // const retrievedCrush = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8')).
+    //  find((crush) => crush.id === Number(id));
+    const crushes = (fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushesObj = JSON.parse(crushes);
+    const retrievedCrush = crushesObj.find((crush) => crush.id === Number(id));
+    if (!retrievedCrush) {
+      return res.status(404).send({ message: 'Crush não encontrado' });
+    }
+    return res.status(200).send(retrievedCrush);
+  } catch (err) {
+    return next(res.status(500).send(err));
+  }
+});
+
+app.get('/crush', (_req, res, next) => {
   try {
     const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
     if (!crushes || crushes.length === 0) {
@@ -23,7 +40,7 @@ app.get('/crush', async (_, res, _next) => {
     return res.status(200).send(crushes);
   } catch (err) {
     console.log(err);
-    return res.status(500).send(err);
+    return next(res.status(500).send(err));
   }
 });
 
