@@ -59,9 +59,10 @@ const authToken = (req, res, next) => {
   if (authorization.length !== 16) return res.status(401).send({ message: 'Token invalido' });
   next();
 };
-const validDateAt = (dataAt) => {
+const validDateAt = (datedAt) => {
   const pattern = /(((^0|^1|^2)[0-9])|(^3[0-1]))\/((0[0-9])|(1[0-2]))\/(((19|20)[0-9]{2}$))/mg;
-  return pattern.test(dataAt);
+  console.log(datedAt);
+  return pattern.test(datedAt);
 };
 
 app.post('/crush', authToken, async (req, res) => {
@@ -70,13 +71,13 @@ app.post('/crush', authToken, async (req, res) => {
   if (name.length < 3) res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!date.dataAt || !date.rate) {
+  if (!date.datedAt || !date.rate) {
     return res.status(400)
       .send({
         message: 'O campo "nameO campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios" é obrigatório',
       });
   }
-  if (!validDateAt(date.dataAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+  if (!validDateAt(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   if (date.rate < 1 || date.rate > 5) return res.status(400).send({ message: 'Ocampo "rate" deve ser um inteiro de 1 à 5' });
 
   const allCrush = JSON.parse(await fs.readFile('./crush.json'));
