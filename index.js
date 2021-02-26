@@ -48,7 +48,7 @@ app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
 
-  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório'});
+  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   if (!regexEmail.test(email)) return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   if (!password) return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   if (password.length < 6) return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
@@ -71,7 +71,7 @@ const infoValid = (name, age, date) => {
   if (date && !regexDate.test(date.datedAt)) return 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"';
   if (date.rate < 1 || date.rate > 5) return 'O campo "rate" deve ser um inteiro de 1 à 5';
 
-    return 'OK';
+  return 'OK';
 };
 
 app.post('/crush', async (req, res) => {
@@ -103,7 +103,6 @@ app.put('/crush/:id', async (req, res) => {
   await jsonFile(JSON.stringify(allCrushes));
   res.status(200).json(freshInformation);
 });
-
 
 app.delete('/crush/:id', async (req, res) => {
   const { id } = req.params;
