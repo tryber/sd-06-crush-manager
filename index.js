@@ -78,7 +78,7 @@ app.post('/crush', authToken, async (req, res) => {
   }
   if (!validDateAt(date.dataAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
   if (date.rate < 1 || date.rate > 5) return res.status(400).send({ message: 'Ocampo "rate" deve ser um inteiro de 1 à 5' });
-  
+
   const allCrush = JSON.parse(await fs.readFile('./crush.json'));
   const id = allCrush.length + 1;
   const newCrushAdded = { id, ...req.body };
