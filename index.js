@@ -1,10 +1,9 @@
 const express = require('express');
 const crypto = require('crypto');
-
-const app = express();
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 
+const app = express();
 const SUCCESS = 200;
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -14,12 +13,16 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-app.get('/crush', async (req, res) => {
-  const possiblesCrush = await fs.readFile('./crush.json');
-  if (possiblesCrush.length === 0) {
-    res.status(SUCCESS).json([]);
+app.get('/crush', async (_req, res) => {
+  try {
+    const possiblesCrush = await fs.readFile('./crush.json');
+    if (possiblesCrush.length === 0) {
+      return res.status(SUCCESS).json([]);
+    }
+    res.status(SUCCESS).json(JSON.parse(possiblesCrush));
+  } catch (error) {
+    console.log(error);
   }
-  res.status(SUCCESS).json(JSON.parse(possiblesCrush));
 });
 
 app.get('/crush/:id', async (req, res) => {
@@ -27,7 +30,9 @@ app.get('/crush/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const filterCrush = JSON.parse(possiblesCrush)
     .find((crush) => id === crush.id);
-  if (!filterCrush) res.status(404).send({ message: 'Crush não encontrado' });
+  if (!filterCrush) {
+    return res.status(404).send({ message: 'Crush não encontrado' });
+  }
 
   res.status(SUCCESS).json(filterCrush);
 });
@@ -53,32 +58,31 @@ app.post('/login', async (req, res) => {
   // console.log(req.body);
 });
 
-const authToken = (req, res, next) => {
+const authToken = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
-  if (authorization.length !== 16) return res.status(401).send({ message: 'Token invalido' });
+  if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
   next();
 };
 const validDateAt = (datedAt) => {
   const pattern = /(((^0|^1|^2)[0-9])|(^3[0-1]))\/((0[0-9])|(1[0-2]))\/(((19|20)[0-9]{2}$))/mg;
-  console.log(datedAt);
   return pattern.test(datedAt);
 };
 
 app.post('/crush', authToken, async (req, res) => {
   const { name, age, date } = req.body;
   if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
-  if (name.length < 3) res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
   if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
-  if (!date.datedAt || !date.rate) {
+  if (!date || !date.datedAt || !date.rate) {
     return res.status(400)
       .send({
-        message: 'O campo "nameO campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios" é obrigatório',
+        message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
       });
   }
   if (!validDateAt(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
-  if (date.rate < 1 || date.rate > 5) return res.status(400).send({ message: 'Ocampo "rate" deve ser um inteiro de 1 à 5' });
+  if (date.rate < 1 || date.rate > 5) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
 
   const allCrush = JSON.parse(await fs.readFile('./crush.json'));
   const id = allCrush.length + 1;
@@ -86,7 +90,7 @@ app.post('/crush', authToken, async (req, res) => {
   const addInList = JSON.stringify([newCrushAdded, ...allCrush]);
   await fs.writeFile('./crush.json', addInList);
 
-  res.status(201).send(addInList);
+  res.status(201).send(newCrushAdded);
 });
 
 app.listen(3000, () => console.log('hello world!'));
