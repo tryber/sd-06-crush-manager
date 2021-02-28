@@ -1,4 +1,5 @@
 const express = require('express');
+const routerCrush = require('./routerCrush');
 
 const app = express();
 const SUCCESS = 200;
@@ -8,4 +9,6 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-// comentário para criacao do PR
+app.use('/crush', routerCrush);
+
+app.listen(3000);
