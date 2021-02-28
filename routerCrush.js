@@ -18,7 +18,8 @@ router.get('/', async (_req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const crushList = await readCrushJson();
-  const filteredCrushById = crushList.filter((crush) => crush.id === +id);
+  const filteredCrushById = crushList.find((crush) => crush.id === +id);
+  console.log(filteredCrushById)
   if (!filteredCrushById) return res.status(404).json({ message: 'Crush não encontrado' });
   return res.status(200).send(filteredCrushById);
 });
