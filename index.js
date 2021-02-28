@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const randtoken = require('rand-token');
 
 const app = express();
 const SUCCESS = 200;
@@ -42,6 +43,39 @@ app.get('/crush', (_req, res, next) => {
     console.log(err);
     return next(res.status(500).send(err));
   }
+});
+
+app.post('/login', (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email) {
+      return res.status(400).send({ message: 'O campo "email" é obrigatório' });
+    }
+    if (!password) {
+      return res.status(400).send({ message: 'O campo "password" é obrigatório' });
+    }
+    if (password.length < 6) {
+      return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+    }
+    const emailValidation = /\S+@\S+\.\S+/;
+    if (!emailValidation.test(email)) {
+      return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+    }
+    const token = randtoken.generate(16);
+    return res.status(200).send({ token });
+  } catch (err) {
+    console.log(err);
+    return next(res.status(500).send(err));
+  }
+});
+
+app.post('/crush', (req, res, next) => {
+  
+});
+
+app.use((err, _req, res, _next) => {
+  console.log(err);
+  res.status(500).json({ message: err.message });
 });
 
 app.listen(3000);
