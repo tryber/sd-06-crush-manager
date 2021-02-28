@@ -70,7 +70,52 @@ app.post('/login', (req, res, next) => {
 });
 
 app.post('/crush', (req, res, next) => {
-  
+  if (!req.headers.authorization) {
+    return next(res.status(401).send({ message: 'Token não encontrado' }));
+  }
+  if (req.headers.authorization !== 16) {
+    return next(res.status(401).send({ message: 'Token inválido' }));
+  }
+  try {
+    const { name, age, date } = req.body;
+    const { dateAt, rate } = date;
+    const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+    const rateRegex = /^[1-5]/;
+    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    let nextAvailableId = 0;
+    if (!crushes || crushes.length === 0) {
+      nextAvailableId = 1;
+    } else {
+      nextAvailableId = crushes[crushes.length - 1].id;
+    }
+    if (name < 3) {
+      return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+    }
+    if (!Number.is(age)) {
+      return res.status(400).send({ message: 'O "age" é obrigatório' });
+    }
+    if (age < 18) {
+      return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+    }
+    if (!dateAt || !rate) {
+      return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    }
+    if (!dateRegex.test(dateAt)) {
+      return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+    }
+    if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
+      return res.status(400).send({ message: 'O campo \"rate\" deve ser um inteiro de 1 à 5' });
+    }
+    return res.status(201).send({ message: {
+      id: nextAvailableId,
+      name,
+      age,
+      date,
+    } });
+  } catch (err) {
+    console.log(err);
+    return next(res.status(500).send(err));
+  }
 });
 
 app.use((err, _req, res, _next) => {
