@@ -93,4 +93,30 @@ app.post('/crush', authToken, async (req, res) => {
   res.status(201).send(newCrushAdded);
 });
 
+app.put('/crush/:id', authToken, async (req, res) => {
+  const { name, age, date } = req.body;
+  if (!name) return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+  if (name.length < 3) return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  if (!age) return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+  if (age < 18) return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+
+  if (!date || !date.datedAt || (!date.rate && date.rate !== 0)) {
+    return res.status(400)
+      .send({
+        message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios',
+      });
+  }
+  if (date.rate < 1 || date.rate > 5) return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  if (!validDateAt(date.datedAt)) return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+
+  const id = JSON.parse(req.params.id);
+  const crushs = await fs.readFile('./crush.json');
+  const jsonCrushs = JSON.parse(crushs).filter((theCrush) => theCrush.id !== id);
+  const addId = { id, name, age, date };
+  jsonCrushs.push(addId);
+
+  await fs.writeFile('./crush.json', JSON.stringify(jsonCrushs));
+  res.status(200).send(addId);
+});
+
 app.listen(3000, () => console.log('hello world!'));
