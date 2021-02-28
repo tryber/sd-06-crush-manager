@@ -1,14 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const routes = require('./routes');
 
 const app = express();
 const SUCCESS = 200;
-const PORT = 3000;
-
-// Routers
-const crush = require('./routers/crush');
-const login = require('./routers/login');
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
@@ -16,12 +11,8 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
-app.use('/login', login);
-app.use('/crush', crush);
+app.use(routes);
 
-app.use((err, req, res, _next) => {
-  console.log(`${req.method} ${req.url} ${res.statusCode}, error: ${err}`);
-  return res.json({ message: err.toString() });
-});
+app.listen(3000, () => console.log('Running'));
 
-app.listen(PORT, () => console.log(`Crush Manager server listening on port ${PORT}`));
+app.use((error, _request, response, _next) => response.status(error.status || 500).send(`Error, error message: ${error.message}`));
