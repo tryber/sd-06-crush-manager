@@ -11,9 +11,16 @@ const readCrushJson = async () => {
 
 router.get('/', async (_req, res) => {
   const crushList = await readCrushJson();
-  console.log('crush', crushList);
   if (!crushList) return res.status(200).send([]);
   res.status(200).send(crushList);
+});
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const crushList = await readCrushJson();
+  const filteredCrushById = crushList.filter((crush) => crush.id === +id);
+  if (!filteredCrushById) return res.status(404).json({ message: 'Crush não encontrado' });
+  return res.status(200).send(filteredCrushById);
 });
 
 module.exports = router;
