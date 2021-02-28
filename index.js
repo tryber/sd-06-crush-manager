@@ -1,16 +1,24 @@
 const express = require('express');
-const bodyParse = require('body-parser');
-const findAll = require('./findAll');
+const fs = require('fs').promises;
 
 const app = express();
 const SUCCESS = 200;
+const port = 3000;
+const crushArray = 'crush.json';
 
-app.use(bodyParse.json());
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', findAll);
+// Requisito -1 obs: '_' p/ quando um parãmetro não é usado
+// res com todos os crushs cadastrados ou um array vazio e o status 200.
+app.get('/crush', async (_req, res) => {
+  const crushes = await fs.readFile(crushArray);
+  if (!crushes) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(JSON.parse(crushes));
+});
 
-app.listen(3000, () => console.log('ta workando'));
+app.listen(3000, () => console.log(`Using port: ${port}`));
