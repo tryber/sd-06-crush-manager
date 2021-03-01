@@ -37,13 +37,13 @@ app.get('/crush/:id', async (req, res) => {
   res.status(SUCCESS).json(filterCrush);
 });
 
-//regEX by LughWalle !!
+// regEX by LughWalle !!
 const validEmail = (email) => {
   const pattern = /[\w]{3,30}@[\w]{3,8}.[\w]{2,7}/mg;
   return pattern.test(email);
 };
 
-//regEX by LughWalle !!
+// regEX by LughWalle !!
 const validPassword = (pass) => {
   const pattern = /[\w]{6,30}/mg;
   return pattern.test(pass);
@@ -66,7 +66,7 @@ const authToken = async (req, res, next) => {
   if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
   next();
 };
-//regEX by LughWalle !!
+// regEX by LughWalle !!
 const validDateAt = (datedAt) => {
   const pattern = /(((^0|^1|^2)[0-9])|(^3[0-1]))\/((0[0-9])|(1[0-2]))\/(((19|20)[0-9]{2}$))/mg;
   return pattern.test(datedAt);
