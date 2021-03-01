@@ -71,17 +71,67 @@ app.post('/login', (req, res) => {
   }
 });
 
-app.post('/crush', (req, res) => {
+app.put('/crush/search?q=searchTerm', (req, res) => {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (req.headers.authorization !== 16) {
+  if (req.headers.authorization.length !== 16) {
     return res.status(401).send({ message: 'Token inválido' });
   }
   try {
     const { name, age, date } = req.body;
-    const { dateAt, rate } = date;
-    const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+    const { datedAt, rate } = date;
+    const dateRegex = /^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+    const rateRegex = /^[1-5]/;
+    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    if (name < 3) {
+      return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+    }
+    if (isNaN(age)) {
+      return res.status(400).send({ message: 'O "age" é obrigatório' });
+    }
+    if (age < 18) {
+      return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+    }
+    if (!datedAt || !rate) {
+      return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+    }
+    if (!dateRegex.test(datedAt)) {
+      return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+    }
+    if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
+      return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    }
+    const crushIndex = crushes.indexOf((crush) => crush.id === Number(id));
+    if (crushIndex === -1) {
+      return res.status(404).send({ message: 'Crush não encontrado' });
+    }
+    crushes.splice(crushIndex, 1);
+    crushes[crushIndex] = { name, age, date };
+    fs.writeFileSync(CRUSHES_PATH, crushes);
+    return res.status(200).send({ message: {
+      id,
+      name,
+      age,
+      date,
+    } });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
+  }
+});
+
+app.post('/crush', (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (req.headers.authorization.length !== 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+  try {
+    const { name, age, date } = req.body;
+    const { datedAt, rate } = date;
+    const dateRegex = /^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
     const rateRegex = /^[1-5]/;
     const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
     let nextAvailableId = 0;
@@ -93,16 +143,16 @@ app.post('/crush', (req, res) => {
     if (name < 3) {
       return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
-    if (!Number.is(age)) {
+    if (isNaN(age)) {
       return res.status(400).send({ message: 'O "age" é obrigatório' });
     }
     if (age < 18) {
       return res.status(400).send({ message: 'O crush deve ser maior de idade' });
     }
-    if (!dateAt || !rate) {
+    if (!datedAt || !rate) {
       return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     }
-    if (!dateRegex.test(dateAt)) {
+    if (!dateRegex.test(datedAt)) {
       return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
     }
     if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
@@ -124,7 +174,7 @@ app.delete('/crush/:id', (req, res) => {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
-  if (req.headers.authorization !== 16) {
+  if (req.headers.authorization.length !== 16) {
     return res.status(401).send({ message: 'Token inválido' });
   }
   try {
