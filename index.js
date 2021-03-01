@@ -30,6 +30,8 @@ app.get('/crush/:id', (req, res) => {
   }
 });
 
+app.get('/crush/search?q=searchTerm');
+
 app.get('/crush', (_req, res) => {
   try {
     const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
@@ -132,6 +134,8 @@ app.delete('/crush/:id', (req, res) => {
     if (crushIndex === -1) {
       return res.status(404).send({ message: 'Crush não encontrado' });
     }
+    crushes.splice(crushIndex, 1);
+    fs.writeFileSync(CRUSHES_PATH, crushes);
     return res.status(200).send({ message: 'Crush deletado com sucesso' });
   } catch (err) {
     console.log(err);
