@@ -9,7 +9,7 @@ const useToken = { token: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
-const useAuth = (req, res, next) => {
+const useauthorization = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
@@ -25,19 +25,27 @@ app.get('/', (_request, response) => {
 const getCrushes = () => JSON.parse(fs.readFileSync('./crush.json', 'utf8'));
 const jsonFile = async (content) => fs.writeFileSync('./crush.json', content);
 
-// -----------------------------------------1(ok)
 app.get('/crush', (_req, res) => {
   res.status(SUCCESS).send(getCrushes());
 });
 
-// -----------------------------------------2(ok)
+app.get('/crush/search', useauthorization, (req, res) => {
+  const searchText = req.query;
+  const allCrushes = getCrushes();
+  if (!searchText) res.status(SUCCESS).json(allCrushes);
+  console.log('query', searchText);
+  console.log('test');
+  const findCrush = allCrushes.filter((crush) => crush.name.includes(searchText));
+  res.status(SUCCESS).json(findCrush);
+});
+
 app.get('/crush/:id', (req, res) => {
   const { id } = req.params;
   const reqCrush = getCrushes().find((crush) => crush.id === +id);
   if (!reqCrush) return res.status(404).json({ message: 'Crush não encontrado' });
   res.status(SUCCESS).json(reqCrush);
 });
-// -----------------------------------------3(ok)
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const regexEmail = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+$/;
@@ -50,7 +58,7 @@ app.post('/login', (req, res) => {
   res.status(SUCCESS).json(useToken);
 });
 
-app.use(useAuth);
+app.use(useauthorization);
 
 const infoValid = (name, age, date) => {
   if (!name) return 'O campo "name" é obrigatório';
@@ -67,7 +75,7 @@ const infoValid = (name, age, date) => {
 
   return 'OK';
 };
-// -----------------------------------------4
+
 app.post('/crush', async (req, res) => {
   const { name, age, date } = req.body;
   const message = infoValid(name, age, date);
@@ -82,7 +90,7 @@ app.post('/crush', async (req, res) => {
   await jsonFile(JSON.stringify(freshData));
   res.status(201).json(freshCrush);
 });
-// -----------------------------------------5
+
 app.put('/crush/:id', async (req, res) => {
   const { name, age, date } = req.body;
   const message = infoValid(name, age, date);
@@ -97,23 +105,12 @@ app.put('/crush/:id', async (req, res) => {
   await jsonFile(JSON.stringify(allCrushes));
   res.status(SUCCESS).json(freshInformation);
 });
-// -----------------------------------------6
+
 app.delete('/crush/:id', async (req, res) => {
   const { id } = req.params;
   const filterAllCrushes = getCrushes().filter((crush) => crush.id !== +id);
   await jsonFile(JSON.stringify(filterAllCrushes));
   res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
-});
-
-// -----------------------------------------7
-app.get('/crush/search', (req, res) => {
-  const searchText = req.query;
-  const allCrushes = getCrushes();
-  if (!searchText) res.status(SUCCESS).json(allCrushes);
-  console.log('query', searchText);
-  console.log('test');
-  const findCrush = allCrushes.filter((crush) => crush.name.includes(searchText));
-  res.status(SUCCESS).json(findCrush);
 });
 
 app.listen(3000, console.log('Servidor funcionando'));
