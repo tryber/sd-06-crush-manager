@@ -4,6 +4,11 @@ const routes = require('./routes');
 const app = express();
 const port = 3000;
 
+// não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (_request, response) => {
+  response.status(SUCCESS).send();
+});
+
 app.use(express.json());
 app.use(routes);
 
