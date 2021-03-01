@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush/:id', (req, res, next) => {
+app.get('/crush/:id', (req, res) => {
   try {
     const { id } = req.params;
     // const retrievedCrush = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8')).
@@ -26,11 +26,11 @@ app.get('/crush/:id', (req, res, next) => {
     }
     return res.status(200).send(retrievedCrush);
   } catch (err) {
-    return next(res.status(500).send(err));
+    return res.status(500).send(err);
   }
 });
 
-app.get('/crush', (_req, res, next) => {
+app.get('/crush', (_req, res) => {
   try {
     const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
     if (!crushes || crushes.length === 0) {
@@ -41,11 +41,11 @@ app.get('/crush', (_req, res, next) => {
     return res.status(200).send(crushes);
   } catch (err) {
     console.log(err);
-    return next(res.status(500).send(err));
+    return res.status(500).send(err);
   }
 });
 
-app.post('/login', (req, res, next) => {
+app.post('/login', (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email) {
@@ -65,16 +65,16 @@ app.post('/login', (req, res, next) => {
     return res.status(200).send({ token });
   } catch (err) {
     console.log(err);
-    return next(res.status(500).send(err));
+    return res.status(500).send(err);
   }
 });
 
-app.post('/crush', (req, res, next) => {
+app.post('/crush', (req, res) => {
   if (!req.headers.authorization) {
-    return next(res.status(401).send({ message: 'Token não encontrado' }));
+    return res.status(401).send({ message: 'Token não encontrado' });
   }
   if (req.headers.authorization !== 16) {
-    return next(res.status(401).send({ message: 'Token inválido' }));
+    return res.status(401).send({ message: 'Token inválido' });
   }
   try {
     const { name, age, date } = req.body;
@@ -104,7 +104,7 @@ app.post('/crush', (req, res, next) => {
       return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
     }
     if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
-      return res.status(400).send({ message: 'O campo \"rate\" deve ser um inteiro de 1 à 5' });
+      return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
     return res.status(201).send({ message: {
       id: nextAvailableId,
@@ -114,7 +114,28 @@ app.post('/crush', (req, res, next) => {
     } });
   } catch (err) {
     console.log(err);
-    return next(res.status(500).send(err));
+    return res.status(500).send(err);
+  }
+});
+
+app.delete('/crush/:id', (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Token não encontrado' });
+  }
+  if (req.headers.authorization !== 16) {
+    return res.status(401).send({ message: 'Token inválido' });
+  }
+  try {
+    const { id } = req.body;
+    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushIndex = crushes.indexOf((crush) => crush.id === Number(id));
+    if (crushIndex === -1) {
+      return res.status(404).send({ message: 'Crush não encontrado' });
+    }
+    return res.status(200).send({ message: 'Crush deletado com sucesso' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
   }
 });
 
