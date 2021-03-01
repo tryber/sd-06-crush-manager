@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
 const bodyParser = require('body-parser');
 const randtoken = require('rand-token');
 
@@ -13,12 +13,12 @@ app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush/:id', (req, res) => {
+app.get('/crush/:id', async (req, res) => {
   try {
     const { id } = req.params;
     // const retrievedCrush = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8')).
     //  find((crush) => crush.id === Number(id));
-    const crushes = (fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushes = (await fs.readFile(CRUSHES_PATH, 'utf8'));
     const crushesObj = JSON.parse(crushes);
     const retrievedCrush = crushesObj.find((crush) => crush.id === Number(id));
     if (!retrievedCrush) {
@@ -32,9 +32,9 @@ app.get('/crush/:id', (req, res) => {
 
 app.get('/crush/search?q=searchTerm');
 
-app.get('/crush', (_req, res) => {
+app.get('/crush', async (_req, res) => {
   try {
-    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
     if (!crushes || crushes.length === 0) {
       console.log('no_crushes');
       const noCrushes = [];
@@ -71,7 +71,7 @@ app.post('/login', (req, res) => {
   }
 });
 
-app.put('/crush/search?q=searchTerm', (req, res) => {
+app.put('/crush/search?q=searchTerm', async (req, res) => {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
@@ -83,7 +83,7 @@ app.put('/crush/search?q=searchTerm', (req, res) => {
     const { datedAt, rate } = date;
     const dateRegex = /^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
     const rateRegex = /^[1-5]/;
-    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
     if (name < 3) {
       return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
@@ -102,7 +102,7 @@ app.put('/crush/search?q=searchTerm', (req, res) => {
     if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
       return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
-    const crushIndex = crushes.indexOf((crush) => crush.id === Number(id));
+    const crushIndex = crushes.indexOf((crush) => crush.id === 1);
     if (crushIndex === -1) {
       return res.status(404).send({ message: 'Crush não encontrado' });
     }
@@ -110,7 +110,6 @@ app.put('/crush/search?q=searchTerm', (req, res) => {
     crushes[crushIndex] = { name, age, date };
     fs.writeFileSync(CRUSHES_PATH, crushes);
     return res.status(200).send({ message: {
-      id,
       name,
       age,
       date,
@@ -121,7 +120,7 @@ app.put('/crush/search?q=searchTerm', (req, res) => {
   }
 });
 
-app.post('/crush', (req, res) => {
+app.post('/crush', async (req, res) => {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
@@ -130,17 +129,26 @@ app.post('/crush', (req, res) => {
   }
   try {
     const { name, age, date } = req.body;
-    const { datedAt, rate } = date;
     const dateRegex = /^(?:(?:31(\/)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
     const rateRegex = /^[1-5]/;
-    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
     let nextAvailableId = 0;
     if (!crushes || crushes.length === 0) {
       nextAvailableId = 1;
     } else {
-      nextAvailableId = crushes[crushes.length - 1].id;
+      nextAvailableId = crushes[crushes.length - 1].id + 1;
     }
-    if (name < 3) {
+    if (!name) {
+      return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+    }
+    if (!age) {
+      return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+    }
+    if (!date) {
+      return res.status(400).send({ message: 'O campo "date" é obrigatório' });
+    }
+    const { datedAt, rate } = date;
+    if (name.length < 3) {
       return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
     if (isNaN(age)) {
@@ -158,19 +166,21 @@ app.post('/crush', (req, res) => {
     if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
       return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
-    return res.status(201).send({ message: {
+    // crushes.push({ name, age, date });
+    // fs.writeFileSync(CRUSHES_PATH, crushes);
+    return res.status(201).send({
       id: nextAvailableId,
       name,
       age,
       date,
-    } });
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).send(err);
   }
 });
 
-app.delete('/crush/:id', (req, res) => {
+app.delete('/crush/:id', async (req, res) => {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Token não encontrado' });
   }
@@ -179,7 +189,7 @@ app.delete('/crush/:id', (req, res) => {
   }
   try {
     const { id } = req.body;
-    const crushes = JSON.parse(fs.readFileSync(CRUSHES_PATH, 'utf8'));
+    const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
     const crushIndex = crushes.indexOf((crush) => crush.id === Number(id));
     if (crushIndex === -1) {
       return res.status(404).send({ message: 'Crush não encontrado' });
