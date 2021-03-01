@@ -1,7 +1,8 @@
 const express = require('express');
 const fs = require('fs').promises;
 const bodyParser = require('body-parser');
-const randtoken = require('rand-token');
+// const randtoken = require('rand-token');
+const { MD5 } = require('crypto-js');
 
 const app = express();
 const SUCCESS = 200;
@@ -63,7 +64,7 @@ app.post('/login', (req, res) => {
     if (!emailValidation.test(email)) {
       return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
-    const token = randtoken.generate(16);
+    const token = ({ email }) => MD5(email).toString().substr(0, 16);
     return res.status(200).send({ token });
   } catch (err) {
     console.log(err);
@@ -87,7 +88,7 @@ app.put('/crush/search?q=searchTerm', async (req, res) => {
     if (name < 3) {
       return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
-    if (isNaN(age)) {
+    if (typeof age !== 'number') {
       return res.status(400).send({ message: 'O "age" é obrigatório' });
     }
     if (age < 18) {
@@ -151,7 +152,7 @@ app.post('/crush', async (req, res) => {
     if (name.length < 3) {
       return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
-    if (isNaN(age)) {
+    if (typeof age !== 'number') {
       return res.status(400).send({ message: 'O "age" é obrigatório' });
     }
     if (age < 18) {
