@@ -9,7 +9,7 @@ const useToken = { token: '7mqaVRXJSp886CGr' };
 
 app.use(express.json());
 
-const useauthorization = (req, res, next) => {
+const useAuth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
@@ -29,7 +29,7 @@ app.get('/crush', (_req, res) => {
   res.status(SUCCESS).send(getCrushes());
 });
 
-app.get('/crush/search', useauthorization, (req, res) => {
+app.get('/crush/search', useAuth, (req, res) => {
   const searchText = req.query;
   const allCrushes = getCrushes();
   if (!searchText) res.status(SUCCESS).json(allCrushes);
@@ -58,7 +58,7 @@ app.post('/login', (req, res) => {
   res.status(SUCCESS).json(useToken);
 });
 
-app.use(useauthorization);
+app.use(useAuth);
 
 const infoValid = (name, age, date) => {
   if (!name) return 'O campo "name" é obrigatório';
