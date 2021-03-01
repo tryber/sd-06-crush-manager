@@ -64,7 +64,7 @@ app.post('/login', (req, res) => {
     if (!emailValidation.test(email)) {
       return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
-    const token = ({ email }) => MD5(email).toString().substr(0, 16);
+    const token = MD5(email).toString().substr(0, 16);
     return res.status(200).send({ token });
   } catch (err) {
     console.log(err);
