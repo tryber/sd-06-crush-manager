@@ -29,6 +29,16 @@ app.get('/crush', (_req, res) => {
   res.status(SUCCESS).send(getCrushes());
 });
 
+app.get('/crush/search', useAuth, (req, res) => {
+  const searchText = req.query;
+  const allCrushes = getCrushes();
+  if (!searchText) res.status(SUCCESS).json(allCrushes);
+  console.log('query', searchText);
+  console.log('test');
+  const findCrush = allCrushes.filter((crush) => crush.name.includes(searchText));
+  res.status(SUCCESS).json(findCrush);
+});
+
 app.get('/crush/:id', (req, res) => {
   const { id } = req.params;
   const reqCrush = getCrushes().find((crush) => crush.id === +id);
@@ -66,19 +76,41 @@ const infoValid = (name, age, date) => {
   return 'OK';
 };
 
-app.post('/crush', async (request, response) => {
-  const { name, age, date } = request.body;
+app.post('/crush', async (req, res) => {
+  const { name, age, date } = req.body;
   const message = infoValid(name, age, date);
 
-  if (message !== 'OK') return response.status(400).json({ message });
+  if (message !== 'OK') {
+    return res.status(400).json({ message });
+  }
 
-  const crushes = getCrushes();
-  const addCrush = { id: crushes.length + 1, ...request.body };
-  const addCruData = crushes.concat(addCrush);
-
-  await jsonFile(JSON.stringify(addCruData));
-
-  response.status(201).json(addCrush);
+  const allCrushes = getCrushes();
+  const freshCrush = { id: allCrushes.length + 1, ...req.body };
+  const freshData = allCrushes.concat(freshCrush);
+  await jsonFile(JSON.stringify(freshData));
+  res.status(201).json(freshCrush);
 });
 
-app.listen(3000, () => console.log('Working...'));
+app.put('/crush/:id', async (req, res) => {
+  const { name, age, date } = req.body;
+  const message = infoValid(name, age, date);
+  if (message !== 'OK') {
+    return res.status(400).json({ message });
+  }
+
+  const { id } = req.params;
+  const allCrushes = getCrushes();
+  const freshInformation = ({ name, age, id: +id, date });
+  allCrushes[id] = freshInformation;
+  await jsonFile(JSON.stringify(allCrushes));
+  res.status(SUCCESS).json(freshInformation);
+});
+
+app.delete('/crush/:id', async (req, res) => {
+  const { id } = req.params;
+  const filterAllCrushes = getCrushes().filter((crush) => crush.id !== +id);
+  await jsonFile(JSON.stringify(filterAllCrushes));
+  res.status(SUCCESS).json({ message: 'Crush deletado com sucesso' });
+});
+
+app.listen(3000, console.log('Servidor funcionando'));
