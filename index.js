@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
-  response.status(SUCCESS).send();
+  response.status(SUCCESS).json();
 });
 
 app.get('/crush/:id', async (req, res) => {
@@ -23,11 +23,11 @@ app.get('/crush/:id', async (req, res) => {
     const crushesObj = JSON.parse(crushes);
     const retrievedCrush = crushesObj.find((crush) => crush.id === Number(id));
     if (!retrievedCrush) {
-      return res.status(404).send({ message: 'Crush não encontrado' });
+      return res.status(404).json({ message: 'Crush não encontrado' });
     }
-    return res.status(200).send(retrievedCrush);
+    return res.status(200).json(retrievedCrush);
   } catch (err) {
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 });
 
@@ -39,12 +39,12 @@ app.get('/crush', async (_req, res) => {
     if (!crushes || crushes.length === 0) {
       console.log('no_crushes');
       const noCrushes = [];
-      return res.status(200).send(noCrushes);
+      return res.status(200).json(noCrushes);
     }
-    return res.status(200).send(crushes);
+    return res.status(200).json(crushes);
   } catch (err) {
     console.log(err);
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 });
 
@@ -52,32 +52,32 @@ app.post('/login', (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email) {
-      return res.status(400).send({ message: 'O campo "email" é obrigatório' });
+      return res.status(400).json({ message: 'O campo "email" é obrigatório' });
     }
     if (!password) {
-      return res.status(400).send({ message: 'O campo "password" é obrigatório' });
+      return res.status(400).json({ message: 'O campo "password" é obrigatório' });
     }
     if (password.length < 6) {
-      return res.status(400).send({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
+      return res.status(400).json({ message: 'A "senha" deve ter pelo menos 6 caracteres' });
     }
     const emailValidation = /\S+@\S+\.\S+/;
     if (!emailValidation.test(email)) {
-      return res.status(400).send({ message: 'O "email" deve ter o formato "email@email.com"' });
+      return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
     const token = MD5(email).toString().substr(0, 16);
-    return res.status(200).send({ token });
+    return res.status(200).json({ token });
   } catch (err) {
     console.log(err);
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 });
 
 app.put('/crush/search?q=searchTerm', async (req, res) => {
   if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
   if (req.headers.authorization.length !== 16) {
-    return res.status(401).send({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
   try {
     const { name, age, date } = req.body;
@@ -86,47 +86,47 @@ app.put('/crush/search?q=searchTerm', async (req, res) => {
     const rateRegex = /^[1-5]/;
     const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
     if (name < 3) {
-      return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+      return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
     if (typeof age !== 'number') {
-      return res.status(400).send({ message: 'O "age" é obrigatório' });
+      return res.status(400).json({ message: 'O "age" é obrigatório' });
     }
     if (age < 18) {
-      return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+      return res.status(400).json({ message: 'O crush deve ser maior de idade' });
     }
     if (!datedAt || !rate) {
-      return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+      return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     }
     if (!dateRegex.test(datedAt)) {
-      return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+      return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
     }
     if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
-      return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
     const crushIndex = crushes.indexOf((crush) => crush.id === 1);
     if (crushIndex === -1) {
-      return res.status(404).send({ message: 'Crush não encontrado' });
+      return res.status(404).json({ message: 'Crush não encontrado' });
     }
     crushes.splice(crushIndex, 1);
     crushes[crushIndex] = { name, age, date };
-    fs.writeFileSync(CRUSHES_PATH, crushes);
-    return res.status(200).send({ message: {
+    // fs.writeFile(CRUSHES_PATH, crushes);
+    return res.status(200).json({ message: {
       name,
       age,
       date,
     } });
   } catch (err) {
     console.log(err);
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 });
 
 app.post('/crush', async (req, res) => {
   if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
   if (req.headers.authorization.length !== 16) {
-    return res.status(401).send({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
   try {
     const { name, age, date } = req.body;
@@ -140,36 +140,36 @@ app.post('/crush', async (req, res) => {
       nextAvailableId = crushes[crushes.length - 1].id + 1;
     }
     if (!name) {
-      return res.status(400).send({ message: 'O campo "name" é obrigatório' });
+      return res.status(400).json({ message: 'O campo "name" é obrigatório' });
     }
     if (!age) {
-      return res.status(400).send({ message: 'O campo "age" é obrigatório' });
+      return res.status(400).json({ message: 'O campo "age" é obrigatório' });
     }
     if (!date) {
-      return res.status(400).send({ message: 'O campo "date" é obrigatório' });
+      return res.status(400).json({ message: 'O campo "date" é obrigatório datedAt" e "rate" não podem ser vazios' });
     }
     const { datedAt, rate } = date;
     if (name.length < 3) {
-      return res.status(400).send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+      return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
     if (typeof age !== 'number') {
-      return res.status(400).send({ message: 'O "age" é obrigatório' });
+      return res.status(400).json({ message: 'O "age" é obrigatório' });
     }
     if (age < 18) {
-      return res.status(400).send({ message: 'O crush deve ser maior de idade' });
+      return res.status(400).json({ message: 'O crush deve ser maior de idade' });
     }
     if (!datedAt || !rate) {
-      return res.status(400).send({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
+      return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     }
     if (!dateRegex.test(datedAt)) {
-      return res.status(400).send({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
+      return res.status(400).json({ message: 'O campo "datedAt" deve ter o formato "dd/mm/aaaa"' });
     }
     if (!rateRegex.test(rate) || !Number.isInteger(rate)) {
-      return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+      return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
-    // crushes.push({ name, age, date });
-    // fs.writeFileSync(CRUSHES_PATH, crushes);
-    return res.status(201).send({
+    crushes.push({ name, age, date });
+    await fs.writeFile(CRUSHES_PATH, crushes);
+    return res.status(201).json({
       id: nextAvailableId,
       name,
       age,
@@ -177,30 +177,30 @@ app.post('/crush', async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 });
 
 app.delete('/crush/:id', async (req, res) => {
   if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
   if (req.headers.authorization.length !== 16) {
-    return res.status(401).send({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
   try {
     const { id } = req.body;
     const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
     const crushIndex = crushes.indexOf((crush) => crush.id === Number(id));
     if (crushIndex === -1) {
-      return res.status(404).send({ message: 'Crush não encontrado' });
+      return res.status(404).json({ message: 'Crush não encontrado' });
     }
     crushes.splice(crushIndex, 1);
-    fs.writeFileSync(CRUSHES_PATH, crushes);
-    return res.status(200).send({ message: 'Crush deletado com sucesso' });
+    // fs.writeFileSync(CRUSHES_PATH, crushes);
+    return res.status(200).json({ message: 'Crush deletado com sucesso' });
   } catch (err) {
     console.log(err);
-    return res.status(500).send(err);
+    return res.status(500).json(err);
   }
 });
 
