@@ -66,6 +66,7 @@ const authToken = async (req, res, next) => {
   if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
   next();
 };
+//regEX by LughWalle !!
 const validDateAt = (datedAt) => {
   const pattern = /(((^0|^1|^2)[0-9])|(^3[0-1]))\/((0[0-9])|(1[0-2]))\/(((19|20)[0-9]{2}$))/mg;
   return pattern.test(datedAt);
