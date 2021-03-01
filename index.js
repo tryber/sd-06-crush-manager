@@ -30,11 +30,10 @@ app.get('/crush', (_req, res) => {
 });
 
 app.get('/crush/search', useAuth, (req, res) => {
-  const searchText = req.query;
   const allCrushes = getCrushes();
+  const searchText = req.query.q;
   if (!searchText) res.status(SUCCESS).json(allCrushes);
   console.log('query', searchText);
-  console.log('test');
   const findCrush = allCrushes.filter((crush) => crush.name.includes(searchText));
   res.status(SUCCESS).json(findCrush);
 });
