@@ -146,7 +146,7 @@ app.post('/crush', async (req, res) => {
       return res.status(400).json({ message: 'O campo "age" é obrigatório' });
     }
     if (!date) {
-      return res.status(400).json({ message: 'O campo "date" é obrigatório datedAt" e "rate" não podem ser vazios' });
+      return res.status(400).json({ message: 'O campo "date" é obrigatório e "datedAt" e "rate" não podem ser vazios' });
     }
     const { datedAt, rate } = date;
     if (name.length < 3) {
@@ -168,7 +168,7 @@ app.post('/crush', async (req, res) => {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
     crushes.push({ name, age, date });
-    await fs.writeFile(CRUSHES_PATH, crushes);
+    await fs.writeFile(CRUSHES_PATH, JSON.stringify(crushes));
     return res.status(201).json({
       id: nextAvailableId,
       name,
@@ -196,7 +196,7 @@ app.delete('/crush/:id', async (req, res) => {
       return res.status(404).json({ message: 'Crush não encontrado' });
     }
     crushes.splice(crushIndex, 1);
-    // fs.writeFileSync(CRUSHES_PATH, crushes);
+    await fs.writeFile(CRUSHES_PATH, JSON.stringify(crushes));
     return res.status(200).json({ message: 'Crush deletado com sucesso' });
   } catch (err) {
     console.log(err);
