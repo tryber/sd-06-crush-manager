@@ -13,6 +13,24 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
+const authToken = async (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
+  next();
+};
+
+app.get('/crush/search', authToken, async (req, res) => {
+  const search = req.query.q;
+  // regEX by LughWalle !!
+  const regex = new RegExp(`^${search}\\w*`, 'i');
+  const crushs = await fs.readFile('./crush.json');
+  const crushsJson = JSON.parse(crushs);
+  const filteredCrushs = crushsJson.filter((crush) => regex.test(crush.name));
+  console.log(filteredCrushs, search);
+  res.status(200).send(filteredCrushs);
+});
+
 app.get('/crush', async (_req, res) => {
   try {
     const possiblesCrush = await fs.readFile('./crush.json');
@@ -121,5 +139,6 @@ app.put('/crush/:id', authToken, async (req, res) => {
   await fs.writeFile('./crush.json', JSON.stringify(jsonCrushs));
   res.status(200).send(addId);
 });
+app.post('/crush', deleteCrush);
 
 app.listen(3000, () => console.log('porta 3000 on !'));
