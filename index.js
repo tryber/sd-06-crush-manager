@@ -140,5 +140,4 @@ app.delete('/crush/:id', authToken, async (req, res) => {
   res.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
 });
 
-
 app.listen(3000, () => console.log('hello world!'));
