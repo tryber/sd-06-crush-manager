@@ -247,9 +247,9 @@ app.delete('/crush/:id', async (req, res) => {
     return res.status(401).json({ message: 'Token inválido' });
   }
   try {
-    const { id } = req.body;
+    const id = Number(req.params.id);
     const crushes = JSON.parse(await fs.readFile(CRUSHES_PATH, 'utf8'));
-    const crushIndex = crushes.indexOf((crush) => crush.id === Number(id));
+    const crushIndex = crushes.findIndex((crush) => crush.id === Number(id));
     if (crushIndex === -1) {
       return res.status(404).json({ message: 'Crush não encontrado' });
     }
