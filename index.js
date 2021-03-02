@@ -13,6 +13,23 @@ app.get('/', (_request, response) => {
 
 app.use(bodyParser.json());
 
+const authToken = async (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
+  next();
+};
+
+app.get('/crush/search', authToken, async (req, res) => {
+  const search = req.query.q;
+  const regex = new RegExp(`^${search}\\w*`, 'i');
+  const crushs = await fs.readFile('./crush.json');
+  const crushsJson = JSON.parse(crushs);
+  const filteredCrushs = crushsJson.filter((crush) => regex.test(crush.name));
+  console.log(filteredCrushs, search);
+  res.status(200).send(filteredCrushs);
+});
+
 app.get('/crush', async (_req, res) => {
   try {
     const possiblesCrush = await fs.readFile('./crush.json');
@@ -38,7 +55,7 @@ app.get('/crush/:id', async (req, res) => {
 });
 
 const validEmail = (email) => {
-  const pattern = /[\w]{3,30}@[\w]{3,8}.[\w]{2,7}/mg;
+  const pattern = /[\w]{3,30}@[a-zA-Z]{3,8}.[\w]{2,7}/mg;
   return pattern.test(email);
 };
 
@@ -58,12 +75,6 @@ app.post('/login', async (req, res) => {
   // console.log(req.body);
 });
 
-const authToken = async (req, res, next) => {
-  const { authorization } = req.headers;
-  if (!authorization) return res.status(401).send({ message: 'Token não encontrado' });
-  if (authorization.length !== 16) return res.status(401).send({ message: 'Token inválido' });
-  next();
-};
 const validDateAt = (datedAt) => {
   const pattern = /(((^0|^1|^2)[0-9])|(^3[0-1]))\/((0[0-9])|(1[0-2]))\/(((19|20)[0-9]{2}$))/mg;
   return pattern.test(datedAt);
@@ -116,7 +127,18 @@ app.put('/crush/:id', authToken, async (req, res) => {
   jsonCrushs.push(addId);
 
   await fs.writeFile('./crush.json', JSON.stringify(jsonCrushs));
-  res.status(200).send(addId);
+  res.status(SUCCESS).send(addId);
 });
+
+app.delete('/crush/:id', authToken, async (req, res) => {
+  const id = JSON.parse(req.params.id);
+  const crushs = await fs.readFile('./crush.json');
+  const jsonCrushs = JSON.parse(crushs);
+  const index = jsonCrushs.findIndex((delCrush) => delCrush.id === id);
+  jsonCrushs.splice(index, 1);
+  console.log(index, jsonCrushs);
+  res.status(SUCCESS).send({ message: 'Crush deletado com sucesso' });
+});
+
 
 app.listen(3000, () => console.log('hello world!'));
