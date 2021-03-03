@@ -133,6 +133,5 @@ app.put('/crush/:id', authToken, async (req, res) => {
   await fs.writeFile('./crush.json', JSON.stringify(jsonCrushs));
   res.status(200).send(addId);
 });
-app.post('/crush', deleteCrush);
 
 app.listen(3000, () => console.log('porta 3000 on !'));
