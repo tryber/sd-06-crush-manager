@@ -9,15 +9,13 @@ const { validateName, validateAge, validateDate } = require('./validationMiddlew
 
 router.use(bodyParser.json());
 
-/* estava com um erro no retorno da função abaixo e não consegui resolver de outro modo
-que não fosse mudando um pouco sua estrutura. O PR do Leo Cavachini me ajudou a perceber
-que implementar a função fs.readFile, como vimos nas aulas, passando apenas o caminho e
-o como o arquivo será lido é mais simples de lidar do que da maneira que fiz anteriormente:
-seguindo a resolução de exercícios do bloco.
-link do PR: https://github.com/tryber/sd-06-crush-manager/pull/89/files */
+/* função alterada novamente: agora com tratamento do caso de erro, com a ajuda
+do Gargani que me esclareceu como lidar neste caso o erro */
 const readCrushJson = async () => {
-  const content = await fs.readFile('./crush.json', 'utf-8');
-  return JSON.parse(content);
+  const content = await fs.readFile('./crush.json', 'utf-8')
+    .then((response) => JSON.parse(response))
+    .catch((err) => new Error('Não foi possível ler o arquivo', err));
+  return content;
 };
 
 router.get('/', async (_req, res) => {
@@ -56,6 +54,21 @@ router.post('/', validateToken, validateName, validateAge, validateDate, async (
 
   addNewCrush(newCrush);
   return res.status(201).json(newCrush);
+});
+
+router.put('/:id', validateToken, validateName, validateAge, validateDate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, date } = req.body;
+
+  const crushList = await readCrushJson();
+  const crushJsonWithoutFilteredCrush = crushList.filter((crush) => crush.id !== +id);
+
+  await WriteCrushJson(crushJsonWithoutFilteredCrush);
+
+  const editedCrush = { id: parseInt(id, 10), name, age, date };
+  await addNewCrush(editedCrush);
+
+  res.status(200).json(editedCrush);
 });
 
 module.exports = router;
