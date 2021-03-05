@@ -78,7 +78,7 @@ router.delete('/:id', validateToken, async (req, res) => {
   const crushJsonWithoutFilteredCrush = crushList.filter((crush) => crush.id !== +id);
 
   await WriteCrushJson(crushJsonWithoutFilteredCrush);
-  res.status(200).json({ message: 'Crush deletado com sucesso'});
+  res.status(200).json({ message: 'Crush deletado com sucesso' });
 });
 
 module.exports = router;
