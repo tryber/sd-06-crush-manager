@@ -24,6 +24,17 @@ router.get('/', async (_req, res) => {
   res.status(200).send(crushList);
 });
 
+// endpoint colocado acima do get com o id porque estava sempre caindo nele antes de vir pra cá
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+
+  const crushList = await readCrushJson();
+  const filterBySearhTerm = crushList.filter((crush) => crush.name.includes(q));
+  if (!q || q === '') return res.status(200).json(crushList);
+  if (filterBySearhTerm.length === 0) return res.status(200).json([]);
+  res.status(200).json(filterBySearhTerm);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const crushList = await readCrushJson();
