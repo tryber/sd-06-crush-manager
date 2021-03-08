@@ -26,16 +26,4 @@ app.get('/crush', async (req, res) => {
   }
 });
 
-app.get('/crush/:id', async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  const file = fs.readFileSync(Crush, 'utf8');
-  const fileObj = JSON.parse(file);
-  const fileId = fileObj.find.find((elem) => id === elem.id);
-
-  if (!fileId) {
-    return res.status(404).send({ message: 'Crush não encontrado' });
-  }
-  return res.status(200).send(fileId);
-});
-
-app.listen(3000, () => console.log('test'));
+app.listen(3000);
