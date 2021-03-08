@@ -28,7 +28,7 @@ app.get('/crush', async (req, res) => {
 
 app.get('/crush/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const file = await fs.readFile(Crush);
+  const file = fs.readFileSync(Crush, 'utf8');
   const fileObj = JSON.parse(file);
   const fileId = fileObj.find.find((elem) => id === elem.id);
 
