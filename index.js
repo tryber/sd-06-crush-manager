@@ -1,29 +1,22 @@
 const express = require('express');
-const fs = require('fs');
-const bodyParser = require('body-parser');
-
-const Crush = './crush.json';
+const { getData, getDataById, validateCrush, validateCrushId, validateUser,
+  validateToken, deleteCrush, searchCrush } = require('./service');
 
 const app = express();
 const SUCCESS = 200;
-app.use(bodyParser.json());
+const PORT = 3000;
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(SUCCESS).send();
 });
 
-app.get('/crush', async (req, res) => {
-  try {
-    const file = JSON.parse(fs.readFileSync(Crush, 'utf8'));
-    if (file.length === 0 || !file) {
-      const offFlie = [];
-      return res.status(200).send(offFlie);
-    }
-    return res.status(200).send(file);
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+app.get('/crush', getData);
+app.get('/crush/search', validateToken, searchCrush);
+app.get('/crush/:id', getDataById);
+app.post('/login', validateUser);
+app.post('/crush', validateToken, validateCrush);
+app.put('/crush/:id', validateToken, validateCrushId);
+app.delete('/crush/:id', validateToken, deleteCrush);
 
-app.listen(3000);
+app.listen(PORT);
