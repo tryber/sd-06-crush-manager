@@ -1,5 +1,4 @@
 const express = require('express');
-const { FrisbySpec } = require('frisby');
 const fs = require('fs');
 const { tokenValidator } = require('./authenticator');
 
